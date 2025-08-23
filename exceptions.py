@@ -1,5 +1,104 @@
 # Exceptions to ignore in the project.
 
-class BookAlreadyBorrowed(Exception):
+# ------------------------------
+# BASE EXCEPTION FOR THE ENTIRE PROJECT
+# ------------------------------
+class LibraryError(Exception):
+    """Base exception for the entire library system."""
+    pass
+
+# ------------------------------
+# BOOK-RELATED EXCEPTIONS (BookService)
+# ------------------------------
+class BookError(LibraryError):
+    """Base exception for book operations."""
+    pass
+
+# CRUD operations
+class BookNotFoundError(BookError):
+    """Book not found in the library."""
+    pass
+
+class BookAlreadyExistsError(BookError):
+    """Book already exists in the library."""
+    pass
+
+# Availability
+class BookNotAvailableError(BookError):
+    """Book is currently unavailable (loaned or reserved)."""
+    pass
+
+# Categories
+class CategoryNotFoundError(BookError):
+    """Category not found."""
+    pass
+
+# Validation
+class BookValidationError(BookError):
+    """Invalid book data."""
+    pass
+
+
+# ------------------------------
+# LOAN AND RESERVATION EXCEPTIONS (LoanService)
+# ------------------------------
+class LoanError(LibraryError):
+    """Base exception for loans and reservations."""
+    pass
+
+class LoanNotFoundError(LoanError):
+    """Loan record not found."""
+    pass
+
+class ReservationError(LoanError):
+    """Error during book reservation."""
+    pass
+
+class AlreadyLoanedError(LoanError):
+    """Book is already loaned to this user."""
+    pass
+
+class LoanValidationError(LoanError):
+    """Invalid loan or reservation data."""
+    pass
+
+
+# ------------------------------
+# USER AND AUTHENTICATION EXCEPTIONS (AuthService)
+# ------------------------------
+class UserError(LibraryError):
+    """Base exception for user-related operations."""
+    pass
+
+class UserNotFoundError(UserError):
+    """User not found."""
+    pass
+
+class AuthenticationError(UserError):
+    """Authentication or login error."""
+    pass
+
+class PermissionError(UserError):
+    """User does not have permission to perform this operation."""
+    pass
+
+class UserValidationError(UserError):
+    """Invalid user data."""
+    pass
+
+
+# ------------------------------
+# GENERAL / UTILITY EXCEPTIONS
+# ------------------------------
+class ValidationError(LibraryError):
+    """General validation error for input data."""
+    pass
+
+class DatabaseError(LibraryError):
+    """Error related to database operations or data storage."""
+    pass
+
+class FileError(LibraryError):
+    """Error during file operations (JSON, CSV, etc.)."""
     pass
 
