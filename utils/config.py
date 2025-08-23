@@ -1,0 +1,1 @@
+# basic settings of the project like file paths, database parameters, etc.

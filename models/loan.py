@@ -1,0 +1,1 @@
+# loan class with attributes and methods (who borrowed the book, when it was borrowed, when it was returned)

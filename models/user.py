@@ -1,0 +1,1 @@
+# class user to represent a user in te library or administrator

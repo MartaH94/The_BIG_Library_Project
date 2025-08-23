@@ -1,0 +1,1 @@
+# Exceptions to ignore in the project.

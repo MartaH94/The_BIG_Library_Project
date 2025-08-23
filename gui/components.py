@@ -1,0 +1,1 @@
+# repetitive elements of the GUI like buttons, labels, style, etc.
