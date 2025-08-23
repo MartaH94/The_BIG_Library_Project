@@ -2,6 +2,7 @@
 
 from datetime import datetime
 from models.book import Book
+import exceptions as exc
 
 class LoanedBook:
     def __init__(self, book : Book, borrowed_by, is_borrowed=False, loan_date=None, return_date=None):
@@ -17,11 +18,17 @@ class LoanedBook:
             self.loan_date = datetime.now()
             self.return_date = None
         else:
-            raise Exception("Book is already borrowed") # ADD this exception to module exceptions.py and import here
+            raise exc.BookAlreadyBorrowed("This book  is already borrowed.")
 
 class BookReservation:
     def __init__(self, book : Book, reserved_by, reservation_date=None):
         self.book = book
         self.reserved_by = reserved_by
         self.reservation_date = reservation_date
+
+    def reserve_book(self, reserved_by=None):
+        self.reservation_date = datetime.now()
+        self.reserved_by = reserved_by
+
+
 
