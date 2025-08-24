@@ -86,6 +86,10 @@ class UserValidationError(UserError):
     """Invalid user data."""
     pass
 
+class UserInvalidRole(UserError):
+    """Invalid user role."""
+    pass
+
 
 # ------------------------------
 # GENERAL / UTILITY EXCEPTIONS
