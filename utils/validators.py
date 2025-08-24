@@ -7,14 +7,20 @@ user_permissions = {
         "borrow_book" : True,
         "return_book" : True,
         "view_books" : True,
-        "manage_books" : False,
+        "add_book" : True,
+        "edit_book" : False,
+        "delete_book" : False,
+        "search_book" : True,
         "manage_users" : False
     },
     "admin": {
         "borrow_book" : False,
         "return_book" : False,
         "view_books" : True,
-        "manage_books" : True,
+        "add_book" : True,
+        "edit_book" : True,
+        "delete_book" : True,
+        "search_book" : True,
         "manage_users" : True
     }
 }
