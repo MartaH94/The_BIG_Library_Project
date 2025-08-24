@@ -19,7 +19,6 @@ user_permissions = {
     }
 }
 
-def has_permission(user, action):
-    role = user.role
-    return user_permissions.get(role, {}).get(action, False)
+def has_permission(user: User, action: str) -> bool:
+    return user_permissions.get(user.role, {}).get(action, False)
 
