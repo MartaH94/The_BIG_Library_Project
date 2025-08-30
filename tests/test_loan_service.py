@@ -1,1 +1,1 @@
-# file for unit tests: authorisation service and authorisation handling
+# file for unit tests: loan service and loan handling

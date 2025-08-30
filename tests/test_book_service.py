@@ -1,4 +1,4 @@
-# file for unit tests: loan service and loan handling
+# file for unit tests: book service and book handling
 import unittest
 from models.book import Book
 from models.user import User
