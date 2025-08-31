@@ -12,8 +12,11 @@ class BookService:
 
     def add_book(self, book : Book):
         self.auth.check_permission("add_book")
-        self.books.append(book)
         
+        if not book.author or not book.title:
+           raise exc.InvalidBookDataError('Fields "author" and "title" cannot be empty.')
+        self.books.append(book)
+
     def edit_book(self, book : Book, title=None, author=None, year=None):
         self.auth.check_permission("edit_book")
         if book not in self.books:

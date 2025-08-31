@@ -15,6 +15,11 @@ class BookError(LibraryError):
     pass
 
 # CRUD operations
+class InvalidBookDataError(BookError):
+    """Raised ehen user tries to add a book with empty title or author."""
+    def __init__(self, message="Field author and title canot be empty", book=None):
+        super().__init__(message)
+        self.book = book
 class BookNotFoundError(BookError):
     """Book not found in the library."""
     pass
