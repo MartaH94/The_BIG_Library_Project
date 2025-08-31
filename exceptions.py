@@ -85,6 +85,8 @@ class AuthenticationError(UserError):
 
 class PermissionError(UserError):
     """User does not have permission to perform this operation."""
+    def __init__(self, message="User does not have permission to perform this operation"):
+        super().__init__(message)
     pass
 
 class UserValidationError(UserError):
