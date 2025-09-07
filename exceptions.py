@@ -16,13 +16,22 @@ class BookError(LibraryError):
 
 # CRUD operations
 class InvalidBookDataError(BookError):
-    """Raised ehen user tries to add a book with empty title or author."""
+    """Raised when user tries to add a book with empty title or author."""
     def __init__(self, message="Field author and title canot be empty", book=None):
         super().__init__(message)
         self.book = book
+
+class SearchValueError(BookError):
+    """Raised when no search criteria is provided."""
+    def __init__(self, message="At least one search criteria must be provided (title, author, year, or searched_term)"):
+        super().__init__(message)
+
 class BookNotFoundError(BookError):
-    """Book not found in the library."""
-    pass
+    """Raised when book not found in the library."""
+    def __init__(self, message="Book not found in the library", book=None):
+        super().__init__(message)
+        self.book = book
+    
 
 class BookAlreadyExistsError(BookError):
     """Book already exists in the library."""
@@ -39,9 +48,11 @@ class CategoryNotFoundError(BookError):
     pass
 
 # Validation
-class BookValidationError(BookError):
+class BookValidationError(BookError): 
     """Invalid book data."""
-    pass
+    def __init__(self, message="Invalid book data"):
+        super().__init__(message)
+
 
 
 # ------------------------------
