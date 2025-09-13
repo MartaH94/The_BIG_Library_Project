@@ -67,6 +67,9 @@ class TestBookService(unittest.TestCase):
         self.assertEqual(book_to_edit.author, "Edited Author")
         print(f"[PASS] test_edit_book_author: Book author changed to '{book_to_edit.author}' successfully.")
 
+    def test_edit_books_year(self):
+        print("\n[TEST CASE FOR: EDIT BOOK: test_edit_book_year: Edition of the book year]")
+
     def test_edit_book_not_found(self):
         print("\n[TEST CASE FOR: EDIT BOOK] edit_book_not_found: Trying to edit book which is not present in the library.")
         self.book = Book(author="Adam Mickiewicz", title="Pan Tadeusz", year=1834)
