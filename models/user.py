@@ -5,7 +5,7 @@ import exceptions as exc
 
 valid_roles = ["reader", "admin"]
 class User():
-    def __init__(self, user_id, email, role="reader"):
+    def __init__(self, user_id, email=None, role="reader"):
         if role not in valid_roles:
             raise exc.UserInvalidRole
         self.user_id = user_id

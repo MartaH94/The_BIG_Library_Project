@@ -6,6 +6,7 @@ user_permissions = {
     "reader" : {
         "borrow_book" : True,
         "return_book" : True,
+        "book_the_book" : True,
         "view_books" : True,
         "add_book" : True,
         "edit_book" : False,
@@ -16,6 +17,7 @@ user_permissions = {
     "admin": {
         "borrow_book" : False,
         "return_book" : False,
+        "book_the_book" : False,
         "view_books" : True,
         "add_book" : True,
         "edit_book" : True,
