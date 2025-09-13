@@ -18,7 +18,7 @@ class LoanService():
         self.authorisation = authorisation
 
         
-    def loan_book(self):
+    def loan_book(self): # this method is not done yet. I need manage JSON files first. 
         self.logged_user = User(user_id=self.user_id)
         self.authorisation.login()
 
