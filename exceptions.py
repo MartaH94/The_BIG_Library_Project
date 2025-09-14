@@ -7,6 +7,8 @@ class LibraryError(Exception):
     """Base exception for the entire library system."""
     pass
 
+
+
 # ------------------------------
 # BOOK-RELATED EXCEPTIONS (BookService)
 # ------------------------------
@@ -119,6 +121,11 @@ class ValidationError(LibraryError):
 class DatabaseError(LibraryError):
     """Error related to database operations or data storage."""
     pass
+
+class FileNotFound(LibraryError):
+    """File not found in the folder."""
+    def __init__(self, message="File doesn't exists in the catalogue."):
+        super().__init__(message)
 
 class FileError(LibraryError):
     """Error during file operations (JSON, CSV, etc.)."""
