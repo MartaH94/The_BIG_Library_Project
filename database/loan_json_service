@@ -1,0 +1,9 @@
+import json
+import utils.config as config
+import exceptions as exc
+from pathlib import Path
+from database.JSON_files_service import JsonFilesService
+
+class LoanJsonFileService():
+    def __init__(self):
+        pass

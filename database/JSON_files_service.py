@@ -31,9 +31,6 @@ class JsonFilesService():
 
         return f"Data had been saved to file: {self.file_path.name}"
 
-    def update_file_data(self):
-        pass
-
     def delete_data_from_file(self):
         pass
 

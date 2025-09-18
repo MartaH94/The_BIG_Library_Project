@@ -1,0 +1,15 @@
+import json
+import utils.config as config
+import exceptions as exc
+from pathlib import Path
+from database.JSON_files_service import JsonFilesService
+
+class BookJsonFileService():
+    def __init__(self, file_path, json_service):
+        self.file_path = file_path
+        self.json_service = JsonFilesService(self.file_path)
+
+    def update_file_data(self, book_id, field, new_value):
+        self.json_service.file_exists_checkout()
+        current_data = self.json_service.read_json_file()
+        
