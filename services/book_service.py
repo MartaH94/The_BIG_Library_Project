@@ -17,7 +17,7 @@ class BookService:
            raise exc.InvalidBookDataError('Fields "author" and "title" cannot be empty.')
         self.books.append(book)
 
-    def edit_book(self, book : Book, title=None, author=None, year=None): # In progress: here
+    def edit_book(self, book : Book, title=None, author=None, year=None): # Method not done yet.
         self.auth.check_permission("edit_book")
         if book not in self.books:
             raise exc.BookNotFoundError("Book not found in the library")

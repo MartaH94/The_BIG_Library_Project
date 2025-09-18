@@ -1,4 +1,8 @@
 # file for unit tests: book service and book handling
+
+# This is not a full list of Testcases to test yet. 
+
+
 import unittest
 from models.book import Book
 from models.user import User
