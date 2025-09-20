@@ -1,9 +1,19 @@
 import json
 import utils.config as config
 import exceptions as exc
-from pathlib import Path
+
+from utils.config import PROGRAM_USERS_FILE_PATH
 from database.JSON_files_service import JsonFilesService
+from services.authorisation_service import UserAuthorisation
 
 class LoanJsonFileService():
-    def __init__(self):
+    def __init__(self, json_service: JsonFilesService, authorisation: UserAuthorisation, file_path=PROGRAM_USERS_FILE_PATH):
+        self.json_service = json_service
+        self.authorisation = authorisation
+        self.file_path = file_path
+
+    def update_file_data(self):
+        pass
+
+    def delete_data_from_file(self):
         pass

@@ -31,15 +31,20 @@ class JsonFilesService():
 
         return f"Data had been saved to file: {self.file_path.name}"
 
-    def delete_data_from_file(self):
-        pass
-
     def file_exists_checkout(self):
         if not self.file_path.exists():
             self.write_json_data([])
             return "Created new file with empty list."
         else:
             return "The file exists. You can continue."
+        
+    def create_backup_file(self):
+        pass
+
+    def validate_file_data(self):
+        pass
+
+
 
         
 
