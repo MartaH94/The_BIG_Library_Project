@@ -57,6 +57,8 @@ class BookValidationError(BookError):
 
 
 
+
+
 # ------------------------------
 # LOAN AND RESERVATION EXCEPTIONS (LoanService)
 # ------------------------------
@@ -131,3 +133,7 @@ class FileError(LibraryError):
     """Error during file operations (JSON, CSV, etc.)."""
     pass
 
+class InvalidFieldError(FileError):
+    """Field to change in json file does not exist."""
+    def __init__(self, message="Field does not exists in the json file."):
+        super().__init__(message)
