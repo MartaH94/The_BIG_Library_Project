@@ -67,7 +67,9 @@ class LoanError(LibraryError):
     pass
 
 class LoanNotFoundError(LoanError):
-    """Loan record not found."""
+    """Loan record not found in database."""
+    def __init__(self, message="Loan ID not found in the loans file"):
+        super().__init__(message)
     pass
 
 class ReservationError(LoanError):
@@ -80,6 +82,8 @@ class AlreadyLoanedError(LoanError):
 
 class LoanValidationError(LoanError):
     """Invalid loan or reservation data."""
+    def __init__(self, message="Loan data are invalid or loan data are empty value."):
+        super().__init__(message)
     pass
 
 

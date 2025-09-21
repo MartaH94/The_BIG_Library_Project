@@ -12,7 +12,9 @@ user_permissions = {
         "edit_book" : False,
         "delete_book" : False,
         "search_book" : True,
-        "manage_users" : False
+        "manage_users" : False,
+        "delete_data" : False,
+        "edit_data" : False
     },
     "admin": {
         "borrow_book" : False,
@@ -23,7 +25,9 @@ user_permissions = {
         "edit_book" : True,
         "delete_book" : True,
         "search_book" : True,
-        "manage_users" : True
+        "manage_users" : True,
+        "delete_data" : True,
+        "Edit_data" : True
     }
 }
 
