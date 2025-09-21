@@ -95,8 +95,9 @@ class UserError(LibraryError):
     pass
 
 class UserNotFoundError(UserError):
-    """User not found."""
-    pass
+    """User not found in database json file."""
+    def __init__(self, message="User does not exist in users json file"):
+        super().__init__(message)
 
 class AuthenticationError(UserError):
     """Authentication or login error."""
@@ -110,7 +111,8 @@ class PermissionError(UserError):
 
 class UserValidationError(UserError):
     """Invalid user data."""
-    pass
+    def __init__(self, message="User ID data are invalid or user ID is empty value"):
+        super().__init__(message)
 
 class UserInvalidRole(UserError):
     """Invalid user role."""
