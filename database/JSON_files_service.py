@@ -4,6 +4,7 @@ import json
 import utils.config as config
 import exceptions as exc
 from pathlib import Path
+from datetime import datetime
 
 class JsonFilesService():
     def __init__(self, file_path: Path):
@@ -41,6 +42,29 @@ class JsonFilesService():
     def create_backup_file(self):
         if not self.file_path.exists():
             raise exc.FileNotFound("File not found in the folder.")
+        
+        name = self.file_path.stem
+        subfolder_backup = config.BACKUP_FILES_DIRECTORY/ name
+
+        if not subfolder_backup.exists():
+            subfolder_backup.mkdir(parents=True, exist_ok=True)
+
+        alias = config.PROJECT_ALIAS
+        timestamp = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")
+        backup_file_name = f"{alias}_{name}_{timestamp}.json"
+        backup_file_path = subfolder_backup/backup_file_name
+
+        try:
+            with self.file_path.open("r", encoding="utf-8") as f:
+                data = json.load(f)
+        except json.JSONDecodeError as e:
+            raise exc.FileError(f"Cannot read JSON file: {e}")
+            
+        with backup_file_path.open("w", encoding="utf-8") as f_backup:
+            json.dump(data, f_backup, ensure_ascii=False, indent=4)
+
+        return backup_file_path
+
 
     def validate_file_data(self):
         pass
