@@ -39,7 +39,8 @@ class JsonFilesService():
             return "The file exists. You can continue."
         
     def create_backup_file(self):
-        pass
+        if not self.file_path.exists():
+            raise exc.FileNotFound("File not found in the folder.")
 
     def validate_file_data(self):
         pass

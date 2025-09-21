@@ -143,3 +143,12 @@ class InvalidFieldError(FileError):
     """Field to change in json file does not exist."""
     def __init__(self, message="Field does not exists in the json file."):
         super().__init__(message)
+
+class BackupError(FileError):
+    """General error for backup file"""
+    pass
+
+class BackupPermissionError(FileError):
+    """Error during checking permission during creating or reading backup file"""
+    pass
+
