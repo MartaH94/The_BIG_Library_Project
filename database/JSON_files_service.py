@@ -66,9 +66,33 @@ class JsonFilesService():
         return backup_file_path
 
 
-    def validate_file_data(self):
-        pass
+    def validate_file_data(self, field_name):
+        if not self.file_path.exists():
+            raise exc.FileNotFound("File does not exist in program data directory.")
+        
+        self.file_exists_checkout()
+        try:
+            with self.file_path.open("r", encoding="utf-8") as f:
+                data = json.load(f)
+        except json.JSONDecodeError as e:
+            raise exc.FileError(f"Cannot read the file: {e} from program data directory.")
+        
 
+        field_found = False
+
+        for item in data:
+            if isinstance(item, dict) and field_name in item:
+                field_found = True
+                break
+
+            if not isinstance(item, list):
+                raise exc.FileError("File should be a list of items. Check file structure.")
+        
+            if not field_found:
+                raise exc.InvalidFieldError(f"The field {field_name} not found in the file: {self.file_path.name}")
+        
+        return f"File validation successful. Validated file {self.file_path.name}"
+    
 
 
         
