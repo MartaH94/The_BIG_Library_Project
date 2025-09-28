@@ -60,17 +60,19 @@ class JsonFilesService():
             json.dump(data, f, indent=4)
 
 
-    def append_data_to_file(self, data_to_append): # in progress
+    def append_data_to_file(self, data_to_append):
         """ Append new data to the JSON file.
         Args: data_to_append (dict) - Data to append to the JSON file.
         Returns: str - confirmation message."""
-        self.file_exists_checking()
         current_data = self.read_json_file() 
+        if not data_to_append:
+            raise exc.FileError("Data is empty. Cannot save dictionary to the file.")
+        if not isinstance(data_to_append, dict):
+            raise exc.FileError("Data is not a dictionary. Cannot save data to the file.")
+
         current_data.append(data_to_append)
-
-        self.validate_file_data()
+        # self.validate_file_data()
         self.write_json_data(current_data)
-
         return f"Data had been saved to file: {self.file_path.name}"
 
     
