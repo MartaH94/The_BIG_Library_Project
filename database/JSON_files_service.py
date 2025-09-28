@@ -29,20 +29,27 @@ class JsonFilesService():
                 return "File was empty. Created new file with empty list."
         else:
             return "The file exists. You can continue."
-        
+            
     def read_json_file(self):
         """ Read and return data from the JSON file.
-        Returns: list - Data from the JSON file."""
-        self.file_exists_checkout()
+        Returns: list - Data read from the JSON file. If the file is empty, returns an empty list."""
+        self.file_exists_checking()
         try:
             with self.file_path.open("r", encoding="utf-8") as f:
+                if self.file_path.stat().st_size == 0:
+                    return []
                 data = json.load(f)
+                if data is None:
+                    return []
+                if not isinstance(data, list):
+                    raise exc.FileError("File should be a list of items. Check file structure.")
                 return data
-        except json.JSONDecodeError:
-            return []
+        except json.JSONDecodeError as e:
+            raise exc.FileError(f"Cannot read the file: {e} from program data directory.")
+        
         
     def write_json_data(self, data):
-        self.file_exists_checkout()
+        self.file_exists_checking()
 
         with self.file_path.open("w", encoding="utf-8") as f:
             json.dump(data, f, indent=4)
@@ -52,7 +59,7 @@ class JsonFilesService():
         """ Append new data to the JSON file.
         Args: data_to_append (dict) - Data to append to the JSON file.
         Returns: str - confirmation message."""
-        self.file_exists_checkout()
+        self.file_exists_checking()
         current_data = self.read_json_file() 
         current_data.append(data_to_append)
 
@@ -67,7 +74,7 @@ class JsonFilesService():
         if not self.file_path.exists():
             raise exc.FileNotFound("File does not exist in program data directory.")
         
-        self.file_exists_checkout()
+        self.file_exists_checking()
         try:
             with self.file_path.open("r", encoding="utf-8") as f:
                 data = json.load(f)
