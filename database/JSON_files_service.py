@@ -49,8 +49,13 @@ class JsonFilesService():
         
         
     def write_json_data(self, data):
+        """ Write data to the JSON file.
+        Args: data (list) - Data to write to the JSON file. """
         self.file_exists_checking()
-
+        if data is None:
+            raise exc.FileError("Data is None. Cannot save data to the file.")
+        if not isinstance(data, list):
+            raise exc.FileError("Data is not a list. Cannot save data to the file.")        
         with self.file_path.open("w", encoding="utf-8") as f:
             json.dump(data, f, indent=4)
 
