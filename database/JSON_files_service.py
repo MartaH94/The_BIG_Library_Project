@@ -16,12 +16,17 @@ class JsonFilesService():
     def __init__(self, file_path: Path):
         self.file_path = file_path
 
-    def file_exists_checkout(self):
+    def file_exists_checking(self):
         """ Check if the JSON file exists; if not, create new file with empty list.
-        Returns: str - Confirmation message. """
+        Returns: str - Message indicating the status of the file."""
+        file_content = []
+
         if not self.file_path.exists():
-            self.write_json_data([])
-            return "Created new file with empty list."
+            self.write_json_data(file_content)
+            return "File didn't exist. Created new file with empty list."
+        elif self.file_path.stat().st_size == 0:
+                self.write_json_data(file_content)
+                return "File was empty. Created new file with empty list."
         else:
             return "The file exists. You can continue."
         
