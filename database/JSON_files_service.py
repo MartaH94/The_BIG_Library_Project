@@ -62,7 +62,7 @@ class JsonFilesService():
 
     def append_data_to_file(self, data_to_append):
         """ Append new data to the JSON file.
-        Args: data_to_append (dict) - Data to append to the JSON file.
+        Args: data_to_append (dict) - Data to append to the JSON file must be dictionary of data to append like new user data or new book data, etc.
         Returns: str - confirmation message."""
         current_data = self.read_json_file() 
         if not data_to_append:
@@ -73,41 +73,38 @@ class JsonFilesService():
         current_data.append(data_to_append)
         # self.validate_file_data()
         self.write_json_data(current_data)
-        return f"Data had been saved to file: {self.file_path.name}"
+        return f"Data had been added and saved to file: {self.file_path.name}"
 
     
 
     def validate_file_data(self, field_name):
+        """ Validate that the JSON file contains the specified field in its items.
+        Args: field_name (str) - The field name to validate in the JSON file items
+        Returns: str - Confirmation message if validation is successful."""
         if not self.file_path.exists():
-            raise exc.FileNotFound("File does not exist in program data directory.")
-        
-        self.file_exists_checking()
+            raise exc.FileNotFound("File not found. Cannot find file in the directory.")
         try:
             with self.file_path.open("r", encoding="utf-8") as f:
                 data = json.load(f)
+                if not isinstance(data, list):
+                    raise exc.FileError("File should be a list of items. Check file structure.")        
         except json.JSONDecodeError as e:
             raise exc.FileError(f"Cannot read the file: {e} from program data directory.")
         
-
         field_found = False
-
-        for item in data:
+        for item in data:    
             if isinstance(item, dict) and field_name in item:
                 field_found = True
                 break
-
-            if not isinstance(item, list):
-                raise exc.FileError("File should be a list of items. Check file structure.")
-        
-            if not field_found:
+            if not isinstance(item, dict):
+                raise exc.FileError("File should be a list of items. Check file structure.")          
+        if not field_found:
                 raise exc.InvalidFieldError(f"The field {field_name} not found in the file: {self.file_path.name}")
-        
         return f"File validation successful. Validated file {self.file_path.name}"
 
     def create_backup_file(self):
         if not self.file_path.exists():
-            raise exc.FileNotFound("File not found in the folder.")
-        
+            raise exc.FileNotFound("File does not exist in the directory.")
         name = self.file_path.stem
         subfolder_backup = config.BACKUP_FILES_DIRECTORY/ name
 
@@ -115,19 +112,13 @@ class JsonFilesService():
             subfolder_backup.mkdir(parents=True, exist_ok=True)
 
         alias = config.PROJECT_ALIAS
-        timestamp = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         backup_file_name = f"{alias}_{name}_{timestamp}.json"
         backup_file_path = subfolder_backup/backup_file_name
-
-        try:
-            with self.file_path.open("r", encoding="utf-8") as f:
-                data = json.load(f)
-        except json.JSONDecodeError as e:
-            raise exc.FileError(f"Cannot read JSON file: {e}")
+        data = self.read_json_file()
             
         with backup_file_path.open("w", encoding="utf-8") as f_backup:
-            json.dump(data, f_backup, ensure_ascii=False, indent=4)
-
+            json.dump(data, f_backup, ensure_ascii=False, indent=4, sort_keys=True)
         return backup_file_path
 
 
