@@ -15,8 +15,6 @@ import exceptions as exc
 
 class TestJsonServices(unittest.TestCase):
     def setUp(self):
-        self.json_services = json_services.JsonFilesService()
-
         self.admin_user = User(user_id="Marta.Boss", email="marta@mail.com", role="admin")
         self.admin_authorisation = UserAuthorisation()
         self.admin_authorisation.login(self.admin_user)
@@ -26,12 +24,14 @@ class TestJsonServices(unittest.TestCase):
         self.reader_authorisation.login(self.reader_user)
 
         self.test_directory = tempfile.TemporaryDirectory()
-        self.test_file = Path(self.test_directory)/"testing_file.json"
-        self. test_file.write_text("Sample data : it requires improvement here.", encoding="utf-8")
+        self.test_file = Path(self.test_directory.name)/"testing_file.json"
+        self.test_file.write_text("[]", encoding="utf-8")
+        self.json_services = json_services.JsonFilesService(file_path=self.test_file)
 
 
     def tearDown(self):
         self.test_directory.cleanup()
+
 
     def test_checking_file_exists(self):
         print("TEST CASE FOR: test_checking_file_exists: Check if the JSON file exists")
