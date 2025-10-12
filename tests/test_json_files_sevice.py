@@ -24,3 +24,18 @@ class TestJsonServices(unittest.TestCase):
         self.reader_authorisation = UserAuthorisation()
         self.reader_authorisation.login(self.reader_user)
 
+    def test_checking_file_exists(self):
+        print("TEST CASE FOR: test_checking_file_exists: Check if the JSON file exists")
+        file_to_check = self.json_services.file_path
+        self.json_services.file_exists_checking(file_to_check)
+        self.assertEqual(file_to_check, [], msg="result - created new file with empty list")
+
+
+
+
+
+
+if __name__ == '__main__':
+    unittest.main(verbosity=2)
+
+    
