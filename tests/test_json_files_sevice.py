@@ -24,6 +24,14 @@ class TestJsonServices(unittest.TestCase):
         self.reader_authorisation = UserAuthorisation()
         self.reader_authorisation.login(self.reader_user)
 
+        self.test_directory = tempfile.TemporaryDirectory()
+        self.test_file = Path(self.test_directory)/"testing_file.json"
+        self. test_file.write_text("Sample data : it requires improvement here.", encoding="utf-8")
+
+
+    def tearDown(self):
+        self.test_directory.cleanup()
+
     def test_checking_file_exists(self):
         print("TEST CASE FOR: test_checking_file_exists: Check if the JSON file exists")
         file_to_check = self.json_services.file_path
@@ -38,4 +46,3 @@ class TestJsonServices(unittest.TestCase):
 if __name__ == '__main__':
     unittest.main(verbosity=2)
 
-    
