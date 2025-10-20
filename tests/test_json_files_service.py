@@ -6,7 +6,8 @@ import json
 
 from models.user import User
 from services.authorisation_service import UserAuthorisation
-import database.json_files_major_services as json_services
+import database.json_files_major_services as json_files_major_services
+
 
 from pathlib import Path
 import utils.config as config
@@ -26,7 +27,7 @@ class TestJsonServices(TestCase):
         self.test_directory = tempfile.TemporaryDirectory()
         self.test_file = Path(self.test_directory.name)/"testing_file.json"
         self.test_file.write_text("[]", encoding="utf-8")
-        self.json_services = json_services.JsonFilesService(file_path=self.test_file)
+        self.json_services = json_files_major_services.JsonFilesService(file_path=self.test_file)
 
 
     def tearDown(self):
@@ -36,7 +37,7 @@ class TestJsonServices(TestCase):
     def test_checking_file_exists(self):
         """Test that the JSON file existence check works and creates a new file if needed."""
         file_to_check = self.json_services.file_path
-        self.json_services.file_exists_checking(file_to_check)
+        self.json_services.file_exists_checking()
         with open(file_to_check, encoding="utf-8") as f:
             file_content = json.load(f)
 
