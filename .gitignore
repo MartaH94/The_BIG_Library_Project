@@ -12,3 +12,7 @@ utils/__pycache__/__init__.cpython-312.pyc
 tests/__pycache__/test_loan_service.cpython-312.pyc
 utils/__pycache__/validators.cpython-312.pyc
 tests/__init__.py
+utils/__pycache__/config.cpython-312.pyc
+tests/__pycache__/test_json_files_sevice.cpython-312.pyc
+database/__pycache__/database_schemes.cpython-312.pyc
+database/__pycache__/json_files_major_services.cpython-312.pyc

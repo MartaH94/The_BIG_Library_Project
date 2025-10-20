@@ -2,7 +2,6 @@
 
 import unittest
 import tempfile
-import shutil
 import json
 
 from models.user import User
@@ -12,8 +11,9 @@ import database.json_files_major_services as json_services
 from pathlib import Path
 import utils.config as config
 import exceptions as exc
+from unittest import TestCase
 
-class TestJsonServices(unittest.TestCase):
+class TestJsonServices(TestCase):
     def setUp(self):
         self.admin_user = User(user_id="Marta.Boss", email="marta@mail.com", role="admin")
         self.admin_authorisation = UserAuthorisation()
@@ -34,10 +34,13 @@ class TestJsonServices(unittest.TestCase):
 
 
     def test_checking_file_exists(self):
-        print("TEST CASE FOR: test_checking_file_exists: Check if the JSON file exists")
+        """Test that the JSON file existence check works and creates a new file if needed."""
         file_to_check = self.json_services.file_path
         self.json_services.file_exists_checking(file_to_check)
-        self.assertEqual(file_to_check, [], msg="result - created new file with empty list")
+        with open(file_to_check, encoding="utf-8") as f:
+            file_content = json.load(f)
+
+        self.assertEqual(file_content, [], msg="Checking if the json file exist. If not, should create a new file with empty list and return status ok.")
 
 
 
