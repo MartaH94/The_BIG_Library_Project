@@ -34,7 +34,7 @@ class TestJsonServices(TestCase):
         self.test_directory.cleanup()
 
 
-    def test_checking_file_exists(self):
+    def test_checking_file_exists(self):    # test ok
         """Test that the JSON file existence check works and creates a new file if needed."""
         file_to_check = self.json_services.file_path
         self.json_services.file_exists_checking()
@@ -42,6 +42,26 @@ class TestJsonServices(TestCase):
             file_content = json.load(f)
 
         self.assertEqual(file_content, [], msg="Checking if the json file exist. If not, should create a new file with empty list and return status ok.")
+
+
+    def test_checking_file_open(self):
+        """Test that the file open operation can be performed without errors."""
+        file_to_open = self.json_services.file_path
+         
+        self.json_services.read_json_file()
+        with open(file_to_open, encoding="utf-8") as f:
+            f.read()
+
+        
+
+    def test_check_file_is_readable(self):
+        """Test that the data in the file is not corrupt."""
+        pass
+
+    def test_check_file_returns_correct_data(self):
+        """Test that the file after opening operation is displaying correct data."""
+        pass
+
 
 
 
