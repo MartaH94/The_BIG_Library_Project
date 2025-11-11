@@ -33,7 +33,7 @@ class JsonFilesService():
             return "The file exists. You can continue."
 
 
-    def read_json_file(self):
+    def read_json_file(self):   # LOAD JSON FILE instead of read json file to read json file content and return data for further process
         """ Read and return data from the JSON file.
         Returns: list - Data read from the JSON file. If the file is empty, returns an empty list."""
         self.file_exists_checking()
@@ -78,7 +78,7 @@ class JsonFilesService():
         return f"Data had been added and saved to file: {self.file_path.name}"
       
 
-    def validate_file_data(self, field_name):
+    def validate_file_data(self, field_name): #collects data from file loading function, check if data in file is correct, return true/false or exception when data is incorrect.
         """ Validate that the JSON file contains the specified field in its items.
         Args: field_name (str) - The field name to validate in the JSON file items
         Returns: str - Confirmation message if validation is successful."""
