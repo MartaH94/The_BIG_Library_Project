@@ -56,7 +56,11 @@ class TestJsonServices(TestCase):
 
     def test_check_file_is_readable(self):
         """Test that the data in the file is not corrupt."""
-        pass
+        file_to_validate = self.json_services.file_path
+        self.json_services.validate_file_data()
+        with open(file_to_validate, encoding="utf-8") as f:
+            f.read()
+            
 
     def test_check_file_returns_correct_data(self):
         """Test that the file after opening operation is displaying correct data."""
