@@ -64,7 +64,7 @@ class JsonFilesService():
         """ Append new data to the JSON file.
         Args: data_to_append (dict) - Data to append to the JSON file must be dictionary of data to append like new user data or new book data, etc.
         Returns: str - confirmation message."""
-        current_data = self.read_json_file() 
+        current_data = self.load_json_file() 
         if not data_to_append:
             raise exc.ValidationError("Data is empty. Cannot save dictionary to the file.")
         if not isinstance(data_to_append, dict):
@@ -74,7 +74,7 @@ class JsonFilesService():
         self.write_json_data(current_data)
         return f"Data had been added and saved to file: {self.file_path.name}"
       
-
+#check this method. Look for code duplicates! 
     def validate_file_data(self, field_name): #collects data from file loading function, check if data in file is correct, return true/false or exception when data is incorrect.
         """ Validate that the JSON file contains the specified field in its items.
         Args: field_name (str) - The field name to validate in the JSON file items

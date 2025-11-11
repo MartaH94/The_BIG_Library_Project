@@ -44,25 +44,21 @@ class TestJsonServices(TestCase):
         self.assertEqual(file_content, [], msg="Checking if the json file exist. If not, should create a new file with empty list and return status ok.")
 
 
-    def test_reading_data_file(self):
-        """Test that the file open operation can be performed without errors."""
-        file_to_open = self.json_services.file_path
-         
-        self.json_services.read_json_file()
-        with open(file_to_open, encoding="utf-8") as f:
-            f.read()
-
+    def test_load_json_file(self):
+        """Test that the file load operation can be performed without errors,verifies the returned data type is a list, 
+            and ensures the file remains readable after loading.
+        """
+        result = self.json_services.load_json_file()
+        self.assertIsInstance(result, list, msg="The loaded JSON data from load_json_file() should be a list.")
         
 
 
-
-    # def test_validate_file_data_tc_file_in_directory(self):
-    #     """Test that the data in the file is not corrupt."""
-    #     file_to_validate = self.json_services.file_path
-    #     self.json_services.validate_file_data()
+    def test_validate_file_data(self):
+        """Test that the data in the file is list"""
+        
+        self.json_services.validate_file_data()
                 
-        # with open(file_to_validate, encoding="utf-8") as f:
-        #     f.read()
+        
 
 
 
