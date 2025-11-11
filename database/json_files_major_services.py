@@ -33,17 +33,14 @@ class JsonFilesService():
             return "The file exists. You can continue."
 
 
-    def read_json_file(self):   # LOAD JSON FILE instead of read json file to read json file content and return data for further process
-        """ Read and return data from the JSON file.
-        Returns: list - Data read from the JSON file. If the file is empty, returns an empty list."""
+    def load_json_file(self):   # LOAD JSON FILE instead of read json file to read json file content and return data for further process
+        """Read JSON file content.
+        Returns: list - Data read from the JSON file."""
         self.file_exists_checking()
+        
         try:
             with self.file_path.open("r", encoding="utf-8") as f:
-                if self.file_path.stat().st_size == 0:
-                    return []
                 data = json.load(f)
-                if data is None:
-                    return []
                 if not isinstance(data, list):
                     raise exc.FileError("File should be a list of items. Check file structure.")
                 return data
