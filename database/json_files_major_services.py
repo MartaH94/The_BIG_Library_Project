@@ -87,18 +87,19 @@ class JsonFilesService():
         try:
             with self.file_path.open("r", encoding="utf-8") as f:
                 data = json.load(f)
-                if not isinstance(data, list):
-                    raise exc.FileError("File should be a list of items. Check file structure.")        
+            if self.file_path.stat().st_size == 0:                    
+                raise exc.ValidationError("File is empty. Check your file data.")                
+            if not isinstance(data, list):
+                raise exc.FileError("File should be a list of items. Check file structure.")        
         except json.JSONDecodeError as e:
             raise exc.FileError(f"Cannot read the file: {e} from program data directory.")
-        
-        schemas = database_schemes
+                
         field_found = False
         for item in data:
             if not isinstance(item, dict):
                 raise exc.FileError("File should be a list of items. Check file structure.")  
             
-            for field, expected_type in schemas.items():
+            for field, expected_type in database_schemes.items():
                 if field not in item:
                     raise exc.InvalidFieldError(f"The field {field} not found in the file: {self.file_path.name}")
                 if not isinstance(item[field], expected_type):
@@ -108,6 +109,7 @@ class JsonFilesService():
         if not field_found:
                 raise exc.InvalidFieldError(f"The field {field_name} not found in the file: {self.file_path.name}")
         return f"File validation successful. Validated file {self.file_path.name}"
+        # I'm not checking if the file is empty in that function. Add an if statement in code of this function.
 
 
     def create_backup_file(self):
