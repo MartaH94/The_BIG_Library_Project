@@ -82,13 +82,16 @@ class JsonFilesService():
         Returns: str - Confirmation message if validation is successful."""
         self.file_exists_checking()
         file_content = self.load_json_file()
-                
+
+        if not file_content:
+            raise exc.ValidationError(f"File {self.file_path.name} is empty. Cannot validate fields in an empty file.")    
+        # check here the order of this method's code.
         field_found = False
         for item in file_content:
             if not isinstance(item, dict):
-                raise exc.FileError("File should be a list of items. Check file structure.")  
+                raise exc.FileError("File should be a list of items (dict). Check file structure.")  
             
-            for field, expected_type in database_schemes.items():
+            for field, expected_type in database_schemes.items():   # module database_schemes is located in database directory.
                 if field not in item:
                     raise exc.InvalidFieldError(f"The field {field} not found in the file: {self.file_path.name}")
                 if not isinstance(item[field], expected_type):
