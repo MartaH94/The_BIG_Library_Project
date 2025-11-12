@@ -30,10 +30,11 @@ class JsonFilesService():
                 self.write_json_data(file_content)
                 return "File was empty. Created new file with empty list."
         else:
-            return "The file exists. You can continue."
+            return "File verified: existing or newly created with empty list."
 
 
-    def load_json_file(self):   # LOAD JSON FILE instead of read json file to read json file content and return data for further process
+
+    def load_json_file(self):   # previously read_json_file; method to read json file content and return data for further process
         """Read JSON file content.
         Returns: list - Data read from the JSON file."""
         self.file_exists_checking()
@@ -79,20 +80,11 @@ class JsonFilesService():
         """ Validate that the JSON file contains the specified field in its items.
         Args: field_name (str) - The field name to validate in the JSON file items
         Returns: str - Confirmation message if validation is successful."""
-        if not self.file_path.exists():
-            raise exc.FileNotFound("File not found. Cannot find file in the directory.")
-        try:
-            with self.file_path.open("r", encoding="utf-8") as f:
-                data = json.load(f)
-            if self.file_path.stat().st_size == 0:                    
-                raise exc.ValidationError("File is empty. Check your file data.")                
-            if not isinstance(data, list):
-                raise exc.FileError("File should be a list of items. Check file structure.")        
-        except json.JSONDecodeError as e:
-            raise exc.FileError(f"Cannot read the file: {e} from program data directory.")
+        self.file_exists_checking()
+        file_content = self.load_json_file()
                 
         field_found = False
-        for item in data:
+        for item in file_content:
             if not isinstance(item, dict):
                 raise exc.FileError("File should be a list of items. Check file structure.")  
             
@@ -106,7 +98,7 @@ class JsonFilesService():
         if not field_found:
                 raise exc.InvalidFieldError(f"The field {field_name} not found in the file: {self.file_path.name}")
         return f"File validation successful. Validated file {self.file_path.name}"
-        # I'm not checking if the file is empty in that function. Add an if statement in code of this function.
+        # I AM NOT checking if the file is empty in that function. Add an if statement in code of this function.. what? why? 
 
 
     def create_backup_file(self):
