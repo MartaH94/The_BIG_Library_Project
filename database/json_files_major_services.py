@@ -75,7 +75,7 @@ class JsonFilesService():
         self.write_json_data(current_data)
         return f"Data had been added and saved to file: {self.file_path.name}"
       
-#check this method. Look for code duplicates! 
+
     def validate_file_data(self, field_name): #collects data from file loading function, check if data in file is correct, return true/false or exception when data is incorrect.
         """ Validate that the JSON file contains the specified field in its items.
         Args: field_name (str) - The field name to validate in the JSON file items
@@ -85,8 +85,6 @@ class JsonFilesService():
 
         if not file_content:
             raise exc.ValidationError(f"File {self.file_path.name} is empty. Cannot validate fields in an empty file.")    
-        # check here the order of this method's code.
-        field_found = False
         for item in file_content:
             if not isinstance(item, dict):
                 raise exc.FileError("File should be a list of items (dict). Check file structure.")  
@@ -96,12 +94,9 @@ class JsonFilesService():
                     raise exc.InvalidFieldError(f"The field {field} not found in the file: {self.file_path.name}")
                 if not isinstance(item[field], expected_type):
                     raise exc.ValidationError(f"Incorrect data type for field: {field}.")
-            if  field_name in item:
-                field_found = True             
-        if not field_found:
-                raise exc.InvalidFieldError(f"The field {field_name} not found in the file: {self.file_path.name}")
-        return f"File validation successful. Validated file {self.file_path.name}"
-        # I AM NOT checking if the file is empty in that function. Add an if statement in code of this function.. what? why? 
+            
+        # Zaimplementuj metodę: Walidacja zagnieżdżonych struktur (zagnieżdżanie słowników)
+        # Zaimplementuj metodę: Sprawdzanie spójności danych (np czy pole "status" przyjmuje tylko konkretne wartości)
 
 
     def create_backup_file(self):
