@@ -76,7 +76,7 @@ class JsonFilesService():
         return f"Data had been added and saved to file: {self.file_path.name}"
       
 
-    def validate_file_data(self, field_name): #collects data from file loading function, check if data in file is correct, return true/false or exception when data is incorrect.
+    def validate_file_data(self): #collects data from file loading function, check if data in file is correct, return true/false or exception when data is incorrect.
         """ Validate that the JSON file contains the specified field in its items.
         Args: field_name (str) - The field name to validate in the JSON file items
         Returns: str - Confirmation message if validation is successful."""
