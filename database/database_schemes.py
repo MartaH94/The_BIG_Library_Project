@@ -37,8 +37,16 @@ database_schemes = {
         "book_status": str,
         "borrower_id": str,
         "due_date": date
-    }
+    },
 
+    "Loan": {
+        "id": int
+
+    },
+
+    "reservation": {
+        "user_id": int
+    }
 
 
 }
