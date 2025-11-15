@@ -1,7 +1,7 @@
 # class user to represent a user in te library or administrator
 
 import exceptions as exc
-
+from utils.validators import user_permissions
 
 valid_roles = ["reader", "admin", "librarian", "guest", "moderator"]
 class User():
