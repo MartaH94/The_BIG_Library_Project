@@ -3,7 +3,7 @@
 import exceptions as exc
 
 
-valid_roles = ["reader", "admin"]
+valid_roles = ["reader", "admin", "librarian", "guest", "moderator"]
 class User():
     def __init__(self, user_id, email=None, role="reader"):
         if role not in valid_roles:
