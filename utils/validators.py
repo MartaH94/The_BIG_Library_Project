@@ -154,6 +154,31 @@ user_permissions = {
     }
 }
 
-def has_permission(user: User, action: str) -> bool:
-    return user_permissions.get(user.role, {}).get(action, False)
+
+def has_permission(user: User, action_path):
+    """This function checks if a user has permission to perform a specific action.
+
+    Args:
+        user (User): _user object_
+        action_path (_type_): _path to the action in the permissions dict e.g. "books.borrow_book"
+
+    Returns:
+        _type_: bool: True if user has permission, False if user does not have permission.
+    """
+    permissions_path =  action_path.split(".")
+    permission = user_permissions.get(user.role, {})
+    
+    for key in permissions_path:
+        if not isinstance(permission, dict):
+            return False
+        permission = permission.get(key, None)
+        if permission is None:
+            return False
+        
+    return bool(permission)
+
+
+
+
+
 
