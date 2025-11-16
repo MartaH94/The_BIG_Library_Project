@@ -1,8 +1,9 @@
 # class user to represent a user in te library or administrator
-
+""" This module defines the User class for representing users in the library management system.
+    """
 
 import exceptions as exc
-from utils.validators import user_permissions
+
 
 valid_roles = ["reader", "admin", "librarian", "guest", "moderator"]
 class User():
@@ -37,3 +38,6 @@ class User():
 
     def __repr__(self):
         return f"User id: {self.user_id}, user email: {self.email}, user role: {self.role}"
+    
+
+    
