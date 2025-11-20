@@ -3,7 +3,7 @@ import utils.config as config
 import exceptions as exc
 
 from utils.config import PROGRAM_USERS_FILE_PATH
-from database.JSON_files_service import JsonFilesService
+from database.json_files_major_services import JsonFilesService
 from services.authorisation_service import UserAuthorisation
 
 class LoanJsonFileService():
@@ -14,8 +14,8 @@ class LoanJsonFileService():
 
     def update_file_data(self, loan_id, field, new_value):
         self.authorisation.check_permission("edit_data")
-        self.json_service.file_exists_checkout
-        current_data = self.json_service.read_json_file()
+        self.json_service.file_exists_checking()
+        current_data = self.json_service.load_json_file()
 
         if not new_value:
             return "Information to user, that new value can not be empty field"
@@ -37,8 +37,8 @@ class LoanJsonFileService():
 
     def delete_data_from_file(self, loan_id):
         self.authorisation.check_permission("delete_data")
-        self.json_service.file_exists_checkout()
-        current_data = self.json_service.read_json_file()
+        self.json_service.file_exists_checking
+        current_data = self.json_service.load_json_file()
         
         if not loan_id:
             raise exc.LoanValidationError("Loan data are empty field or have invalid value.")

@@ -1,4 +1,4 @@
-# managing registration, login, and authorisation of users
+# managing registration, login, permissions and authorisation of users
 
 from models.user import User
 import exceptions as exc

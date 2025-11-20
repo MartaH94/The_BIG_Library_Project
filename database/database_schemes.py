@@ -11,7 +11,7 @@ from datetime import date, datetime
 
 database_schemes = {
     "User" : {
-        "id": int,
+        "user_id": int,
         "role": list(valid_roles),
         "is_active": bool,
         "last_login": datetime,
@@ -27,7 +27,7 @@ database_schemes = {
     },
 
     "Book":{
-        "id": int,
+        "book_id": int,
         "title": str,
         "author": str,
         "isbn": str,
@@ -40,22 +40,29 @@ database_schemes = {
     },
 
     "Loan": {
-        "id": int
+        "loan_id": int,
+        "user_id": int,
+        "book_id": int,
+        "loan_date": date,
+        "return_date": date,
+        
 
     },
 
     "reservation": {
-        "user_id": int
+        "reservation_id": int,
+        "user_id": int,
+        "book_id": int,
+        "reservation_date": date
+    },
+    
+    "backup":{
+        "file_name": str,
+        "backup_date": date
     }
 
 
 }
 
 
-userSchema = {"id": int, "name": str, "email": "str", "role": str}
-bookSchema = {"id": int, "title": str, "author": str, "year": int, "isbn": str, "available": bool}
-loanSchema = {"id": int, "user_id": int, "book_id": int, "loan_date": str, "return_date": str, "returned": bool}
-reservationSchema = {"id": int, "user_id": int, "book_id": int, "reservation_date": str, "fulfilled": bool}
-backupSchema = {"file_name": str, "backup_date": str, "size": int}
-backupFileSchema = {"file_name": str, "backup_date": str, "size": int}
 
