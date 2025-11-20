@@ -15,8 +15,9 @@ from datetime import datetime
 class JsonFilesService():
     """ Service to handle JSON file operations."""
 
-    def __init__(self, file_path: Path):
+    def __init__(self, file_path: Path, schema: dict):
         self.file_path = file_path
+        self.schema = schema
 
     def file_exists_checking(self):
         """ Check if the JSON file exists; if not, create new file with empty list.
@@ -76,6 +77,23 @@ class JsonFilesService():
         return f"Data had been added and saved to file: {self.file_path.name}"
       
 
+
+    def validate_against_schema(self, data, schema):
+        if isinstance(schema, dict):
+            if not isinstance(data, dict):
+                raise exc.ValidationError(f"Given value {data} should be a dictionary")
+            for key, subschema in schema.items():
+                if key not in data:
+                    raise exc.ValidationError(f"Missing key {key} in {subschema}")
+                self.validate_against_schema(data[key], subschema)
+        else:
+            if not isinstance(data, schema):
+                raise exc.ValidationError("Wrong type ")
+
+
+
+
+
     def validate_file_data(self): #collects data from file loading function, check if data in file is correct, return true/false or exception when data is incorrect.
         """ Validate that the JSON file contains the specified field in its items.
         Args: field_name (str) - The field name to validate in the JSON file items
@@ -84,19 +102,12 @@ class JsonFilesService():
         file_content = self.load_json_file()
 
         if not file_content:
-            raise exc.ValidationError(f"File {self.file_path.name} is empty. Cannot validate fields in an empty file.")    
-        for item in file_content:
+            raise exc.ValidationError(f"File {self.file_path.name} is empty. Cannot validate fields in an empty file.")  
+        for index, item in enumerate(file_content):
             if not isinstance(item, dict):
-                raise exc.FileError("File should be a list of items (dict). Check file structure.")  
-            
-            for field, expected_type in database_schemes.items():   # module database_schemes is located in database directory.
-                if field not in item:
-                    raise exc.InvalidFieldError(f"The field {field} not found in the file: {self.file_path.name}")
-                if not isinstance(item[field], expected_type):
-                    raise exc.ValidationError(f"Incorrect data type for field: {field}.")
-            
-        # Zaimplementuj metodę: Walidacja zagnieżdżonych struktur (zagnieżdżanie słowników)
-        # Zaimplementuj metodę: Sprawdzanie spójności danych (np czy pole "status" przyjmuje tylko konkretne wartości)
+                raise exc.ValidationError(f"The record {index+1} is not a dictionary.")
+            self.validate_against_schema(item, self.schema)
+
 
 
     def create_backup_file(self):
