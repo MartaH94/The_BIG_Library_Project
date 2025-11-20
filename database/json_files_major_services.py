@@ -79,6 +79,17 @@ class JsonFilesService():
 
 
     def validate_against_schema(self, data, schema):
+        """The method to validate values type
+
+        Args:
+            data (_type_): _description_
+            schema (_type_): _description_
+
+        Raises:
+            exc.ValidationError: _description_
+            exc.ValidationError: _description_
+            exc.ValidationError: _description_
+        """
         if isinstance(schema, dict):
             if not isinstance(data, dict):
                 raise exc.ValidationError(f"Given value {data} should be a dictionary")
@@ -89,9 +100,6 @@ class JsonFilesService():
         else:
             if not isinstance(data, schema):
                 raise exc.ValidationError("Wrong type ")
-
-
-
 
 
     def validate_file_data(self): #collects data from file loading function, check if data in file is correct, return true/false or exception when data is incorrect.
