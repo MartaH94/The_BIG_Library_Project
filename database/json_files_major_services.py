@@ -79,10 +79,10 @@ class JsonFilesService():
 
 
     def validate_against_schema(self, data, schema):
-        """The method to validate values type
+        """The method to validate values type and structure against the given schema.
 
         Args:
-            data (_type_): _description_
+            data (): 
             schema (_type_): _description_
 
         Raises:
