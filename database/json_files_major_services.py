@@ -53,11 +53,12 @@ class JsonFilesService():
     def write_json_data(self, data):
         """ Write data to the JSON file.
         Args: data (list) - Data to write to the JSON file. """
-        self.file_exists_checking()
-        if data is None:
-            raise exc.FileError("File data is None. Cannot save data to the file.")
+
+        if not data:
+            raise exc.FileError("Data is empty. Cannot save empty data to the file.")
         if not isinstance(data, list):
-            raise exc.FileError("Data is not a list. Cannot save data to the file.")        
+            raise exc.FileError("Data is not a list. Cannot save data to the file.") 
+        self.validate_against_schema(data,[self.schema])       
         with self.file_path.open("w", encoding="utf-8") as f:
             json.dump(data, f, indent=4, sort_keys=True)
 
@@ -66,12 +67,12 @@ class JsonFilesService():
         """ Append new data to the JSON file.
         Args: data_to_append (dict) - Data to append to the JSON file must be dictionary of data to append like new user data or new book data, etc.
         Returns: str - confirmation message."""
+
         current_data = self.load_json_file() 
         if not data_to_append:
-            raise exc.ValidationError("Data is empty. Cannot save dictionary to the file.")
-        if not isinstance(data_to_append, dict):
-            raise exc.FileError("Data is not a dictionary. Cannot save data to the file.")
+            raise exc.ValidationError("New record is empty. Cannot save dictionary to the file.")
         
+        self.validate_against_schema(data_to_append, self.schema)
         current_data.append(data_to_append)
         self.write_json_data(current_data)
         return f"Data had been added and saved to file: {self.file_path.name}"
@@ -79,17 +80,8 @@ class JsonFilesService():
 
 
     def validate_against_schema(self, data, schema):
-        """The method to validate values type and structure against the given schema.
-
-        Args:
-            data (): 
-            schema (_type_): _description_
-
-        Raises:
-            exc.ValidationError: _description_
-            exc.ValidationError: _description_
-            exc.ValidationError: _description_
-        """
+        """The method to validate values type and structure against the given schema. """
+        
         if isinstance(schema, dict):
             if not isinstance(data, dict):
                 raise exc.ValidationError(f"Given value {data} should be a dictionary")
@@ -103,9 +95,7 @@ class JsonFilesService():
 
 
     def validate_file_data(self): #collects data from file loading function, check if data in file is correct, return true/false or exception when data is incorrect.
-        """ Validate that the JSON file contains the specified field in its items.
-        Args: field_name (str) - The field name to validate in the JSON file items
-        Returns: str - Confirmation message if validation is successful."""
+        """ Veryfying if the list of items in the JSON file is not empty and each item matches the expected schema."""
         self.file_exists_checking()
         file_content = self.load_json_file()
 
@@ -115,13 +105,14 @@ class JsonFilesService():
             if not isinstance(item, dict):
                 raise exc.ValidationError(f"The record {index+1} is not a dictionary.")
             self.validate_against_schema(item, self.schema)
-
+        return True
 
 
     def create_backup_file(self):
         """ Create a backup of the current JSON file with a timestamped filename in the backup directory.
         Returns: Path - The path to the created backup file.
         """
+
         if not self.file_path.exists():
             raise exc.FileNotFound("File does not exist in the directory.")
         name = self.file_path.stem
