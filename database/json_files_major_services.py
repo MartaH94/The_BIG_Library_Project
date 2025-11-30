@@ -35,7 +35,7 @@ class JsonFilesService():
 
 
 
-    def load_json_file(self):   # previously read_json_file; method to read json file content and return data for further process
+    def load_json_file(self):   
         """Read JSON file content.
         Returns: list - Data read from the JSON file."""
         self.file_exists_checking()
@@ -94,7 +94,7 @@ class JsonFilesService():
                 raise exc.ValidationError("Wrong type ")
 
 
-    def validate_file_data(self): #collects data from file loading function, check if data in file is correct, return true/false or exception when data is incorrect.
+    def validate_file_data(self): 
         """ Veryfying if the list of items in the JSON file is not empty and each item matches the expected schema."""
         self.file_exists_checking()
         file_content = self.load_json_file()
@@ -108,32 +108,51 @@ class JsonFilesService():
         return True
 
 
+
+    def get_or_create_backup_dir(self):
+        name = self.file_path.stem
+        backup_dir = config.BACKUP_FILES_DIRECTORY/ name 
+        if not backup_dir.exists():
+            backup_dir.mkdir(parents=True, exist_ok=True)
+        return backup_dir
+
+    def build_backup_file_name(self):
+        alias = config.PROJECT_ALIAS 
+        name = self.file_path.stem 
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        backup_file_name = f"{alias}_{name}_{timestamp}.json"
+        
+        return backup_file_name
+
     def create_backup_file(self):
         """ Create a backup of the current JSON file with a timestamped filename in the backup directory.
         Returns: Path - The path to the created backup file.
         """
-
-        if not self.file_path.exists():
-            raise exc.FileNotFound("File does not exist in the directory.")
-        name = self.file_path.stem
-        subfolder_backup = config.BACKUP_FILES_DIRECTORY/ name
-
-        if not subfolder_backup.exists():
-            subfolder_backup.mkdir(parents=True, exist_ok=True)
-
-        alias = config.PROJECT_ALIAS
-        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        backup_file_name = f"{alias}_{name}_{timestamp}.json"
-        backup_file_path = subfolder_backup/backup_file_name
-        data = self.read_json_file()
+        self.file_exists_checking()
+        backup_dir = self.get_or_create_backup_dir()
+        backup_file_name = self.build_backup_file_name()
+        backup_path = backup_dir/backup_file_name
+        data = self.load_json_file()
             
-        with backup_file_path.open("w", encoding="utf-8") as f_backup:
+        with backup_path.open("w", encoding="utf-8") as f_backup:
             json.dump(data, f_backup, ensure_ascii=False, indent=4, sort_keys=True)
-        return backup_file_path
+        return "Comfirmation that backup has been created. Show The path to the created file"
 
 
 
-    
+
+
+# def remove_from_file(self, item_to_delete):
+#   ...
+
+# def update_data_in_file(self, item, new_data):
+#   ...
+
+
+
+
+
+
 
 
         
