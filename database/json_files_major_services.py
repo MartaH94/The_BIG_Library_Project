@@ -149,7 +149,19 @@ class JsonFilesService():
         for key, key_name in file_content:
             if key not in file_content:
                 records_to_remove.append(key_name)
+            if not key_value:
+                records_to_remove.append(key_name)
+            deleted_records_counter += 1
 
+        # Delete records_to_remove from file_content here !!!
+        
+        file_data_to_save = ""
+
+        if deleted_records_counter == 0:
+            raise exc.DatabaseError(f"No matching elements to key {key_name} and value {key_value}")
+        
+        self.validate_file_data()
+        self.write_json_data(file_data_to_save)
         
 
   
