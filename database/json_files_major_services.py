@@ -142,11 +142,19 @@ class JsonFilesService():
 
 
 
-# def remove_from_file(self, item_to_delete):
-#   ...
+    def remove_from_file(self, key_name, key_value):
+        file_content = self.load_json_file()
+        records_to_remove = []
 
-# def update_data_in_file(self, item, new_data):
-#   ...
+        for key, key_name in file_content:
+            if key not in file_content:
+                records_to_remove.append(key_name)
+
+        
+
+  
+    def update_data_in_file(self, item, new_data):
+        pass
 
 
 
