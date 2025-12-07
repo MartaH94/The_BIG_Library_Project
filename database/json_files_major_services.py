@@ -155,8 +155,6 @@ class JsonFilesService():
 
 
 
-
-
     def remove_from_file(self, key_name, key_value):
         """The method to remove records from the JSON file based on a specific key-value pair.
         Args:
@@ -183,10 +181,26 @@ class JsonFilesService():
         
 
   
-    def update_data_in_file(self, item, new_data):
-        pass
+    def update_data_in_file(self, item, new_data): # IN PROGRESS !!!
+        """ Update an existing item in the JSON file with new data.
+        Args:
+            item (dict): The existing item to update.
+            new_data (dict): The new data to update the item with.
+        """
+        file_content = self.load_json_file()    
+        updated = 0
 
+        for record_id, record_data in file_content.items():
+            if item in record_data and record_data[item]:
+                file_content[record_id] = new_data
+                updated += 1
 
+        if updated == 0:
+            raise exc.DatabaseError(f"No matching element to {item}. File content couldn't be updated with {new_data}")
+        
+
+        self.validate_file_data(file_content)
+        self.write_json_data(file_content)
 
 
 
