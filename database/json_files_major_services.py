@@ -13,7 +13,11 @@ from datetime import datetime
 
 
 class JsonFilesService():
-    """ Service to handle JSON file operations."""
+    """ Service to handle JSON file operations.
+    Args:
+        file_path (Path): Path to the JSON file.
+        schema (dict): Schema to validate the JSON file structure and fields.
+    """
 
     def __init__(self, file_path: Path, schema: dict):
         self.file_path = file_path
@@ -52,8 +56,8 @@ class JsonFilesService():
         
     def write_json_data(self, data):
         """ Write data to the JSON file.
-        Args: data (list) - Data to write to the JSON file. """
-
+            Args: data (list) - Data to write to the JSON file. 
+        """
         if not data:
             raise exc.FileError("Data is empty. Cannot save empty data to the file.")
         if not isinstance(data, list):
@@ -80,8 +84,11 @@ class JsonFilesService():
 
 
     def validate_against_schema(self, data, schema):
-        """The method to validate values type and structure against the given schema. """
-        
+        """The method to validate values type and structure against the given schema. 
+        Args:
+            data: The data to validate.
+            schema: The schema to validate against.
+        """
         if isinstance(schema, dict):
             if not isinstance(data, dict):
                 raise exc.ValidationError(f"Given value {data} should be a dictionary")
@@ -95,7 +102,9 @@ class JsonFilesService():
 
 
     def validate_file_data(self): 
-        """ Veryfying if the list of items in the JSON file is not empty and each item matches the expected schema."""
+        """ Veryfying if the list of items in the JSON file is not empty and each item matches the expected schema.
+        Returns: bool - True if all items in the file match the schema; raises ValidationError otherwise.
+        """
         self.file_exists_checking()
         file_content = self.load_json_file()
 
@@ -110,6 +119,9 @@ class JsonFilesService():
 
 
     def get_or_create_backup_dir(self):
+        """ Get or create the backup directory for the JSON file.
+        Returns: Path - The path to the backup directory.
+        """
         name = self.file_path.stem
         backup_dir = config.BACKUP_FILES_DIRECTORY/ name 
         if not backup_dir.exists():
@@ -117,6 +129,9 @@ class JsonFilesService():
         return backup_dir
 
     def build_backup_file_name(self):
+        """ Build a timestamped backup file name for the JSON file.
+        Returns: str - The backup file name.
+        """
         alias = config.PROJECT_ALIAS 
         name = self.file_path.stem 
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -143,25 +158,28 @@ class JsonFilesService():
 
 
     def remove_from_file(self, key_name, key_value):
+        """The method to remove records from the JSON file based on a specific key-value pair.
+        Args:
+            key_name (str): The key name to search for in the records.
+            key_value: The value associated with the key to identify records to be removed.
+        """
         file_content = self.load_json_file()
         records_to_remove = []
+        deleted_records_counter = 0
 
-        for key, key_name in file_content:
-            if key not in file_content:
-                records_to_remove.append(key_name)
-            if not key_value:
-                records_to_remove.append(key_name)
-            deleted_records_counter += 1
-
-        # Delete records_to_remove from file_content here !!!
-        
-        file_data_to_save = ""
+        for record_id, record_data in file_content.items():
+            if key_name in record_data and record_data[key_name] == key_value:            
+                records_to_remove.append(record_id)
+                deleted_records_counter += 1
 
         if deleted_records_counter == 0:
             raise exc.DatabaseError(f"No matching elements to key {key_name} and value {key_value}")
         
-        self.validate_file_data()
-        self.write_json_data(file_data_to_save)
+        for record_id in records_to_remove:
+            del file_content[record_id]
+
+        self.validate_file_data(file_content)
+        self.write_json_data(file_content)
         
 
   
