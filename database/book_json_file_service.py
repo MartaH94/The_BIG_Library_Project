@@ -3,7 +3,7 @@ import utils.config as config
 import exceptions as exc
 
 from utils.config import THE_LIBRARY_FILE_PATH
-from database.JSON_files_service import JsonFilesService
+from database.json_files_major_services import JsonFilesService
 from services.authorisation_service import UserAuthorisation
 
 class BookJsonFileService():

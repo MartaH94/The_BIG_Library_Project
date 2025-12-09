@@ -181,24 +181,23 @@ class JsonFilesService():
         
 
   
-    def update_data_in_file(self, item, new_data): # IN PROGRESS !!!
+    def update_data_in_file(self, item, new_data): 
         """ Update an existing item in the JSON file with new data.
         Args:
-            item (dict): The existing item to update.
-            new_data (dict): The new data to update the item with.
+            item (str): The existing item (field) to update.
+            new_data (str): The new data to update the item with.
         """
         file_content = self.load_json_file()    
         updated = 0
-
+        if not new_data:
+            raise exc.FileError(f"New data can't be empty value.")
         for record_id, record_data in file_content.items():
-            if item in record_data and record_data[item]:
-                file_content[record_id] = new_data
+            if item in record_data:
+                record_data[item] = new_data
                 updated += 1
-
         if updated == 0:
-            raise exc.DatabaseError(f"No matching element to {item}. File content couldn't be updated with {new_data}")
+            raise exc.DatabaseError(f"No matching element to {item}.")
         
-
         self.validate_file_data(file_content)
         self.write_json_data(file_content)
 
