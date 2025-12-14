@@ -11,6 +11,16 @@ class UsersJsonFileService():
         self.authorisation = authorisation
         self.file_path = file_path
 
+    def get_user(self, user_id):
+        pass
+
+    def add_user(self, user_data):
+        pass
+
+    def all_users_list(self):
+        pass
+
+
     def update_user_record_id(self, user_id, field, new_value):
         """ Update an existing user record in the JSON file with new data. This method is about to work on previouly checked file using load_json_file method() from 
             json_files_major_services module, which returns checked and ready to work json file. Also this method validates data and save changes in the file. 
@@ -50,7 +60,7 @@ class UsersJsonFileService():
 
 
 
-    def delete_data_from_file(self, user_id):
+    def delete_data_from_file(self, user_id): # this method requires review. also add method: delete_user_by_id
         self.authorisation.check_permission("edit_data")
         self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()
