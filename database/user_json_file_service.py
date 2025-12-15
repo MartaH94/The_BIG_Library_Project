@@ -12,7 +12,20 @@ class UsersJsonFileService():
         self.file_path = file_path
 
     def get_user(self, user_id):
-        pass
+        current_data = self.json_service.load_json_file()
+        user_found = False
+        user_data = None
+
+        for user in current_data:
+            if user["id"] == user_id:
+                user_data = user
+                user_found = True
+
+        if not user_found:
+            raise exc.UserNotFoundError(f"User with {user_id} does  not exist in database")        
+
+        return user_data
+
 
     def add_user(self, user_data):
         pass
