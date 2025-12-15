@@ -11,7 +11,14 @@ class UsersJsonFileService():
         self.authorisation = authorisation
         self.file_path = file_path
 
+
     def get_user(self, user_id):
+        """ Retrieve a user record from the JSON file by user ID.
+        Args:
+            user_id (int): The ID of the user to retrieve.
+        Returns:
+            dict - The user record if found.
+        """
         current_data = self.json_service.load_json_file()
         user_found = False
         user_data = None
@@ -38,7 +45,7 @@ class UsersJsonFileService():
         """ Update an existing user record in the JSON file with new data. This method is about to work on previouly checked file using load_json_file method() from 
             json_files_major_services module, which returns checked and ready to work json file. Also this method validates data and save changes in the file. 
         Args:
-            user_id (str): The ID of the user to update.
+            user_id (int): The ID of the user to update.
             field (str): The field to update.
             new_value (str): The new value to update the field with.
         """
@@ -51,7 +58,7 @@ class UsersJsonFileService():
                     user[field] = new_value
                     user_found = True
                 except KeyError:
-                    raise exc.UserValidationError("User id is invalid or it's empty value")
+                    raise exc.UserValidationError("User's ID is invalid or it's empty value")
             if not user_found:
                 raise exc.UserNotFoundError(f"User with id: {user_id} not found in users database.")
             
