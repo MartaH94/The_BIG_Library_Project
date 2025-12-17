@@ -35,7 +35,21 @@ class UsersJsonFileService():
 
 
     def add_user(self, user_data):
-        pass
+        """ Add a new user record to the JSON file.
+        Args:
+            user_data (dict): The user data to add.
+        """
+        self.authorisation.check_permission("edit")
+        current_data = self.json_service.load_json_file()
+        validated_data = self.json_service.validate_against_schema(current_data)
+
+        if validated_data:
+            current_data.append(user_data)
+
+        if not validated_data:
+            raise exc.ValidationError(f"Validation new user data {user_data} does not match file schema.")
+        
+        self.json_service.write_json_data(current_data)
 
     def all_users_list(self):
         pass
