@@ -32,24 +32,31 @@ class UsersJsonFileService():
             raise exc.UserNotFoundError(f"User with {user_id} does  not exist in database")        
 
         return user_data
+    
 
 
-    def add_user(self, user_data):
+
+    def add_user(self, user_data):  # NOT FINISHED YET
         """ Add a new user record to the JSON file.
         Args:
             user_data (dict): The user data to add.
         """
+
+    # check if user_data is not empty; check if user_data is dict; check if in current_data there is user with the same id or email (uniquness of id or mail)
+
         self.authorisation.check_permission("edit")
         current_data = self.json_service.load_json_file()
-        validated_data = self.json_service.validate_against_schema(current_data)
-
-        if validated_data:
-            current_data.append(user_data)
+        validated_data = self.json_service.validate_against_schema(user_data)
+        user_id = None
 
         if not validated_data:
             raise exc.ValidationError(f"Validation new user data {user_data} does not match file schema.")
+        else:
+            current_data.append(user_data)
         
         self.json_service.write_json_data(current_data)
+
+        return f"Added new user to database with ID: {user_id}"
 
     def all_users_list(self):
         pass
