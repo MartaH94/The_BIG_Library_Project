@@ -35,9 +35,8 @@ class UsersJsonFileService():
     
 
 
-# check if user_data is not empty; check if user_data is dict; check if in current_data there is user with the same id or email (uniquness of id or mail)
-    def add_user(self, user_data):  # NOT FINISHED YET !!!
-        """ Add a new user record to the JSON file.
+    def add_user(self, user_data):  
+        """ Add a new user record to the JSON file. 
         Args:
             user_data (dict): The user data to add.
         """
