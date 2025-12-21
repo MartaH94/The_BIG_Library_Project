@@ -1,9 +1,22 @@
-# managing registration, login, permissions and authorisation of users
+"""
+Docstring for services.authorisation_service
+This module handles user authorisation, including login, logout, and permission checks.
+
+TO DO HERE:
+- Class UserAuthorisation review. Check if it may need more methods.
+- Function has_permission review. Check if it covers all needed cases.
+- Make sure that nested permissions are handled correctly.
+"""
+
+
+
+
+
 
 from models.user import User
 import exceptions as exc
 
-
+# managing registration, login, permissions and authorisation of users
 
 user_permissions = {
     "reader" : {
@@ -182,8 +195,14 @@ def has_permission(role: str, action_path: str) -> bool:
 
 
 class UserAuthorisation():
-    def __init__(self):
+    """This class handles user authorisation, including login, logout, and permission checks. 
+        Authorised user can perform actions based on their role and associated permissions. User must be logged in to perform any action.
+        This class logs user in and out, and checks if the logged-in user has permission to perform specific actions.
+    """
+    def __init__(self, user):
         self.logged_in_user = None
+        self.user = user
+
 
     def login(self, user: User):
         self.logged_in_user = user

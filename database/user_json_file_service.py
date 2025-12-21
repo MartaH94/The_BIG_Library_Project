@@ -1,11 +1,27 @@
+"""
+Docstring for database.user_json_file_service
+Service class for managing user records in a JSON file.
+
+TO DO HERE:
+- Implement method to retrieve all users.
+- Implement method to delete user by ID.
+- Review delete_data_from_file method.
+- Review permission checks in all methods.
+
+"""
+
 import json
 import exceptions as exc
 
 from utils.config import PROGRAM_USERS_FILE_PATH
 from database.json_files_major_services import JsonFilesService
 from services.authorisation_service import UserAuthorisation
+from services.authorisation_service import user_permissions
 
 class UsersJsonFileService():
+    """ Service class for managing user records in a JSON file. This class provides methods to add, retrieve, update, and delete user records,
+        while ensuring data validation and user authorisation.
+    """
     def __init__(self, json_service: JsonFilesService, authorisation: UserAuthorisation, file_path=PROGRAM_USERS_FILE_PATH):
         self.json_service = json_service
         self.authorisation = authorisation
@@ -34,13 +50,13 @@ class UsersJsonFileService():
         return user_data
     
 
-
     def add_user(self, user_data):  
-        """ Add a new user record to the JSON file. 
+        """ Add a new user record to the JSON file. This method checks user's permissions to edit data, loads current data from file, validates new user data against schema,
+            checks for unique user ID, appends new user data to current data, and writes updated data back to the file.
         Args:
             user_data (dict): The user data to add.
         """
-        self.authorisation.check_permission("edit")
+        self.authorisation.check_permissions("manage_users")
         current_data = self.json_service.load_json_file()
         validated_data = self.json_service.validate_against_schema(user_data)
         user_id = user_data["id"]
@@ -92,21 +108,17 @@ class UsersJsonFileService():
             
         self.json_service.validate_file_data()
         self.json_service.write_json_data(current_data)
+        return f"For user with ID: {user_id}, data updated successfully."
                 
 
     def update_file_data(self, user_id, field, new_value):
         """This method is for update users data in the JSON file. It checks user's permissions to edit data, checks if file exits and returns confirmation to the GUI.
         """
-
         self.authorisation.check_permission("edit_data")
         self.json_service.file_exists_checking()
         self.update_user_record_id(user_id, field, new_value)
-        
         return "In Gui confirmation changes made succesfully and saved in file"
     
-
-
-
 
     def delete_data_from_file(self, user_id): # this method requires review. also add method: delete_user_by_id
         self.authorisation.check_permission("edit_data")
