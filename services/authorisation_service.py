@@ -46,6 +46,11 @@ user_permissions = {
             "delegate_permissions": False,
             "delete_data" : False,
             "edit_data" : False
+        },
+        "sensitive_users_data": {
+            "view_data": False,
+            "edit_data": False,
+            "delete_data": False,
         }
     },
 
@@ -76,6 +81,11 @@ user_permissions = {
             "delegate_permissions": True,
             "delete_data" : True,
             "edit_data" : True
+        },
+        "sensitive_users_data": {
+            "view_data": True,
+            "edit_data": True,
+            "delete_data": True,
         }    
     },
 
@@ -106,6 +116,11 @@ user_permissions = {
             "delegate_permissions": False,
             "delete_data" : True,
             "edit_data" : True
+        },
+        "sensitive_users_data": {
+            "view_data": True,
+            "edit_data": True,
+            "delete_data": False,
         }
     },
 
@@ -136,6 +151,11 @@ user_permissions = {
             "delegate_permissions": False,
             "delete_data" : False,
             "edit_data" : False
+        },
+        "sensitive_users_data": {
+            "view_data": False,
+            "edit_data": False,
+            "delete_data": False,
         }
     },
 
@@ -167,7 +187,12 @@ user_permissions = {
             "delete_data" : False,
             "edit_data" : True
         }
-    }
+    },
+        "sensitive_users_data": {
+            "view_data": True,
+            "edit_data": False,
+            "delete_data": True,
+        }
 }
 
 def has_permission(role: str, action_path: str) -> bool:
