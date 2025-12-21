@@ -3,10 +3,11 @@ Docstring for database.user_json_file_service
 Service class for managing user records in a JSON file.
 
 TO DO HERE:
-- Implement method to retrieve all users.
+- Implement method to retrieve all users. <--
 - Implement method to delete user by ID.
 - Review delete_data_from_file method.
 - Review permission checks in all methods.
+- Review imports.
 
 """
 
@@ -81,8 +82,25 @@ class UsersJsonFileService():
         return f"Added new user to database with ID: {user_id}"
 
 
-    def all_users_list(self):
-        pass
+    def all_users_list(self, user_login_name):
+        """ 
+        """
+        self.authorisation.check_permission("view_data")
+        current_data = self.json_service.load_json_file()
+        all_users = []
+
+        user_found = False
+        for user in current_data:
+            if user["user_name"] == user_login_name:
+                try:
+                    all_users.append(user)
+                    user_found = True
+                except KeyError:
+                    raise exc.UserNotFoundError(f"No user with name: {user["user_name"]} in library database.")
+            if not user_found:
+                raise exc.UserError(f"No user in database. Impossible to view data of user: {user["user_name"]} ")
+            
+        return all_users
 
 
     def update_user_record_id(self, user_id, field, new_value):
