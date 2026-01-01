@@ -3,11 +3,12 @@ Docstring for database.user_json_file_service
 Service class for managing user records in a JSON file.
 
 TO DO HERE:
-- Implement method to retrieve all users. <--
-- Implement method to delete user by ID.
+- Implement method to retrieve all users. <-- Done.
+- Implement method to delete user by ID. <-- In progress.
 - Review delete_data_from_file method.
 - Review permission checks in all methods.
 - Review imports.
+
 
 """
 
@@ -56,6 +57,8 @@ class UsersJsonFileService():
             checks for unique user ID, appends new user data to current data, and writes updated data back to the file.
         Args:
             user_data (dict): The user data to add.
+        Returns:
+            str - Confirmation message with the new user's ID.
         """
         self.authorisation.check_permissions("manage_users")
         current_data = self.json_service.load_json_file()
@@ -83,7 +86,11 @@ class UsersJsonFileService():
 
 
     def all_users_list(self, user_login_name):
-        """ 
+        """ Retrieve all user records from the JSON file that match the given login name.
+        Args:
+            user_login_name (str): The login name of the user to retrieve.
+        Returns:
+            list - A list of user records matching the login name.
         """
         self.authorisation.check_permission("view_data")
         current_data = self.json_service.load_json_file()
@@ -110,6 +117,8 @@ class UsersJsonFileService():
             user_id (int): The ID of the user to update.
             field (str): The field to update.
             new_value (str): The new value to update the field with.
+        Returns:
+            str - Confirmation message indicating successful update.
         """
         current_data = self.json_service.load_json_file()
         user_found = False
@@ -131,6 +140,12 @@ class UsersJsonFileService():
 
     def update_file_data(self, user_id, field, new_value):
         """This method is for update users data in the JSON file. It checks user's permissions to edit data, checks if file exits and returns confirmation to the GUI.
+        Args:
+            user_id (int): The ID of the user to update.
+            field (str): The field to update.
+            new_value (str): The new value to update the field with.
+        Returns:
+            str - Confirmation message indicating successful update.
         """
         self.authorisation.check_permission("edit_data")
         self.json_service.file_exists_checking()
