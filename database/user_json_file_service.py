@@ -166,15 +166,17 @@ class UsersJsonFileService():
         self.authorisation.check_permission("delete_data")
         self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()
-        user_data = self.get_user_data(user_id)
-        user_id_to_delete = user_data["id"]
+        self.get_user_data(user_id)
 
-        if not user_id_to_delete:
-            raise exc.UserValidationError("User ID must be a correct value. User ID can't be an empty value.")
-
+        user_deleted = False
         for user in current_data:
-            if user_id == user_id_to_delete:
+            if user["id"] == user_id:
                 current_data.remove(user)
+                user_deleted = True
+                break
+
+        if not user_deleted:
+            raise exc.UserError(f"User {user_id} couldn't be removed from database.")
 
         self.json_service.validate_file_data()
         self.json_service.write_json_data(current_data)
@@ -183,7 +185,6 @@ class UsersJsonFileService():
                 
 
         
-
 
 
 
