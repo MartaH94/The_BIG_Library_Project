@@ -154,7 +154,7 @@ class UsersJsonFileService():
         self.authorisation.check_permission("edit_data")
         self.json_service.file_exists_checking()
         self.update_user_record_id(user_id, field, new_value)
-        return "In Gui confirmation changes made succesfully and saved in file"
+        return "Changes in the file made succesfully and saved"
     
 
     def delete_user_by_id(self, user_id):
