@@ -166,7 +166,6 @@ class UsersJsonFileService():
         self.authorisation.check_permission("delete_data")
         self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()
-        
         user_data = self.get_user_data(user_id)
         user_id_to_delete = user_data["id"]
 
@@ -175,8 +174,12 @@ class UsersJsonFileService():
 
         for user in current_data:
             if user_id == user_id_to_delete:
-                self.delete_user_by_id(user_id_to_delete)
+                current_data.remove(user)
+
+        self.json_service.validate_file_data()
+        self.json_service.write_json_data(current_data)
                 
+        return f"User with ID {user_id} deleted from database."
                 
 
         
@@ -184,21 +187,24 @@ class UsersJsonFileService():
 
 
 
-    def delete_data_from_file(self, user_id): # this method requires review. also add method: delete_user_by_id
+    def delete_data_from_file(self, user_id, field_to_delete): # this method requires review. also add method: delete_user_by_id
+        """This method is for deleting user data from database. 
+
+        Args:
+            user_id (_type_): _description_
+            field_to_update (): 
+
+        Raises:
+            exc.UserValidationError: _description_
+            exc.UserNotFoundError: _description_
+        """
+
+
         self.authorisation.check_permission("edit_data")
         self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()
+        user_data = self.get_user_data()
 
-        if not user_id:
-            raise exc.UserValidationError("User's id is invalid or it's empty value.")
         
-        user_id_found = False
-        for user in current_data:
-            if user["id"] == user_id:
-                current_data.remove(user)
-                user_id_found = True
-
-            if not user_id_found:
-                raise exc.UserNotFoundError(f"User with id {user_id} does not exist in user data json file.")
 
 
