@@ -8,6 +8,7 @@ TO DO HERE:
 - Review delete_data_from_file method.
 - Review permission checks in all methods.
 - Review imports.
+- Review docstrings.
 
 
 """
@@ -29,13 +30,16 @@ class UsersJsonFileService():
         self.authorisation = authorisation
         self.file_path = file_path
 
+    # def get_user_by_id(self):
+    #     pass
 
-    def get_user(self, user_id):
-        """ Retrieve a user record from the JSON file by user ID.
+
+    def get_user_data(self, user_id):
+        """ Retrieve a user data record from the JSON file by user ID. 
         Args:
             user_id (int): The ID of the user to retrieve.
         Returns:
-            dict - The user record if found.
+            dict - The user data of the specified user.
         """
         current_data = self.json_service.load_json_file()
         user_found = False
@@ -60,7 +64,7 @@ class UsersJsonFileService():
         Returns:
             str - Confirmation message with the new user's ID.
         """
-        self.authorisation.check_permissions("manage_users")
+        self.authorisation.check_permission("edit_data")
         current_data = self.json_service.load_json_file()
         validated_data = self.json_service.validate_against_schema(user_data)
         user_id = user_data["id"]
@@ -86,7 +90,7 @@ class UsersJsonFileService():
 
 
     def all_users_list(self, user_login_name):
-        """ Retrieve all user records from the JSON file that match the given login name.
+        """ Retrieve all user records from the JSON file that match the given login name. 
         Args:
             user_login_name (str): The login name of the user to retrieve.
         Returns:
@@ -111,7 +115,7 @@ class UsersJsonFileService():
 
 
     def update_user_record_id(self, user_id, field, new_value):
-        """ Update an existing user record in the JSON file with new data. This method is about to work on previouly checked file using load_json_file method() from 
+        """ Update an existing user record in the JSON file with new data. This method is about to work on previously verifiedfile using load_json_file method() from 
             json_files_major_services module, which returns checked and ready to work json file. Also this method validates data and save changes in the file. 
         Args:
             user_id (int): The ID of the user to update.
@@ -139,7 +143,7 @@ class UsersJsonFileService():
                 
 
     def update_file_data(self, user_id, field, new_value):
-        """This method is for update users data in the JSON file. It checks user's permissions to edit data, checks if file exits and returns confirmation to the GUI.
+        """This method is for update users data in the JSON file. It checks user's permissions to edit data, checks if file exits and returns confirmation message.
         Args:
             user_id (int): The ID of the user to update.
             field (str): The field to update.
@@ -153,21 +157,29 @@ class UsersJsonFileService():
         return "In Gui confirmation changes made succesfully and saved in file"
     
 
-    def delete_user_by_id(self):
+    def delete_user_by_id(self, user_id):
+        """This method is for deleting user by id from the JSON file. It checks permission to delete data.
+            IN PROGRESS.
+        Raises:
+            exc.UserNotFoundError: _description_
+        """
         self.authorisation.check_permission("delete_data")
-        user_to_delete = self.get_user
+        self.json_service.file_exists_checking()
+        current_data = self.json_service.load_json_file()
+        
+        user_data = self.get_user_data(user_id)
+        user_id_to_delete = user_data["id"]
 
-        if not user_to_delete:
-            raise exc.UserNotFoundError("User and its data not found in database.")
+        if not user_id_to_delete:
+            raise exc.UserValidationError("User ID must be a correct value. User ID can't be an empty value.")
 
+        for user in current_data:
+            if user_id == user_id_to_delete:
+                self.delete_user_by_id(user_id_to_delete)
+                
+                
 
-
-
-
-
-
-
-
+        
 
 
 
