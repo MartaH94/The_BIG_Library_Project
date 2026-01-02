@@ -153,6 +153,25 @@ class UsersJsonFileService():
         return "In Gui confirmation changes made succesfully and saved in file"
     
 
+    def delete_user_by_id(self):
+        self.authorisation.check_permission("delete_data")
+        user_to_delete = self.get_user
+
+        if not user_to_delete:
+            raise exc.UserNotFoundError("User and its data not found in database.")
+
+
+
+
+
+
+
+
+
+
+
+
+
     def delete_data_from_file(self, user_id): # this method requires review. also add method: delete_user_by_id
         self.authorisation.check_permission("edit_data")
         self.json_service.file_exists_checking()
