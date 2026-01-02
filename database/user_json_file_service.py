@@ -4,8 +4,8 @@ Service class for managing user records in a JSON file.
 
 TO DO HERE:
 - Implement method to retrieve all users. <-- Done.
-- Implement method to delete user by ID. <-- In progress.
-- Review delete_data_from_file method.
+- Implement method to delete user by ID. <-- Done.
+- Reimplement delete_data_from_file method. <-- In progress.
 - Review permission checks in all methods.
 - Review imports.
 - Review docstrings.
@@ -159,7 +159,7 @@ class UsersJsonFileService():
 
     def delete_user_by_id(self, user_id):
         """This method is for deleting user by id from the JSON file. It checks permission to delete data.
-            IN PROGRESS.
+            
         Raises:
             exc.UserNotFoundError: _description_
         """
