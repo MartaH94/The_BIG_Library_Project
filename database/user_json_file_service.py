@@ -1,19 +1,22 @@
 """
-Docstring for database.user_json_file_service
+________________________________________________________
+database.user_json_file_service
+========================================================
 Service class for managing user records in a JSON file.
+________________________________________________________
 
 TO DO HERE:
 - Implement method to retrieve all users. <-- Done.
 - Implement method to delete user by ID. <-- Done.
-- Reimplement delete_data_from_file method. <-- In progress.
-- Review permission checks in all methods.
-- Review imports.
-- Review docstrings.
+- Reimplement delete_data_from_file method. <-- Rejected. Method not needed. 
+- Review permission checks in all methods. <-- Blocked Authorisattion service permissions splitting and update.
+- Review imports. <-- Looks good. 
+- Review docstrings. <-- All descriptions in one manner. 
 
 
 """
 
-import json
+
 import exceptions as exc
 
 from utils.config import PROGRAM_USERS_FILE_PATH

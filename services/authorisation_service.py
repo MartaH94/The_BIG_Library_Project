@@ -6,6 +6,9 @@ TO DO HERE:
 - Class UserAuthorisation review. Check if it may need more methods.
 - Function has_permission review. Check if it covers all needed cases.
 - Make sure that nested permissions are handled correctly.
+- Split permissions for books, loans, user account actions.
+
+
 """
 
 

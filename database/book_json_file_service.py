@@ -1,3 +1,21 @@
+"""
+________________________________________________________
+database.book_json_file_service
+========================================================
+Service class for managing book data in a JSON file.
+________________________________________________________
+
+TO DO HERE:
+- Verify implemented methods.
+- Implement new methods. Verify what is needed. 
+
+
+"""
+
+
+
+
+
 import json
 import utils.config as config
 import exceptions as exc
