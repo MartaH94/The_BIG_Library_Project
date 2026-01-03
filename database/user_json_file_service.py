@@ -181,10 +181,8 @@ class UsersJsonFileService():
         return f"User with ID {user_id} deleted from database."
                 
 
-    def delete_data_from_file(self, user_id, field_to_delete): 
+    def delete_data_from_file(self, field_to_delete): 
         """This method is for deleting user data from database. This method checks permission, checks if file is correct, loads data from file.
-        
-    
 
         Args:
             user_id (_type_): _description_
@@ -198,19 +196,10 @@ class UsersJsonFileService():
         self.authorisation.check_permission("edit_data")
         self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()
-        user_data = self.get_user_data()
+        self.json_service.remove_from_file(field_to_delete)
         
-
-        field_found = False
-        for user in current_data:
-            if user["id"] == user_id:
-                try:
-                    current_data.remove(user_data)
-                    field_found = True
-                except KeyError:
-                    raise exc.DataError("User data coudn't be deleted from database.")
-                if not field_found:
-                    raise exc.InvalidFieldError(f"Field {field_to_delete} does not exists in database.")
+        
+        
 
 
         
