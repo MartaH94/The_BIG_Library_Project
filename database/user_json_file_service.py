@@ -30,16 +30,13 @@ class UsersJsonFileService():
         self.authorisation = authorisation
         self.file_path = file_path
 
-    # def get_user_by_id(self):
-    #     pass
-
 
     def get_user_data(self, user_id):
         """ Retrieve a user data record from the JSON file by user ID. 
         Args:
             user_id (int): The ID of the user to retrieve.
         Returns:
-            dict - The user data of the specified user.
+            user_data (dict) - The data for the specified user returned as a dictionary.
         """
         current_data = self.json_service.load_json_file()
         user_found = False
@@ -184,11 +181,7 @@ class UsersJsonFileService():
         return f"User with ID {user_id} deleted from database."
                 
 
-        
-
-
-
-    def delete_data_from_file(self, user_id, field_to_delete): # this method requires review. also add method: delete_user_by_id
+    def delete_data_from_file(self, user_id, field_to_delete): 
         """This method is for deleting user data from database. 
 
         Args:
@@ -205,6 +198,17 @@ class UsersJsonFileService():
         self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()
         user_data = self.get_user_data()
+        field_found = False
+
+
+        for user in current_data:
+            if user["id"] == user_id:
+                try:
+                    current_data.remove(user_data)
+                    field_found = True
+                except KeyError:
+                    raise exc.DataError("User data coudn't be deleted from database.")
+
 
         
 
