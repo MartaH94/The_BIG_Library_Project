@@ -9,6 +9,8 @@ TO DO HERE:
 - Verify implemented methods.
 - Implement new methods. Verify what is needed. 
 
+- methods to add: get book data, get all books list, update book record id, update file data, delete book by matching parameters, 
+
 
 """
 
