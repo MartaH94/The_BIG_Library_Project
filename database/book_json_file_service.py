@@ -33,6 +33,14 @@ class BookJsonFileService():
         self.file_path = file_path
 
     def update_file_data(self, book_id, field, new_value):
+        """
+        This method is a base for planned new methods. look on top docstring
+        
+        :param self: Description
+        :param book_id: Description
+        :param field: Description
+        :param new_value: Description
+        """
         self.authorisation.check_permission("edit_book")
         self.json_service.file_exists_checkout()
         current_data = self.json_service.read_json_file()
@@ -57,6 +65,12 @@ class BookJsonFileService():
 
     
     def delete_data_from_file(self, book_id):
+        """
+        This method is a base for planned new methods. look on top docstring
+        
+        :param self: Description
+        :param book_id: Description
+        """
         self.authorisation.check_permission("delete_book")
         self.json_service.file_exists_checkout()
         current_data = self.json_service.read_json_file()
