@@ -1,3 +1,27 @@
+"""
+__________________________________________________________
+database.loan_json_file_service
+==========================================================
+Service class for managing book loan data in a JSON file.
+__________________________________________________________
+
+TO DO HERE: 
+- verify imports
+- update docstrings
+- implement crucial methods
+
+methods to implement: get full list of loans, verificate correct loan data, add loan data to database, update data in loan, what else I can do with that data? 
+
+
+
+"""
+
+
+
+
+
+
+
 import json
 import utils.config as config
 import exceptions as exc
