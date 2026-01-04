@@ -152,3 +152,10 @@ class BackupPermissionError(FileError):
     """Error during checking permission during creating or reading backup file"""
     pass
 
+class DataError(FileError):
+    def __init__(self, message="Incorrect data value: data cannot be empty value."):
+        super().__init__(message)
+
+class DataTypeError(FileError):
+    def __init__(self, message="Data has invalid data type"):
+        super().__init__(message)

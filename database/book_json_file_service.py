@@ -1,18 +1,73 @@
+"""
+________________________________________________________
+database.book_json_file_service
+========================================================
+Service class for managing book data in a JSON file.
+________________________________________________________
+
+TO DO HERE:
+- Verify implemented methods.
+- Implement new methods. Verify what is needed. 
+- verify imports 
+
+- methods to add: get book data, get all books list, update book record id, update file data, delete book by matching parameters, 
+
+
+"""
+
 import json
 import utils.config as config
 import exceptions as exc
 
 from utils.config import THE_LIBRARY_FILE_PATH
-from database.JSON_files_service import JsonFilesService
+from database.json_files_major_services import JsonFilesService
 from services.authorisation_service import UserAuthorisation
 
 class BookJsonFileService():
+    """Service class for managing book data in a JSON file. This class provides methods to retrive data of specific book, get book of all available books, update data of book, delete book with matching parameter.
+    
+    Note for future me: In GUI user will choose books from list to delete. 
+
+    """
     def __init__(self, json_service: JsonFilesService, authorisation: UserAuthorisation, file_path=THE_LIBRARY_FILE_PATH):
         self.json_service = json_service
         self.authorisation = authorisation
         self.file_path = file_path
 
+    def get_book_data(self):
+        pass
+
+    def get_all_books_list(self):
+        pass
+
+    def update_book_data(self):
+        pass
+
+    def delete_book_from_database(self):
+        pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     def update_file_data(self, book_id, field, new_value):
+        """
+        This method is a base for planned new methods. look on top docstring
+        
+        :param self: Description
+        :param book_id: Description
+        :param field: Description
+        :param new_value: Description
+        """
         self.authorisation.check_permission("edit_book")
         self.json_service.file_exists_checkout()
         current_data = self.json_service.read_json_file()
@@ -37,6 +92,12 @@ class BookJsonFileService():
 
     
     def delete_data_from_file(self, book_id):
+        """
+        This method is a base for planned new methods. look on top docstring
+        
+        :param self: Description
+        :param book_id: Description
+        """
         self.authorisation.check_permission("delete_book")
         self.json_service.file_exists_checkout()
         current_data = self.json_service.read_json_file()
