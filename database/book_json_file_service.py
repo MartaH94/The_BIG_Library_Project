@@ -24,6 +24,11 @@ from database.json_files_major_services import JsonFilesService
 from services.authorisation_service import UserAuthorisation
 
 class BookJsonFileService():
+    """Service class for managing book data in a JSON file. This class provides methods to retrive data of specific book, get book of all available books, update data of book, delete book with matching parameter.
+    
+    Note for future me: In GUI user will choose books from list to delete. 
+
+    """
     def __init__(self, json_service: JsonFilesService, authorisation: UserAuthorisation, file_path=THE_LIBRARY_FILE_PATH):
         self.json_service = json_service
         self.authorisation = authorisation
