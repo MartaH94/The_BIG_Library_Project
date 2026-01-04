@@ -8,15 +8,12 @@ ________________________________________________________
 TO DO HERE:
 - Verify implemented methods.
 - Implement new methods. Verify what is needed. 
+- verify imports 
 
 - methods to add: get book data, get all books list, update book record id, update file data, delete book by matching parameters, 
 
 
 """
-
-
-
-
 
 import json
 import utils.config as config
@@ -31,6 +28,31 @@ class BookJsonFileService():
         self.json_service = json_service
         self.authorisation = authorisation
         self.file_path = file_path
+
+    def get_book_data(self):
+        pass
+
+    def get_all_books_list(self):
+        pass
+
+    def update_book_data(self):
+        pass
+
+    def delete_book_from_database(self):
+        pass
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     def update_file_data(self, book_id, field, new_value):
         """
