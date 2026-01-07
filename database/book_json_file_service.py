@@ -10,7 +10,7 @@ TO DO HERE:
 - Implement new methods. Verify what is needed. 
 - verify imports 
 
-- methods to add: get book data, get all books list, update book record id, update file data, delete book by matching parameters, 
+- methods to add: get book data, get all books list, update book record id, update file data, delete book by matching parameters, maybe sth else.
 
 
 """
@@ -34,8 +34,26 @@ class BookJsonFileService():
         self.authorisation = authorisation
         self.file_path = file_path
 
-    def get_book_data(self):
-        pass
+    def get_book_data(self, book_id):
+        """I search for book data here by id. I also need searching by keyword. 
+
+        Args:
+            book_id (_type_): _description_
+        """
+        current_data = self.json_service.load_json_file()
+        book_found = False
+        book_data = None
+
+        for book in current_data:
+            if book["id"] == book_id:
+                book_data = book
+                book_found = True
+
+        if not book_found:
+            raise exc.BookNotFoundError(f"Book with {book_id} does not exists in database.")
+        
+        return book_data
+        
 
     def get_all_books_list(self):
         pass
@@ -45,8 +63,6 @@ class BookJsonFileService():
 
     def delete_book_from_database(self):
         pass
-
-
 
 
 
