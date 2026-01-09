@@ -109,7 +109,7 @@ class UsersJsonFileService():
                 except KeyError:
                     raise exc.UserNotFoundError(f"No user with name: {user["user_name"]} in library database.")
             if not user_found:
-                raise exc.UserError(f"No user in database. Impossible to view data of user: {user["user_name"]} ")
+                raise exc.UserError(f"No user in database. Impossible to add user: {user["user_name"]} to all users list.")
             
         return all_users
 
