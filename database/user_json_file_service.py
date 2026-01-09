@@ -92,7 +92,7 @@ class UsersJsonFileService():
     def all_users_list(self, user_login_name):
         """ Retrieve all user records from the JSON file that match the given login name. 
         Args:
-            user_login_name (str): The login name of the user to retrieve.
+            user_login_name (str): The login name of the user to retrieve. For example john_example3
         Returns:
             list - A list of user records matching the login name.
         """
