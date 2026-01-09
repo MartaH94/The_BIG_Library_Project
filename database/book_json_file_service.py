@@ -9,6 +9,7 @@ TO DO HERE:
 - Verify implemented methods.
 - Implement new methods. Verify what is needed. 
 - verify imports 
+- Add permissions! 
 
 - methods to add: get book data, get all books list, update book record id, update file data, delete book by matching parameters, maybe sth else.
 
@@ -55,8 +56,22 @@ class BookJsonFileService():
         return book_data
         
 
-    def get_all_books_list(self):
-        pass
+    def get_all_books_list(self, book_id):
+        current_data = self.json_service.load_json_file()
+        all_books = []
+        book_found = False
+
+        for book in current_data:
+            if book["book_id"] == book_id:
+                try:
+                    all_books.append(book)
+                    book_found = True
+                except KeyError:
+                    raise exc.BookNotFoundError(f"Book with ID {book_id} does not exists in database.")
+            if not book_found:
+                raise exc.BookError(f"No book in database. Impossible to add book with ID: {book["book_id"]} to all books list.")
+        return all_books
+
 
     def update_book_data(self):
         pass
