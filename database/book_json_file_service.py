@@ -74,7 +74,8 @@ class BookJsonFileService():
 
 
     def update_book_data(self):
-        
+        """ Update an existing book record in the JSON file with new data.
+        """
         pass
 
     def delete_book_from_database(self):
