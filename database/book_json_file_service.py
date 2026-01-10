@@ -73,10 +73,27 @@ class BookJsonFileService():
         return all_books
 
 
-    def update_book_data(self):
+    def update_book_data(self, book_id, field, new_value):
         """ Update an existing book record in the JSON file with new data.
         """
-        pass
+        self.json_service.file_exists_checking()
+        current_data = self.json_service.load_json_file()
+        book_found = False
+
+        if not new_value:
+            raise exc.FileError("This exception requires sth better. And this validation needs to be in similar methods. New value to update book record is incorrect or not exists.")
+
+        for book in current_data:
+            if book["book_id"] == book_id:
+                try:
+                    book[field] = new_value
+                    book_found = True
+                except KeyError:
+                    raise exc.BookValidationError("Book ID is invalid or it's an emppty value.")
+
+        if not book_found:
+            raise exc.BookNotFoundError("New value to update book record is incorrect or empty value.")
+
 
     def delete_book_from_database(self):
         pass
