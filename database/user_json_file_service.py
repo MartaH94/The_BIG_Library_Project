@@ -115,7 +115,7 @@ class UsersJsonFileService():
 
 
     def update_user_record_id(self, user_id, field, new_value):
-        """ Update an existing user record in the JSON file with new data. This method is about to work on previously verifiedfile using load_json_file method() from 
+        """ Update an existing user record in the JSON file with new data. This method is about to work on previously verified file using load_json_file method() from 
             json_files_major_services module, which returns checked and ready to work json file. Also this method validates data and save changes in the file. 
         Args:
             user_id (int): The ID of the user to update.
@@ -124,6 +124,8 @@ class UsersJsonFileService():
         Returns:
             str - Confirmation message indicating successful update.
         """
+        self.authorisation.check_permission("edit_data")
+        self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()
         user_found = False
 
@@ -141,22 +143,7 @@ class UsersJsonFileService():
         self.json_service.write_json_data(current_data)
         return f"For user with ID: {user_id}, data updated successfully."
                 
-
-    def update_file_data(self, user_id, field, new_value):
-        """This method is for update users data in the JSON file. It checks user's permissions to edit data, checks if file exits and returns confirmation message.
-        Args:
-            user_id (int): The ID of the user to update.
-            field (str): The field to update.
-            new_value (str): The new value to update the field with.
-        Returns:
-            str - Confirmation message indicating successful update.
-        """
-        self.authorisation.check_permission("edit_data")
-        self.json_service.file_exists_checking()
-        self.update_user_record_id(user_id, field, new_value)
-        return "Changes in the file made succesfully and saved"
     
-
     def delete_user_by_id(self, user_id):
         """This method is for deleting user by id from the JSON file. It checks permission to delete data.
             
