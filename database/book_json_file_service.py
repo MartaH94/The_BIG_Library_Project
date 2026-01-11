@@ -57,6 +57,18 @@ class BookJsonFileService():
         
 
     def get_all_books_list(self, book_id):
+        """ This method returns list of all books in database. It can be used to display all books in GUI and makes possible to manage on the books (searching, deleting, updating etc.)
+
+        Args:
+            book_id (int): Unique identifier of the book.
+
+        Raises:
+            exc.BookNotFoundError: _description_
+            exc.BookError: _description_
+
+        Returns:
+            list: List of all books in database.
+        """
         current_data = self.json_service.load_json_file()
         all_books = []
         book_found = False
