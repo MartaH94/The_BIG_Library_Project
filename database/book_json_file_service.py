@@ -48,11 +48,14 @@ class BookJsonFileService():
         """
         pass
 
+
     def get_book_data(self, book_id):
-        """I search for book data here by id. I also need searching by keyword
+        """ Searching for the book in the library by book ID. This method wilb be used in library for instance before book loan or before chanching thr book's status.
+
+        Returned book_data ought to be a dictionary! 
 
         Args:
-            book_id (_type_): _description_
+            book_id (str): Unique ID of the book.
         """
         current_data = self.json_service.load_json_file()
         book_found = False
