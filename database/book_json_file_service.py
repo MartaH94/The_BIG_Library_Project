@@ -9,7 +9,8 @@ TO DO HERE:
 - Verify implemented methods.
 - Implement new methods. Verify what is needed. 
 - verify imports 
-- Add permissions! 
+- Add and verify permissions! 
+- Check code of get_book_data method if it's sufficient and correct.
 
 methods added: get book data, get all books list, update book data, delete book by id
 methods that can be added: 
