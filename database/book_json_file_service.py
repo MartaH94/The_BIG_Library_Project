@@ -11,7 +11,11 @@ TO DO HERE:
 - verify imports 
 - Add permissions! 
 
-- methods to add: get book data, get all books list, update book record id, update file data, delete book by matching parameters, maybe sth else.
+methods added: get book data, get all books list, update book data, delete book by id
+methods that can be added: 
+
+
+
 
 
 """
@@ -34,6 +38,15 @@ class BookJsonFileService():
         self.json_service = json_service
         self.authorisation = authorisation
         self.file_path = file_path
+
+    def add_book_data(self, book_data):
+        """ Adds data of new book to database file. Validates book_data against schema. Checks uniqueness of ID.
+
+
+        Args:
+            book_data (_type_): _description_
+        """
+        pass
 
     def get_book_data(self, book_id):
         """I search for book data here by id. I also need searching by keyword
