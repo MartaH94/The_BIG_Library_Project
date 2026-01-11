@@ -43,6 +43,14 @@ class BookJsonFileService():
     def add_book_data(self, book_data):
         """ Adds data of new book to database file. Validates book_data against schema. Checks uniqueness of ID.
 
+        Guidelines:
+        - book_data must be dictionary
+        - load the file
+        - checking id uniqueness - check if you can use existing method
+        - verify book data (check if all fields are correct; author, title, year, etc)
+        - Add the book_data to database 
+        - Save the changes
+
 
         Args:
             book_data (_type_): _description_
