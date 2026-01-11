@@ -90,6 +90,7 @@ class BookJsonFileService():
         """
         self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()
+        self.get_book_data(book_id)
         book_found = False
 
         if not new_value:
@@ -115,9 +116,12 @@ class BookJsonFileService():
     def delete_book_by_id(self, book_id):
         """ This method is for deleting book by id from the JSON file. It checks permission to delete data.
         """
+
+
         self.authorisation.check_permission("delete_book")
-        self.json_service.file_exists_checkout()
-        current_data = self.json_service.read_json_file()
+        self.json_service.file_exists_checking()
+        current_data = self.json_service.load_json_file()
+        self.get_book_data(book_id)
 
         if not book_id:
             raise exc.BookValidationError(f"Book_id can not be empty field.")
