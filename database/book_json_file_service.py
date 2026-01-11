@@ -131,5 +131,6 @@ class BookJsonFileService():
         if not book_deleted:
             raise exc.BookError(f"Book with ID: {book_id} couldn't be removed from database.")
         
+        self.json_service.validate_against_schema()
         self.json_service.write_json_data(current_data)
-        return "Placeholder for delete confirmation to user, using GUI"
+        return f"Book with ID: {book_id} has beed deleted from the library. "
