@@ -129,7 +129,7 @@ class BookJsonFileService():
                 break
 
         if not book_deleted:
-            raise exc.BookNotFoundError("Book not found in the library. Nothing to delete from library.")
+            raise exc.BookError(f"Book with ID: {book_id} couldn't be removed from database.")
         
         self.json_service.write_json_data(current_data)
         return "Placeholder for delete confirmation to user, using GUI"
