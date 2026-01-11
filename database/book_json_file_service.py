@@ -111,58 +111,9 @@ class BookJsonFileService():
         return f"Data in book with book ID: {book_id} has been changed in field: {field}."
 
 
-    def delete_book_from_database(self):
-        pass
-
-
-
-
-
-
-
-
-
-
-
-
-    def update_file_data(self, book_id, field, new_value):
-        """
-        This method is a base for planned new methods. look on top docstring
-        
-        :param self: Description
-        :param book_id: Description
-        :param field: Description
-        :param new_value: Description
-        """
-        self.authorisation.check_permission("edit_book")
-        self.json_service.file_exists_checkout()
-        current_data = self.json_service.read_json_file()
-
-        if not new_value:
-            return "I want to put information to user that he should add the value to change or he can cancel this action. It will be presented in GUI."
-
-        book_found = False
-        for book in current_data:
-            if book["id"] == book_id:
-                try:
-                    book[field] = new_value
-                    book_found = True
-                except KeyError:
-                    raise exc.InvalidFieldError(f"Field {field} does not exists in library file.")
-
-        if not book_found:
-            raise exc.BookNotFoundError(f"Book with {book_id} not found in the library.")
-        
-        self.json_service.write_json_data(current_data)
-        return "PLACEHOLDER: Here there will be confirmation for user that change have been done successfuly, using GUI"
-
     
-    def delete_data_from_file(self, book_id):
-        """
-        This method is a base for planned new methods. look on top docstring
-        
-        :param self: Description
-        :param book_id: Description
+    def delete_book_by_id(self, book_id):
+        """ This method is for deleting book by id from the JSON file. It checks permission to delete data.
         """
         self.authorisation.check_permission("delete_book")
         self.json_service.file_exists_checkout()
