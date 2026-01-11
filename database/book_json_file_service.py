@@ -105,6 +105,10 @@ class BookJsonFileService():
 
         if not book_found:
             raise exc.BookNotFoundError("New value to update book record is incorrect or empty value.")
+        
+        self.json_service.validate_against_schema()
+        self.json_service.write_json_data(current_data)
+        return f"Data in book with book ID: {book_id} has been changed in field: {field}."
 
 
     def delete_book_from_database(self):
