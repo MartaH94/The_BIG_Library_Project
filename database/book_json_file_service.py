@@ -56,7 +56,7 @@ class BookJsonFileService():
             book_data (_type_): _description_
         """
         current_data = self.json_service.load_json_file()
-        validated_book_data = self.json_service.validate_file_data(book_data)
+        validated_book_data = self.json_service.validate_against_schema(book_data)
         book_id = book_data["book_id"]
 
         if not book_data:
@@ -68,6 +68,9 @@ class BookJsonFileService():
         for book in current_data:
             if book["book_id"] == book_id:
                 raise exc.BookError(f"Book with ID: {book["book_id"]} exists in the database. ID number must be unique value.")
+            
+        if not validated_book_data:
+            raise exc.BookValidationError("Validation failed. Book data doesn't match database file schema.")
 
 
 
