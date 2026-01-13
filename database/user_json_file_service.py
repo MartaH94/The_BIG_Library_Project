@@ -9,10 +9,10 @@ TO DO HERE:
 - Implement method to retrieve all users. <-- Done.
 - Implement method to delete user by ID. <-- Done.
 - Reimplement delete_data_from_file method. <-- Rejected. Method not needed. 
-- Review permission checks in all methods. <-- Blocked Authorisattion service permissions splitting and update.
 - Review imports. <-- Looks good. 
 - Review docstrings. <-- All descriptions in one manner. 
 
+- Delete permission checks in all methods. <-- Checking permissions will go to functionality layer. 
 
 """
 
