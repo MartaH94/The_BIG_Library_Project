@@ -57,12 +57,18 @@ class BookJsonFileService():
         """
         current_data = self.json_service.load_json_file()
         validated_book_data = self.json_service.validate_file_data(book_data)
+        book_id = book_data["book_id"]
 
         if not book_data:
             raise exc.DataError("Book data to save is missing or it's incorrect.")
         
         if not isinstance(book_data, dict):
             raise exc.DataTypeError("Book data type is incorrect. Book data must be a dict type.")
+        
+        for book in current_data:
+            if book["book_id"] == book_id:
+                raise exc.BookError(f"Book with ID: {book["book_id"]} exists in the database. ID number must be unique value.")
+
 
 
     def get_book_data(self, book_id):
