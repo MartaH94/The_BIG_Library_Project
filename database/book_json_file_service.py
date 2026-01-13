@@ -71,6 +71,12 @@ class BookJsonFileService():
             
         if not validated_book_data:
             raise exc.BookValidationError("Validation failed. Book data doesn't match database file schema.")
+        else:
+            current_data.append(book_data)
+
+        self.json_service.write_json_data(current_data)
+
+        return "New book record added to the database without errors."
 
 
 
