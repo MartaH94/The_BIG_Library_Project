@@ -55,7 +55,11 @@ class BookJsonFileService():
         Args:
             book_data (_type_): _description_
         """
-        pass
+        current_data = self.json_service.load_json_file()
+        validated_book_data = self.json_service.validate_file_data(book_data)
+
+        if not book_data:
+            raise exc.DataError("Book data to save is missing or it's incorrect.")
 
 
     def get_book_data(self, book_id):
