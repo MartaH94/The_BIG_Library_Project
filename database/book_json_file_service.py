@@ -60,6 +60,9 @@ class BookJsonFileService():
 
         if not book_data:
             raise exc.DataError("Book data to save is missing or it's incorrect.")
+        
+        if not isinstance(book_data, dict):
+            raise exc.DataTypeError("Book data type is incorrect. Book data must be a dict type.")
 
 
     def get_book_data(self, book_id):
