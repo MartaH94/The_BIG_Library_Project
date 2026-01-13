@@ -8,16 +8,16 @@ __________________________________________________________
 TO DO HERE: 
 - verify imports
 - update docstrings
-- implement crucial methods
 
-methods to implement: get full list of loans, verificate correct loan data, add loan data to database, update data in loan, what else I can do with that data? 
-
+METHODS:
+1. get_loan_data() --> implement
+2. add_loan() --> implement
+3. get_all_loans_list() --> implement
+4. update_file data() --> make review
+5. delete_data_from_file() --> make review
 
 
 """
-
-
-
 
 
 
@@ -36,7 +36,18 @@ class LoanJsonFileService():
         self.authorisation = authorisation
         self.file_path = file_path
 
+    def get_loan_data(self):
+        pass
+
+    def add_loan(self):
+        pass
+
+    def get_all_loans_list(self):
+        pass
+
     def update_file_data(self, loan_id, field, new_value):
+        """ !! This method needs review.
+        """
         self.authorisation.check_permission("edit_data")
         self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()
@@ -60,6 +71,8 @@ class LoanJsonFileService():
         return "Placeholder, confirmation for user."
 
     def delete_data_from_file(self, loan_id):
+        """ !! This method requires review! 
+        """
         self.authorisation.check_permission("delete_data")
         self.json_service.file_exists_checking
         current_data = self.json_service.load_json_file()
