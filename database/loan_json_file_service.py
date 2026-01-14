@@ -36,8 +36,21 @@ class LoanJsonFileService():
         self.authorisation = authorisation
         self.file_path = file_path
 
-    def get_loan_data(self):
-        pass
+    def get_loan_data(self, loan_id):
+        current_data = self.json_service.load_json_file()
+        loan_found = False
+        loan_data = None
+
+        for loan in current_data:
+            if loan["loan_id"] == loan_id:
+                loan_data = loan
+                loan_found = True
+
+        if not loan_found:
+            raise exc.BookNotFoundError(f"Loan with {loan_id} does not exists in database.")
+        
+        return loan_data
+        
 
     def add_loan(self):
         pass
