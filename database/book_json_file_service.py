@@ -94,7 +94,7 @@ class BookJsonFileService():
         book_data = None
 
         for book in current_data:
-            if book["id"] == book_id:
+            if book["book_id"] == book_id:
                 book_data = book
                 book_found = True
 
@@ -171,7 +171,7 @@ class BookJsonFileService():
 
         book_deleted = False
         for book in current_data:
-            if book["id"] == book_id:
+            if book["book_id"] == book_id:
                 current_data.remove(book)
                 book_deleted = True
                 break
