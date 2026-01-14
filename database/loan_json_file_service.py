@@ -47,7 +47,7 @@ class LoanJsonFileService():
                 loan_found = True
 
         if not loan_found:
-            raise exc.BookNotFoundError(f"Loan with {loan_id} does not exists in database.")
+            raise exc.LoanNotFoundError(f"Loan with {loan_id} does not exists in database.")
         
         return loan_data
         
@@ -65,16 +65,16 @@ class LoanJsonFileService():
         
         for loan in current_data:
             if loan["loan_id"] == loan_id:
-                raise exc.BookError(f"Book with ID: {loan["loan_id"]} exists in the database. ID number must be unique value.")
+                raise exc.LoanError(f"Book with ID: {loan["loan_id"]} exists in the database. ID number must be unique value.")
             
         if not validated_loan_data:
-            raise exc.BookValidationError("Validation failed. Book data doesn't match database file schema.")
+            raise exc.LoanValidationError("Validation failed. Book data doesn't match database file schema.")
         else:
             current_data.append(loan_data)
 
         self.json_service.write_json_data(current_data)
 
-        return "New book record added to the database without errors."
+        return "New loan data record added to the database without errors."
     
 
     def get_all_loans_list(self):
