@@ -52,8 +52,30 @@ class LoanJsonFileService():
         return loan_data
         
 
-    def add_loan(self):
-        pass
+    def add_loan_data(self, loan_data):
+        current_data = self.json_service.load_json_file()
+        validated_loan_data = self.json_service.validate_against_schema(loan_data)
+        loan_id = loan_data["loan_id"]
+
+        if not loan_data:
+            raise exc.DataError("Book data to save is missing or it's incorrect.")
+        
+        if not isinstance(loan_data, dict):
+            raise exc.DataTypeError("Book data type is incorrect. Book data must be a dict type.")
+        
+        for loan in current_data:
+            if loan["loan_id"] == loan_id:
+                raise exc.BookError(f"Book with ID: {loan["loan_id"]} exists in the database. ID number must be unique value.")
+            
+        if not validated_loan_data:
+            raise exc.BookValidationError("Validation failed. Book data doesn't match database file schema.")
+        else:
+            current_data.append(loan_data)
+
+        self.json_service.write_json_data(current_data)
+
+        return "New book record added to the database without errors."
+    
 
     def get_all_loans_list(self):
         pass
