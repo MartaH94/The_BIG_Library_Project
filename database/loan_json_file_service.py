@@ -22,8 +22,6 @@ METHODS:
 
 
 
-
-import json
 import utils.config as config
 import exceptions as exc
 
@@ -38,7 +36,7 @@ class LoanJsonFileService():
         self.file_path = file_path
 
     def get_loan_data(self, loan_id):
-        """ This method retrieves loan data from database file by loan ID. It returns loan data as dictionary. It can be used to display loan details in GUI.
+        """ This method retrieves loan data from record in database file by loan ID. It returns loan data as dictionary. It can be used to display single loan details in GUI.
 
         Args:
             loan_id (int): Unique number of loan
@@ -79,7 +77,7 @@ class LoanJsonFileService():
             raise exc.DataError("Book data to save is missing or it's incorrect.")
         
         if not isinstance(loan_data, dict):
-            raise exc.DataTypeError("Book data type is incorrect. Book data must be a dict type.")
+            raise exc.DataTypeError("Book data type is incorrect. Book data must be a dictionary")
         
         for loan in current_data:
             if loan["loan_id"] == loan_id:
@@ -96,7 +94,7 @@ class LoanJsonFileService():
     
 
     def get_all_loans_list(self, loan_id):
-        """ This method returns all loans in database in one list. It can be used to mangage loan data, display loans in GUI. 
+        """ This method returns list of all loans in database. It can be used to display all loans in GUI and makes possible to manage on the loans (searching, deleting, updating etc.)
 
         Args:
             loan_id (int): Unique numerber of loan 
@@ -105,6 +103,7 @@ class LoanJsonFileService():
             list: This method returns a list of all loans in database file. 
         """
         current_data = self.json_service.load_json_file()
+        self.get_loan_data(loan_id)
         all_loans_list = []
         loan_found = False
 
@@ -152,6 +151,7 @@ class LoanJsonFileService():
         self.authorisation.check_permission("delete_data")
         self.json_service.file_exists_checking
         current_data = self.json_service.load_json_file()
+        self.get_loan_data(loan_id)
         
         if not loan_id:
             raise exc.LoanValidationError("Loan data are empty field or have invalid value.")
