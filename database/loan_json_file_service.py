@@ -123,12 +123,11 @@ class LoanJsonFileService():
     def update_file_data(self, loan_id, field, new_value):
         """ !! This method needs review.
         """
-        self.authorisation.check_permission("edit_data")
         self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()
 
         if not new_value:
-            return "Information to user, that new value can not be empty field"
+            raise exc.LoanValidationError("New value to update loand data is incorrect or is empty data")
         
         loan_id_found = False
         for loan in current_data:
