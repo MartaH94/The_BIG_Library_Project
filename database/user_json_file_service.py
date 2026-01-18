@@ -6,12 +6,7 @@ Service class for managing user records in a JSON file.
 ________________________________________________________
 
 TO DO HERE:
-- Implement method to retrieve all users. <-- Done.
-- Implement method to delete user by ID. <-- Done.
-- Reimplement delete_data_from_file method. <-- Rejected. Method not needed. 
-- Review imports. <-- Looks good. 
 - Review docstrings. <-- All descriptions in one manner. 
-
 - Delete permission checks in all methods. <-- Checking permissions will go to functionality layer. 
 
 """
@@ -56,7 +51,7 @@ class UsersJsonFileService():
         return user_data
     
 
-    def add_user(self, user_data):  
+    def add_user_data(self, user_data):  
         """ Add a new user record to the JSON file. This method checks user's permissions to edit data, loads current data from file, validates new user data against schema,
             checks for unique user ID, appends new user data to current data, and writes updated data back to the file.
         Args:
@@ -127,6 +122,7 @@ class UsersJsonFileService():
         self.authorisation.check_permission("edit_data")
         self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()
+        self.get_user_data(user_id)
         user_found = False
 
         for user in current_data:
