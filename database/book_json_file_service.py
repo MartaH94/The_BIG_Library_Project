@@ -32,19 +32,10 @@ class BookJsonFileService():
         self.file_path = file_path
 
     def add_book_data(self, book_data):
-        """ Adds data of new book to database file. Validates book_data against schema. Checks uniqueness of ID.
-
-        Guidelines:
-        - book_data must be dictionary
-        - load the file
-        - checking id uniqueness - check if you can use existing method
-        - verify book data (check if all fields are correct; author, title, year, etc)
-        - Add the book_data to database 
-        - Save the changes
-
+        """ This method adds new book data record to database file. It validates book_data against schema and checks uniqueness of book ID. It can be used to create new book record in library.
 
         Args:
-            book_data (_type_): _description_
+            book_data (dict): Book data to be added to database.
         """
         current_data = self.json_service.load_json_file()
         validated_book_data = self.json_service.validate_against_schema(book_data)
@@ -72,9 +63,7 @@ class BookJsonFileService():
 
 
     def get_book_data(self, book_id):
-        """ Searching for the book in the library by book ID. This method wilb be used in library for instance before book loan or before chanching thr book's status.
-
-        Returned book_data ought to be a dictionary! 
+        """ This method retrieves book data from database file by book ID. It returns book data as dictionary. It can be used to display book details in GUI.
 
         Args:
             book_id (str): Unique ID of the book.
@@ -100,10 +89,6 @@ class BookJsonFileService():
         Args:
             book_id (int): Unique identifier of the book.
 
-        Raises:
-            exc.BookNotFoundError: _description_
-            exc.BookError: _description_
-
         Returns:
             list: List of all books in database.
         """
@@ -124,7 +109,16 @@ class BookJsonFileService():
 
 
     def update_book_data(self, book_id, field, new_value):
-        """ Update an existing book record in the JSON file with new data.
+        """ This method updates book data in database file by book ID. It checks if new value is not empty, retrieves current data from file, updates specified field with new value, validates updated data against schema, and writes updated data back to the file.
+        It can be used to modify book details in library.
+
+        Args:
+            book_id (int): Unique identifier of the book.
+            field (str): Field to be updated.
+            new_value (str): New value for the field.
+
+        Returns:
+            str: A message indicating the success of the update.
         """
         self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()
@@ -132,7 +126,7 @@ class BookJsonFileService():
         book_found = False
 
         if not new_value:
-            raise exc.FileError("This exception requires sth better. And this validation needs to be in similar methods. New value to update book record is incorrect or not exists.")
+            raise exc.BookValidationError("New value to update book record is incorrect or empty value.")
 
         for book in current_data:
             if book["book_id"] == book_id:
@@ -152,7 +146,14 @@ class BookJsonFileService():
 
     
     def delete_book_by_id(self, book_id):
-        """ This method is for deleting book by id from the JSON file. It checks permission to delete data.
+        """ This method deletes book from database file by book ID. It checks if book exists in database, removes book from current data, validates updated data against schema, and writes updated data back to the file.
+        It can be used to remove book from library.
+
+        Args:
+            book_id (int): Unique identifier of the book.
+
+        Returns:
+            str: A message indicating the success of the deletion.
         """
         self.authorisation.check_permission("delete_book")
         self.json_service.file_exists_checking()
