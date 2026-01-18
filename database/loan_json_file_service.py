@@ -80,13 +80,19 @@ class LoanJsonFileService():
     def get_all_loans_list(self, loan_id):
         current_data = self.json_service.load_json_file()
         all_loans_list = []
-
-        if not loan_id:
-            raise exc.LoanError("Value of loan ID is invalid. ID must be a number value.")
+        loan_found = False
 
         for loan in current_data:
-            if loan_id:
-                all_loans_list.append(loan)
+            if loan["loan_id"] == loan_id:
+                try:
+                    all_loans_list.append(loan)
+                    loan_found = True
+                except KeyError:
+                    raise exc.LoanNotFoundError(f"Loan with ID: {loan_id} does not exists in database.")
+            if not loan_found:
+                raise exc.LoanError(f"Loan not found")
+        return all_loans_list
+            
         
 
 
