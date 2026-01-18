@@ -14,8 +14,8 @@ METHODS:
 1. get_loan_data() --> implemented
 2. add_loan() --> implemented
 3. get_all_loans_list() --> implemented
-4. update_file data() --> make review
-5. delete_data_from_file() --> make review
+4. update_file data() --> reviewed
+5. delete_data_from_file() --> reviewed
 
 --> General review of methods.
 """
