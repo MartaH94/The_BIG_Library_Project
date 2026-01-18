@@ -6,17 +6,18 @@ Service class for managing book loan data in a JSON file.
 __________________________________________________________
 
 TO DO HERE: 
+- Delete permission checks in all methods. <-- Checking permissions will go to functionality layer. 
 - verify imports
 - update docstrings
 
 METHODS:
-1. get_loan_data() --> implement
-2. add_loan() --> implement
-3. get_all_loans_list() --> implement
+1. get_loan_data() --> implemented
+2. add_loan() --> implemented
+3. get_all_loans_list() --> implemented
 4. update_file data() --> make review
 5. delete_data_from_file() --> make review
 
-
+--> General review of methods.
 """
 
 
