@@ -129,9 +129,9 @@ class UsersJsonFileService():
                     user[field] = new_value
                     user_found = True
                 except KeyError:
-                    raise exc.UserValidationError("User's ID is invalid or it's empty value")
+                    raise exc.UserNotFoundError(f"User with ID: {user_id} not found in database.")
             if not user_found:
-                raise exc.UserNotFoundError(f"User with id: {user_id} not found in users database.")
+                raise exc.UserNotFoundError(f"User with ID: {user_id} not found in database.")
             
         self.json_service.validate_file_data()
         self.json_service.write_json_data(current_data)
@@ -147,8 +147,8 @@ class UsersJsonFileService():
         self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()
         self.get_user_data(user_id)
-
         user_deleted = False
+
         for user in current_data:
             if user["id"] == user_id:
                 current_data.remove(user)
@@ -156,7 +156,7 @@ class UsersJsonFileService():
                 break
 
         if not user_deleted:
-            raise exc.UserError(f"User {user_id} couldn't be removed from database.")
+            raise exc.UserError(f"User with ID: {user_id} couldn't be removed from database.")
 
         self.json_service.validate_file_data()
         self.json_service.write_json_data(current_data)
