@@ -77,8 +77,18 @@ class LoanJsonFileService():
         return "New loan data record added to the database without errors."
     
 
-    def get_all_loans_list(self):
-        pass
+    def get_all_loans_list(self, loan_id):
+        current_data = self.json_service.load_json_file()
+        all_loans_list = []
+
+        if not loan_id:
+            raise exc.LoanError("Value of loan ID is invalid. ID must be a number value.")
+
+        for loan in current_data:
+            if loan_id:
+                all_loans_list.append(loan)
+        
+
 
     def update_file_data(self, loan_id, field, new_value):
         """ !! This method needs review.
