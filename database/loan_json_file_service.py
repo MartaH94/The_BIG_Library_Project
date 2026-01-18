@@ -81,7 +81,7 @@ class LoanJsonFileService():
         
         for loan in current_data:
             if loan["loan_id"] == loan_id:
-                raise exc.LoanError(f"Book with ID: {loan["loan_id"]} exists in the database. ID number must be unique value.")
+                raise exc.LoanError(f"Loan with ID: {loan['loan_id']} exists in the database. ID number must be unique value.")
             
         if not validated_loan_data:
             raise exc.LoanValidationError("Validation failed. Book data doesn't match database file schema.")
@@ -90,7 +90,7 @@ class LoanJsonFileService():
 
         self.json_service.write_json_data(current_data)
 
-        return "New loan data record added to the database without errors."
+        return "New loan record added to the database without errors."
     
 
     def get_all_loans_list(self, loan_id):
@@ -127,7 +127,7 @@ class LoanJsonFileService():
         loan_id_found = False
 
         if not new_value:
-            raise exc.LoanValidationError("New value to update loand data is incorrect or is empty data")
+            raise exc.LoanValidationError("New value to update loand data is missing or is not correct.")
         
         for loan in current_data:
             if loan["id"] == loan_id:
@@ -135,14 +135,14 @@ class LoanJsonFileService():
                     loan[field] = new_value
                     loan_id_found = True
                 except KeyError:
-                    raise exc.InvalidFieldError(f"Field {field} does not exists in loan database file.")
+                    raise exc.LoanNotFoundError(f"Loan with ID: {loan_id} not found in database.")
                 
             if not loan_id_found:
-                raise exc.LoanNotFoundError(f"Loan id {loan_id} is missing in the loans file. ")
+                raise exc.LoanNotFoundError(f"Loan with ID: {loan_id} not found in database.")
 
         self.json_service.validate_against_schema()    
         self.json_service.write_json_data(current_data)
-        return f"Updated loan record with ID {loan_id}. Changes made in {field} field."
+        return f"For loan with ID: {loan_id}, data updated successfully."
 
 
     def delete_data_from_file(self, loan_id):
@@ -152,14 +152,14 @@ class LoanJsonFileService():
         current_data = self.json_service.load_json_file()
         self.get_loan_data(loan_id)
         loan_id_found = False
-        
+
         for loan in current_data:
             if loan["id"] == loan_id:
                 current_data.remove(loan)
                 loan_id_found = True
 
         if not loan_id_found:
-            raise exc.LoanNotFoundError("Loan ID does not exists in the loans file.")
+            raise exc.LoanNotFoundError("Loan ID to delete record is incorrect or missing in the loans database file.")
 
         self.json_service.write_json_data(current_data)
-        return "Placeholder to confiramtion to user that data has benn deleted."
+        return f"Loan record with ID {loan_id} has been deleted from database."
