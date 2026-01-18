@@ -12,7 +12,6 @@ TO DO HERE:
 
 """
 
-import json
 import utils.config as config
 import exceptions as exc
 
@@ -30,6 +29,27 @@ class BookJsonFileService():
         self.json_service = json_service
         self.authorisation = authorisation
         self.file_path = file_path
+
+    def get_book_data(self, book_id):
+        """ This method retrieves book data from database file by book ID. It returns book data as dictionary. It can be used to display book details in GUI.
+
+        Args:
+            book_id (str): Unique ID of the book.
+        """
+        current_data = self.json_service.load_json_file()
+        book_found = False
+        book_data = None
+
+        for book in current_data:
+            if book["book_id"] == book_id:
+                book_data = book
+                book_found = True
+
+        if not book_found:
+            raise exc.BookNotFoundError(f"Book with {book_id} does not exists in database.")
+        
+        return book_data
+
 
     def add_book_data(self, book_data):
         """ This method adds new book data record to database file. It validates book_data against schema and checks uniqueness of book ID. It can be used to create new book record in library.
@@ -62,25 +82,7 @@ class BookJsonFileService():
 
 
 
-    def get_book_data(self, book_id):
-        """ This method retrieves book data from database file by book ID. It returns book data as dictionary. It can be used to display book details in GUI.
-
-        Args:
-            book_id (str): Unique ID of the book.
-        """
-        current_data = self.json_service.load_json_file()
-        book_found = False
-        book_data = None
-
-        for book in current_data:
-            if book["book_id"] == book_id:
-                book_data = book
-                book_found = True
-
-        if not book_found:
-            raise exc.BookNotFoundError(f"Book with {book_id} does not exists in database.")
-        
-        return book_data
+    
         
 
     def get_all_books_list(self, book_id):
@@ -126,7 +128,7 @@ class BookJsonFileService():
         book_found = False
 
         if not new_value:
-            raise exc.BookValidationError("New value to update book record is incorrect or empty value.")
+            raise exc.BookValidationError("New value to update book record is incorrect or is empty value.")
 
         for book in current_data:
             if book["book_id"] == book_id:
