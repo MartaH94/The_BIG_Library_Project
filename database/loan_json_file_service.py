@@ -148,15 +148,11 @@ class LoanJsonFileService():
     def delete_data_from_file(self, loan_id):
         """ !! This method requires review! 
         """
-        self.authorisation.check_permission("delete_data")
         self.json_service.file_exists_checking
         current_data = self.json_service.load_json_file()
         self.get_loan_data(loan_id)
-        
-        if not loan_id:
-            raise exc.LoanValidationError("Loan data are empty field or have invalid value.")
-        
         loan_id_found = False
+        
         for loan in current_data:
             if loan["id"] == loan_id:
                 current_data.remove(loan)
