@@ -123,13 +123,13 @@ class LoanJsonFileService():
     def update_file_data(self, loan_id, field, new_value):
         """ !! This method needs review.
         """
-        self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()
+        self.get_loan_data(loan_id)
+        loan_id_found = False
 
         if not new_value:
             raise exc.LoanValidationError("New value to update loand data is incorrect or is empty data")
         
-        loan_id_found = False
         for loan in current_data:
             if loan["id"] == loan_id:
                 try:
@@ -140,9 +140,10 @@ class LoanJsonFileService():
                 
             if not loan_id_found:
                 raise exc.LoanNotFoundError(f"Loan id {loan_id} is missing in the loans file. ")
-            
+
+        self.json_service.validate_against_schema()    
         self.json_service.write_json_data(current_data)
-        return "Placeholder, confirmation for user."
+        return f"Updated loan record with ID {loan_id}. Changes made in {field} field."
 
 
     def delete_data_from_file(self, loan_id):
