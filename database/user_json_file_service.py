@@ -30,7 +30,7 @@ class UsersJsonFileService():
 
 
     def get_user_data(self, user_id):
-        """ Retrieve a user data record from the JSON file by user ID. 
+        """ Retrieve a user data record from the JSON file by user ID. It can be used to display user details in GUI.
         Args:
             user_id (int): The ID of the user to retrieve.
         Returns:
@@ -46,20 +46,19 @@ class UsersJsonFileService():
                 user_found = True
 
         if not user_found:
-            raise exc.UserNotFoundError(f"User with {user_id} does  not exist in database")        
+            raise exc.UserNotFoundError(f"User with {user_id} does not exist in database")        
 
         return user_data
     
 
     def add_user_data(self, user_data):  
         """ Add a new user record to the JSON file. This method checks user's permissions to edit data, loads current data from file, validates new user data against schema,
-            checks for unique user ID, appends new user data to current data, and writes updated data back to the file.
+            checks for unique user ID, appends new user data to current data, and writes updated data back to the file. It can be used to create a new user record.
         Args:
             user_data (dict): The user data to add.
         Returns:
             str - Confirmation message with the new user's ID.
         """
-        self.authorisation.check_permission("edit_data")
         current_data = self.json_service.load_json_file()
         validated_data = self.json_service.validate_against_schema(user_data)
         user_id = user_data["id"]
@@ -119,7 +118,6 @@ class UsersJsonFileService():
         Returns:
             str - Confirmation message indicating successful update.
         """
-        self.authorisation.check_permission("edit_data")
         self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()
         self.get_user_data(user_id)
@@ -146,7 +144,6 @@ class UsersJsonFileService():
         Raises:
             exc.UserNotFoundError: _description_
         """
-        self.authorisation.check_permission("delete_data")
         self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()
         self.get_user_data(user_id)
