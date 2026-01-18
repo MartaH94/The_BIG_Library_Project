@@ -37,6 +37,14 @@ class LoanJsonFileService():
         self.file_path = file_path
 
     def get_loan_data(self, loan_id):
+        """ This method retrieves loan data from database file by loan ID. It returns loan data as dictionary. It can be used to display loan details in GUI.
+
+        Args:
+            loan_id (int): Unique number of loan
+
+        Returns:
+            dict: Loan data as a dictionary.
+        """
         current_data = self.json_service.load_json_file()
         loan_found = False
         loan_data = None
@@ -53,6 +61,15 @@ class LoanJsonFileService():
         
 
     def add_loan_data(self, loan_data):
+        """ This method adds new loan data record to database file. It validates loan_data against schema and checks uniqueness of loan ID. It can be used to create new loan record.
+        This method works with all kinds of loan actions - new loan, return of book, extend loan period.
+
+        Args:
+            loan_data (dict): Loan data to be added to database.
+
+        Returns:
+            str: Confirmation message that new loan data record was added to the database.
+        """
         current_data = self.json_service.load_json_file()
         validated_loan_data = self.json_service.validate_against_schema(loan_data)
         loan_id = loan_data["loan_id"]
@@ -78,6 +95,14 @@ class LoanJsonFileService():
     
 
     def get_all_loans_list(self, loan_id):
+        """ This method returns all loans in database in one list. It can be used to mangage loan data, display loans in GUI. 
+
+        Args:
+            loan_id (int): Unique numerber of loan 
+
+        Returns:
+            list: This method returns a list of all loans in database file. 
+        """
         current_data = self.json_service.load_json_file()
         all_loans_list = []
         loan_found = False
@@ -94,8 +119,6 @@ class LoanJsonFileService():
         return all_loans_list
             
         
-
-
     def update_file_data(self, loan_id, field, new_value):
         """ !! This method needs review.
         """
@@ -120,6 +143,7 @@ class LoanJsonFileService():
             
         self.json_service.write_json_data(current_data)
         return "Placeholder, confirmation for user."
+
 
     def delete_data_from_file(self, loan_id):
         """ !! This method requires review! 
