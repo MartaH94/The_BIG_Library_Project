@@ -127,9 +127,9 @@ class BookJsonFileService():
                     all_books.append(book)
                     book_found = True
                 except KeyError:
-                    raise exc.BookNotFoundError(f"Book with ID {book_id} does not exists in database.")
+                    raise exc.BookNotFoundError(f"Book with ID {book_id} not found in database.")
             if not book_found:
-                raise exc.BookError(f"No book in database. Impossible to add book with ID: {book["book_id"]} to all books list.")
+                raise exc.BookNotFoundError(f"Book with ID {book_id} not found in database.")
         return all_books
 
 

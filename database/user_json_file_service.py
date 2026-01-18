@@ -80,7 +80,7 @@ class UsersJsonFileService():
                 raise exc.UserError(f"User with {user_id} already exists in database. Each user needs unique ID.")
 
         if not validated_data:
-            raise exc.ValidationError(f"Validation new user data {user_data} does not match file schema.")
+            raise exc.UserValidationError(f"Validation new user data {user_data} does not match file schema.")
         else:
             current_data.append(user_data)
         
@@ -89,7 +89,7 @@ class UsersJsonFileService():
         return f"Added new user to database with ID: {user_id}"
 
 
-    def all_users_list(self, user_login_name):
+    def get_all_users_list(self, user_login_name):
         """ Retrieve all user records from the JSON file that match the given login name. 
         Args:
             user_login_name (str): The login name of the user to retrieve. For example john_example3
@@ -107,9 +107,9 @@ class UsersJsonFileService():
                     all_users.append(user)
                     user_found = True
                 except KeyError:
-                    raise exc.UserNotFoundError(f"No user with name: {user["user_name"]} in library database.")
+                    raise exc.UserNotFoundError(f"User with login: {user_login_name} not found in database.")
             if not user_found:
-                raise exc.UserError(f"No user in database. Impossible to add user: {user["user_name"]} to all users list.")
+                raise exc.UserNotFoundError(f"User with login: {user_login_name} not found in database.")
             
         return all_users
 

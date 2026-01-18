@@ -88,9 +88,9 @@ class LoanJsonFileService():
                     all_loans_list.append(loan)
                     loan_found = True
                 except KeyError:
-                    raise exc.LoanNotFoundError(f"Loan with ID: {loan_id} does not exists in database.")
+                    raise exc.LoanNotFoundError(f"Loan with ID: {loan_id} not found.")
             if not loan_found:
-                raise exc.LoanError(f"Loan not found")
+                raise exc.LoanNotFoundError(f"Loan with ID: {loan_id} not found.")
         return all_loans_list
             
         
