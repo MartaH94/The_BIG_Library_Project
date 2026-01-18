@@ -64,14 +64,14 @@ class UsersJsonFileService():
         user_id = user_data["id"]
 
         if not user_data:
-            raise exc.DataError("User data its empty value or its misisng. Provide correct data.")
+            raise exc.DataError("User data to add is missing.")
         
         if not isinstance(user_data, dict):
-            raise exc.DataTypeError("User data must be a dictionary.")
+            raise exc.DataTypeError("User data type is incorrect. User data must be a dict type.")
 
         for user in current_data:
             if user["id"] == user_id:
-                raise exc.UserError(f"User with {user_id} already exists in database. Each user needs unique ID.")
+                raise exc.UserError(f"User with ID: {user_id} already exists in the database. User ID must be unique value.")
 
         if not validated_data:
             raise exc.UserValidationError(f"Validation new user data {user_data} does not match file schema.")
@@ -84,14 +84,14 @@ class UsersJsonFileService():
 
 
     def get_all_users_list(self, user_login_name):
-        """ Retrieve all user records from the JSON file that match the given login name. 
+        """ Retrieve all user records from the JSON file that match the given login name. It can be used to display user details in GUI.
         Args:
             user_login_name (str): The login name of the user to retrieve. For example john_example3
         Returns:
             list - A list of user records matching the login name.
         """
-        self.authorisation.check_permission("view_data")
         current_data = self.json_service.load_json_file()
+        self.get_user_data(user_login_name)
         all_users = []
 
         user_found = False
