@@ -17,7 +17,7 @@ import exceptions as exc
 from utils.config import PROGRAM_USERS_FILE_PATH
 from database.json_files_major_services import JsonFilesService
 from services.authorisation_service import UserAuthorisation
-from services.authorisation_service import user_permissions
+
 
 class UsersJsonFileService():
     """ Service class for managing user records in a JSON file. This class provides methods to add, retrieve, update, and delete user records,

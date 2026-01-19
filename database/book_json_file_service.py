@@ -12,7 +12,7 @@ TO DO HERE:
 
 """
 
-import utils.config as config
+
 import exceptions as exc
 
 from utils.config import THE_LIBRARY_FILE_PATH

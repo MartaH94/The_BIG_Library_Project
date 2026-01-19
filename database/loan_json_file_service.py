@@ -22,7 +22,6 @@ METHODS:
 
 
 
-import utils.config as config
 import exceptions as exc
 
 from utils.config import LOANS_LIST_FILE_PATH
