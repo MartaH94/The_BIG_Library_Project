@@ -108,7 +108,7 @@ class UsersJsonFileService():
         return all_users
 
 
-    def update_user_record_id(self, user_id, field, new_value):
+    def update_user_data(self, user_id, field, new_value):
         """ Update an existing user record in the JSON file with new data. This method is about to work on previously verified file using load_json_file method() from 
             json_files_major_services module, which returns checked and ready to work json file. Also this method validates data and save changes in the file. 
         Args:
@@ -144,8 +144,10 @@ class UsersJsonFileService():
     def delete_user_by_id(self, user_id):
         """This method is for deleting user by id from the JSON file. It checks permission to delete data.
             
-        Raises:
-            exc.UserNotFoundError: _description_
+        Args:
+            user_id (int): The ID of the user to delete. 
+        Returns:
+            str - Confirmation message indicating successful deletion.                   
         """
         self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()

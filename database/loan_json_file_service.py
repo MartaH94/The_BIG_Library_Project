@@ -130,6 +130,7 @@ class LoanJsonFileService():
         Returns:
             str: Confirmation message that loan data was updated successfully.
         """
+        self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()
         self.get_loan_data(loan_id)
         loan_id_found = False
@@ -160,7 +161,7 @@ class LoanJsonFileService():
         Returns:
             str: Confirmation message that loan record was deleted successfully.
         """
-        self.json_service.file_exists_checking
+        self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()
         self.get_loan_data(loan_id)
         loan_id_found = False
@@ -173,5 +174,6 @@ class LoanJsonFileService():
         if not loan_id_found:
             raise exc.LoanNotFoundError("Loan ID to delete record is incorrect or missing in the loans database file.")
 
+        self.json_service.validate_against_schema()
         self.json_service.write_json_data(current_data)
         return f"Loan record with ID {loan_id} has been deleted from database."

@@ -120,7 +120,7 @@ class BookJsonFileService():
         Returns:
             str: A message indicating the success of the update.
         """
-        self.json_service.file_exists_checking()
+        
         current_data = self.json_service.load_json_file()
         self.get_book_data(book_id)
         book_found = False
@@ -158,8 +158,8 @@ class BookJsonFileService():
         self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()
         self.get_book_data(book_id)
-
         book_deleted = False
+        
         for book in current_data:
             if book["book_id"] == book_id:
                 current_data.remove(book)
