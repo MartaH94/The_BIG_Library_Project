@@ -20,9 +20,8 @@ from database.json_files_major_services import JsonFilesService
 from services.authorisation_service import UserAuthorisation
 
 class BookJsonFileService():
-    """Service class for managing book data in a JSON file. This class provides methods to retrive data of specific book, get book of all available books, update data of book, delete book with matching parameter.
-    
-    Note for future me: In GUI user will choose books from list to delete. 
+    """ Service class for managing book data in a JSON file. This class provides methods to add, retrieve, update, and delete book records,
+        while ensuring data validation. It can be used to manage the library's book collection.
 
     """
     def __init__(self, json_service: JsonFilesService, authorisation: UserAuthorisation, file_path=THE_LIBRARY_FILE_PATH):
@@ -79,11 +78,7 @@ class BookJsonFileService():
         self.json_service.write_json_data(current_data)
 
         return "New book record added to the database without errors."
-
-
-
-    
-        
+     
 
     def get_all_books_list(self, book_id):
         """ This method returns list of all books in database. It can be used to display all books in GUI and makes possible to manage on the books (searching, deleting, updating etc.)
@@ -95,6 +90,7 @@ class BookJsonFileService():
             list: List of all books in database.
         """
         current_data = self.json_service.load_json_file()
+        self.get_book_data(book_id)
         all_books = []
         book_found = False
 
@@ -157,7 +153,6 @@ class BookJsonFileService():
         Returns:
             str: A message indicating the success of the deletion.
         """
-        self.authorisation.check_permission("delete_book")
         self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()
         self.get_book_data(book_id)
