@@ -120,7 +120,13 @@ class LoanJsonFileService():
             
         
     def update_file_data(self, loan_id, field, new_value):
-        """ !! This method needs review.
+        """ This method updates existing loan record in the JSON file with new data. It can be used to update loan details such as return date, loan status, etc.
+        Args:
+            loan_id (int): The ID of the loan to update.
+            field (str): The field to update.
+            new_value: The new value to set for the specified field.
+        Returns:
+            str: Confirmation message that loan data was updated successfully.
         """
         current_data = self.json_service.load_json_file()
         self.get_loan_data(loan_id)
@@ -146,7 +152,11 @@ class LoanJsonFileService():
 
 
     def delete_data_from_file(self, loan_id):
-        """ !! This method requires review! 
+        """ This method deletes loan record from the JSON file by loan ID. It can be used to remove loan records that are no longer needed.
+        Args:
+            loan_id (int): The ID of the loan to delete.
+        Returns:
+            str: Confirmation message that loan record was deleted successfully.
         """
         self.json_service.file_exists_checking
         current_data = self.json_service.load_json_file()
