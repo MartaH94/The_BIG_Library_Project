@@ -55,6 +55,8 @@ class BookJsonFileService():
 
         Args:
             book_data (dict): Book data to be added to database.
+        Returns:
+            str: Confirmation message that book record was added successfully.
         """
         current_data = self.json_service.load_json_file()
         validated_book_data = self.json_service.validate_against_schema(book_data)

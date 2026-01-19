@@ -29,6 +29,9 @@ from database.json_files_major_services import JsonFilesService
 from services.authorisation_service import UserAuthorisation
 
 class LoanJsonFileService():
+    """ Service class for managing book loan data in a JSON file. This class provides methods to add, retrieve, update, and delete book loan records,
+        while ensuring data validation. It can be used to manage the library's book loan records.
+    """
     def __init__(self, json_service: JsonFilesService, authorisation: UserAuthorisation, file_path=LOANS_LIST_FILE_PATH):
         self.json_service = json_service
         self.authorisation = authorisation
