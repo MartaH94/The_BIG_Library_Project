@@ -94,7 +94,7 @@ class UsersJsonFileService():
         self.get_user_data(user_login_name)
         all_users = []
         user_found = False
-        
+
         for user in current_data:
             if user["user_name"] == user_login_name:
                 try:
@@ -122,6 +122,9 @@ class UsersJsonFileService():
         current_data = self.json_service.load_json_file()
         self.get_user_data(user_id)
         user_found = False
+
+        if not new_value:
+            raise exc.DataError("New value to update user data is missing.")
 
         for user in current_data:
             if user["id"] == user_id:
