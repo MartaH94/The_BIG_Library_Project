@@ -25,12 +25,12 @@ METHODS:
 import utils.config as config
 import exceptions as exc
 
-from utils.config import PROGRAM_USERS_FILE_PATH
+from utils.config import LOANS_LIST_FILE_PATH
 from database.json_files_major_services import JsonFilesService
 from services.authorisation_service import UserAuthorisation
 
 class LoanJsonFileService():
-    def __init__(self, json_service: JsonFilesService, authorisation: UserAuthorisation, file_path=PROGRAM_USERS_FILE_PATH):
+    def __init__(self, json_service: JsonFilesService, authorisation: UserAuthorisation, file_path=LOANS_LIST_FILE_PATH):
         self.json_service = json_service
         self.authorisation = authorisation
         self.file_path = file_path
