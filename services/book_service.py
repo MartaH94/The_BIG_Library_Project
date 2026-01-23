@@ -1,5 +1,23 @@
 # managing book  operations like: add, edit, search, sort, delete, display
 
+"""
+________________________________________________________________________
+services.book_service.py
+========================================================================
+Managing book operations e.g.: add, edit, search, sort, delete, display
+________________________________________________________________________
+
+
+TO DO HERE:
+- Check if all methods are implemented
+- Prepare docstrings.
+- Add and verify permissions <-- Related to authorisation service works.
+
+
+"""
+
+
+
 from models.book import Book
 import exceptions as exc
 from services.authorisation_service import UserAuthorisation

@@ -1,57 +1,174 @@
-import json
-import utils.config as config
+"""
+________________________________________________________
+database.book_json_file_service
+========================================================
+Service class for managing book data in a JSON file.
+________________________________________________________
+
+TO DO HERE:
+- Delete permission checks in all methods. <-- Checking permissions will go to functionality.
+- verify imports
+- update docstrings
+
+"""
+
+
 import exceptions as exc
 
 from utils.config import THE_LIBRARY_FILE_PATH
-from database.JSON_files_service import JsonFilesService
+from database.json_files_major_services import JsonFilesService
 from services.authorisation_service import UserAuthorisation
 
 class BookJsonFileService():
+    """ Service class for managing book data in a JSON file. This class provides methods to add, retrieve, update, and delete book records,
+        while ensuring data validation. It can be used to manage the library's book collection.
+
+    """
     def __init__(self, json_service: JsonFilesService, authorisation: UserAuthorisation, file_path=THE_LIBRARY_FILE_PATH):
         self.json_service = json_service
         self.authorisation = authorisation
         self.file_path = file_path
 
-    def update_file_data(self, book_id, field, new_value):
-        self.authorisation.check_permission("edit_book")
-        self.json_service.file_exists_checkout()
-        current_data = self.json_service.read_json_file()
+    def get_book_data(self, book_id):
+        """ This method retrieves book data from database file by book ID. It returns book data as dictionary. It can be used to display book details in GUI.
+
+        Args:
+            book_id (str): Unique ID of the book.
+        """
+        current_data = self.json_service.load_json_file()
+        book_found = False
+        book_data = None
+
+        for book in current_data:
+            if book["book_id"] == book_id:
+                book_data = book
+                book_found = True
+
+        if not book_found:
+            raise exc.BookNotFoundError(f"Book with {book_id} does not exists in database.")
+        
+        return book_data
+
+
+    def add_book_data(self, book_data):
+        """ This method adds new book data record to database file. It validates book_data against schema and checks uniqueness of book ID. It can be used to create new book record in library.
+
+        Args:
+            book_data (dict): Book data to be added to database.
+        Returns:
+            str: Confirmation message that book record was added successfully.
+        """
+        current_data = self.json_service.load_json_file()
+        validated_book_data = self.json_service.validate_against_schema(book_data)
+        book_id = book_data["book_id"]
+
+        if not book_data:
+            raise exc.DataError("Book data to save is missing or it's incorrect.")
+        
+        if not isinstance(book_data, dict):
+            raise exc.DataTypeError("Book data type is incorrect. Book data must be a dict type.")
+        
+        for book in current_data:
+            if book["book_id"] == book_id:
+                raise exc.BookError(f"Book with ID: {book["book_id"]} exists in the database. ID number must be unique value.")
+            
+        if not validated_book_data:
+            raise exc.BookValidationError("Validation failed. Book data doesn't match database file schema.")
+        else:
+            current_data.append(book_data)
+
+        self.json_service.write_json_data(current_data)
+
+        return "New book record added to the database without errors."
+     
+
+    def get_all_books_list(self, book_id):
+        """ This method returns list of all books in database. It can be used to display all books in GUI and makes possible to manage on the books (searching, deleting, updating etc.)
+
+        Args:
+            book_id (int): Unique identifier of the book.
+
+        Returns:
+            list: List of all books in database.
+        """
+        current_data = self.json_service.load_json_file()
+        self.get_book_data(book_id)
+        all_books = []
+        book_found = False
+
+        for book in current_data:
+            if book["book_id"] == book_id:
+                try:
+                    all_books.append(book)
+                    book_found = True
+                except KeyError:
+                    raise exc.BookNotFoundError(f"Book with ID {book_id} not found in database.")
+            if not book_found:
+                raise exc.BookNotFoundError(f"Book with ID {book_id} not found in database.")
+        return all_books
+
+
+    def update_book_data(self, book_id, field, new_value):
+        """ This method updates book data in database file by book ID. It checks if new value is not empty, retrieves current data from file, updates specified field with new value, validates updated data against schema, and writes updated data back to the file.
+        It can be used to modify book details in library.
+
+        Args:
+            book_id (int): Unique identifier of the book.
+            field (str): Field to be updated.
+            new_value (str): New value for the field.
+
+        Returns:
+            str: A message indicating the success of the update.
+        """
+        
+        current_data = self.json_service.load_json_file()
+        self.get_book_data(book_id)
+        book_found = False
 
         if not new_value:
-            return "I want to put information to user that he should add the value to change or he can cancel this action. It will be presented in GUI."
+            raise exc.BookValidationError("New value to update book record is incorrect or is empty value.")
 
-        book_found = False
         for book in current_data:
-            if book["id"] == book_id:
+            if book["book_id"] == book_id:
                 try:
                     book[field] = new_value
                     book_found = True
                 except KeyError:
-                    raise exc.InvalidFieldError(f"Field {field} does not exists in library file.")
+                    raise exc.BookValidationError("Book ID is invalid or it's an emppty value.")
 
         if not book_found:
-            raise exc.BookNotFoundError(f"Book with {book_id} not found in the library.")
+            raise exc.BookNotFoundError("New value to update book record is incorrect or empty value.")
         
+        self.json_service.validate_against_schema()
         self.json_service.write_json_data(current_data)
-        return "PLACEHOLDER: Here there will be confirmation for user that change have been done successfuly, using GUI"
+        return f"Data in book with book ID: {book_id} has been changed in field: {field}."
+
 
     
-    def delete_data_from_file(self, book_id):
-        self.authorisation.check_permission("delete_book")
-        self.json_service.file_exists_checkout()
-        current_data = self.json_service.read_json_file()
+    def delete_book_by_id(self, book_id):
+        """ This method deletes book from database file by book ID. It checks if book exists in database, removes book from current data, validates updated data against schema, and writes updated data back to the file.
+        It can be used to remove book from library.
 
-        if not book_id:
-            raise exc.BookValidationError(f"Book_id can not be empty field.")
+        Args:
+            book_id (int): Unique identifier of the book.
 
-        book_found = False
-        for book in current_data:
-            if book["id"] == book_id:
-                current_data.remove(book)
-                book_found = True
-
-        if not book_found:
-            raise exc.BookNotFoundError("Book not found in the library. Nothing to delete from library.")
+        Returns:
+            str: A message indicating the success of the deletion.
+        """
+        self.json_service.file_exists_checking()
+        current_data = self.json_service.load_json_file()
+        self.get_book_data(book_id)
+        book_deleted = False
         
+        for book in current_data:
+            if book["book_id"] == book_id:
+                current_data.remove(book)
+                book_deleted = True
+                break
+
+        if not book_deleted:
+            raise exc.BookError(f"Book with ID: {book_id} couldn't be removed from database.")
+        
+        self.json_service.validate_against_schema()
         self.json_service.write_json_data(current_data)
-        return "Placeholder for delete confirmation to user, using GUI"
+        return f"Book with ID: {book_id} has beed deleted from the library. "
