@@ -13,10 +13,15 @@ from datetime import datetime
 
 
 class JsonFilesService():
-    """ Service to handle JSON file operations."""
+    """ Service to handle JSON file operations.
+    Args:
+        file_path (Path): Path to the JSON file.
+        schema (dict): Schema to validate the JSON file structure and fields.
+    """
 
-    def __init__(self, file_path: Path):
+    def __init__(self, file_path: Path, schema: dict):
         self.file_path = file_path
+        self.schema = schema
 
     def file_exists_checking(self):
         """ Check if the JSON file exists; if not, create new file with empty list.
@@ -34,7 +39,7 @@ class JsonFilesService():
 
 
 
-    def load_json_file(self):   # previously read_json_file; method to read json file content and return data for further process
+    def load_json_file(self):   
         """Read JSON file content.
         Returns: list - Data read from the JSON file."""
         self.file_exists_checking()
@@ -51,12 +56,13 @@ class JsonFilesService():
         
     def write_json_data(self, data):
         """ Write data to the JSON file.
-        Args: data (list) - Data to write to the JSON file. """
-        self.file_exists_checking()
-        if data is None:
-            raise exc.FileError("File data is None. Cannot save data to the file.")
+            Args: data (list) - Data to write to the JSON file. 
+        """
+        if not data:
+            raise exc.FileError("Data is empty. Cannot save empty data to the file.")
         if not isinstance(data, list):
-            raise exc.FileError("Data is not a list. Cannot save data to the file.")        
+            raise exc.FileError("Data is not a list. Cannot save data to the file.") 
+        self.validate_against_schema(data,[self.schema])       
         with self.file_path.open("w", encoding="utf-8") as f:
             json.dump(data, f, indent=4, sort_keys=True)
 
@@ -65,65 +71,139 @@ class JsonFilesService():
         """ Append new data to the JSON file.
         Args: data_to_append (dict) - Data to append to the JSON file must be dictionary of data to append like new user data or new book data, etc.
         Returns: str - confirmation message."""
+
         current_data = self.load_json_file() 
         if not data_to_append:
-            raise exc.ValidationError("Data is empty. Cannot save dictionary to the file.")
-        if not isinstance(data_to_append, dict):
-            raise exc.FileError("Data is not a dictionary. Cannot save data to the file.")
+            raise exc.ValidationError("New record is empty. Cannot save dictionary to the file.")
         
+        self.validate_against_schema(data_to_append, self.schema)
         current_data.append(data_to_append)
         self.write_json_data(current_data)
         return f"Data had been added and saved to file: {self.file_path.name}"
       
 
-    def validate_file_data(self): #collects data from file loading function, check if data in file is correct, return true/false or exception when data is incorrect.
-        """ Validate that the JSON file contains the specified field in its items.
-        Args: field_name (str) - The field name to validate in the JSON file items
-        Returns: str - Confirmation message if validation is successful."""
+
+    def validate_against_schema(self, data, schema):
+        """The method to validate values type and structure against the given schema. 
+        Args:
+            data: The data to validate.
+            schema: The schema to validate against.
+        """
+        if isinstance(schema, dict):
+            if not isinstance(data, dict):
+                raise exc.ValidationError(f"Given value {data} should be a dictionary")
+            for key, subschema in schema.items():
+                if key not in data:
+                    raise exc.ValidationError(f"Missing key {key} in {subschema}")
+                self.validate_against_schema(data[key], subschema)
+        else:
+            if not isinstance(data, schema):
+                raise exc.ValidationError("Wrong type ")
+
+
+    def validate_file_data(self): 
+        """ Veryfying if the list of items in the JSON file is not empty and each item matches the expected schema.
+        Returns: bool - True if all items in the file match the schema; raises ValidationError otherwise.
+        """
         self.file_exists_checking()
         file_content = self.load_json_file()
 
         if not file_content:
-            raise exc.ValidationError(f"File {self.file_path.name} is empty. Cannot validate fields in an empty file.")    
-        for item in file_content:
+            raise exc.ValidationError(f"File {self.file_path.name} is empty. Cannot validate fields in an empty file.")  
+        for index, item in enumerate(file_content):
             if not isinstance(item, dict):
-                raise exc.FileError("File should be a list of items (dict). Check file structure.")  
-            
-            for field, expected_type in database_schemes.items():   # module database_schemes is located in database directory.
-                if field not in item:
-                    raise exc.InvalidFieldError(f"The field {field} not found in the file: {self.file_path.name}")
-                if not isinstance(item[field], expected_type):
-                    raise exc.ValidationError(f"Incorrect data type for field: {field}.")
-            
-        # Zaimplementuj metodę: Walidacja zagnieżdżonych struktur (zagnieżdżanie słowników)
-        # Zaimplementuj metodę: Sprawdzanie spójności danych (np czy pole "status" przyjmuje tylko konkretne wartości)
+                raise exc.ValidationError(f"The record {index+1} is not a dictionary.")
+            self.validate_against_schema(item, self.schema)
+        return True
 
+
+
+    def get_or_create_backup_dir(self):
+        """ Get or create the backup directory for the JSON file.
+        Returns: Path - The path to the backup directory.
+        """
+        name = self.file_path.stem
+        backup_dir = config.BACKUP_FILES_DIRECTORY/ name 
+        if not backup_dir.exists():
+            backup_dir.mkdir(parents=True, exist_ok=True)
+        return backup_dir
+
+    def build_backup_file_name(self):
+        """ Build a timestamped backup file name for the JSON file.
+        Returns: str - The backup file name.
+        """
+        alias = config.PROJECT_ALIAS 
+        name = self.file_path.stem 
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        backup_file_name = f"{alias}_{name}_{timestamp}.json"
+        
+        return backup_file_name
 
     def create_backup_file(self):
         """ Create a backup of the current JSON file with a timestamped filename in the backup directory.
         Returns: Path - The path to the created backup file.
         """
-        if not self.file_path.exists():
-            raise exc.FileNotFound("File does not exist in the directory.")
-        name = self.file_path.stem
-        subfolder_backup = config.BACKUP_FILES_DIRECTORY/ name
-
-        if not subfolder_backup.exists():
-            subfolder_backup.mkdir(parents=True, exist_ok=True)
-
-        alias = config.PROJECT_ALIAS
-        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        backup_file_name = f"{alias}_{name}_{timestamp}.json"
-        backup_file_path = subfolder_backup/backup_file_name
-        data = self.read_json_file()
+        self.file_exists_checking()
+        backup_dir = self.get_or_create_backup_dir()
+        backup_file_name = self.build_backup_file_name()
+        backup_path = backup_dir/backup_file_name
+        data = self.load_json_file()
             
-        with backup_file_path.open("w", encoding="utf-8") as f_backup:
+        with backup_path.open("w", encoding="utf-8") as f_backup:
             json.dump(data, f_backup, ensure_ascii=False, indent=4, sort_keys=True)
-        return backup_file_path
+        return "Comfirmation that backup has been created. Show The path to the created file"
 
 
 
-    
+    def remove_from_file(self, key_name, key_value):
+        """The method to remove records from the JSON file based on a specific key-value pair.
+        Args:
+            key_name (str): The key name to search for in the records.
+            key_value: The value associated with the key to identify records to be removed.
+        """
+        file_content = self.load_json_file()
+        records_to_remove = []
+        deleted_records_counter = 0
+
+        for record_id, record_data in file_content.items():
+            if key_name in record_data and record_data[key_name] == key_value:            
+                records_to_remove.append(record_id)
+                deleted_records_counter += 1
+
+        if deleted_records_counter == 0:
+            raise exc.DatabaseError(f"No matching elements to key {key_name} and value {key_value}")
+        
+        for record_id in records_to_remove:
+            del file_content[record_id]
+
+        self.validate_file_data(file_content)
+        self.write_json_data(file_content)
+        
+
+  
+    def update_data_in_file(self, item, new_data): 
+        """ Update an existing item in the JSON file with new data.
+        Args:
+            item (str): The existing item (field) to update.
+            new_data (str): The new data to update the item with.
+        """
+        file_content = self.load_json_file()    
+        updated = 0
+        if not new_data:
+            raise exc.FileError(f"New data can't be empty value.")
+        for record_id, record_data in file_content.items():
+            if item in record_data:
+                record_data[item] = new_data
+                updated += 1
+        if updated == 0:
+            raise exc.DatabaseError(f"No matching element to {item}.")
+        
+        self.validate_file_data(file_content)
+        self.write_json_data(file_content)
+
+
+
+
 
 
         
