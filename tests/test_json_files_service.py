@@ -81,7 +81,9 @@ class TestJsonServices(TestCase):
 
     def test_validate_file_data(self):
         """Test that the data in the file is list"""
-        self.json_services.validate_file_data()
+        data_to_validate = self.json_services.load_json_file()
+        self.json_services.validate_file_data(data_to_validate, self.json_services.schema)
+        self.assertIsInstance(data_to_validate, dict, msg="Validation data against schema should confirm data is a dict.")
                 
         
     def test_create_backup_file(self):
