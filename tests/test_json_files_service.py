@@ -27,11 +27,6 @@ List of tests to implement:
 """
 
 
-
-
-# unit tests for json_files_service.py
-
-
 import unittest
 import tempfile
 import json
@@ -84,22 +79,37 @@ class TestJsonServices(TestCase):
         self.assertIsInstance(result, list, msg="The loaded JSON data from load_json_file() should be a list.")
         
 
-
     def test_validate_file_data(self):
         """Test that the data in the file is list"""
-        
         self.json_services.validate_file_data()
                 
         
-
-
-
-    def test_check_file_returns_correct_data(self):
-        """Test that the file after opening operation is displaying correct data."""
+    def test_create_backup_file(self):
         pass
 
 
+    def test_remove_from_file(self):
+        pass
 
+
+    def test_update_data_in_file(self):
+        pass
+
+
+    def test_write_json_data(self):
+        pass
+
+
+    def test_create_backup_dir(self):
+        pass
+
+
+    def test_get_backup_dir(self):
+        pass
+
+
+    def test_build_backup_filename(self):
+        pass
 
 
 
