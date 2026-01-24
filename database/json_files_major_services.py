@@ -36,12 +36,11 @@ class JsonFilesService():
                 return "File was empty. Created new file with empty list."
         else:
             return "File verified: existing or newly created with empty list."
-
-
+        
 
     def load_json_file(self):   
-        """Read JSON file content.
-        Returns: list - Data read from the JSON file."""
+        """Read JSON file content. 
+        Returns: list - Content of the JSON file as a list of items."""
         self.file_exists_checking()
         
         try:
@@ -52,6 +51,8 @@ class JsonFilesService():
                 return data
         except json.JSONDecodeError as e:
             raise exc.FileError(f"Cannot read the file: {e} from program data directory.")
+        
+        return data
         
         
     def write_json_data(self, data):
@@ -66,6 +67,8 @@ class JsonFilesService():
         with self.file_path.open("w", encoding="utf-8") as f:
             json.dump(data, f, indent=4, sort_keys=True)
 
+        return "Success. Changes has been saved."
+
 
     def append_data_to_file(self, data_to_append):
         """ Append new data to the JSON file.
@@ -79,7 +82,7 @@ class JsonFilesService():
         self.validate_against_schema(data_to_append, self.schema)
         current_data.append(data_to_append)
         self.write_json_data(current_data)
-        return f"Data had been added and saved to file: {self.file_path.name}"
+        return f"Success. Data had been added and saved to file: {self.file_path.name}"
       
 
 
@@ -98,7 +101,9 @@ class JsonFilesService():
                 self.validate_against_schema(data[key], subschema)
         else:
             if not isinstance(data, schema):
-                raise exc.ValidationError("Wrong type ")
+                raise exc.ValidationError("Wrong type of data. Expected dict.")
+            
+        return "Success. Data has been validated and matches the file schema."
 
 
     def validate_file_data(self): 
@@ -151,7 +156,7 @@ class JsonFilesService():
             
         with backup_path.open("w", encoding="utf-8") as f_backup:
             json.dump(data, f_backup, ensure_ascii=False, indent=4, sort_keys=True)
-        return "Comfirmation that backup has been created. Show The path to the created file"
+        return "Success. Backup file has been created."
 
 
 
@@ -178,7 +183,7 @@ class JsonFilesService():
 
         self.validate_file_data(file_content)
         self.write_json_data(file_content)
-        
+        return f"Success. Data from the file deleted for record: {key_name}"
 
   
     def update_data_in_file(self, item, new_data): 
@@ -200,6 +205,8 @@ class JsonFilesService():
         
         self.validate_file_data(file_content)
         self.write_json_data(file_content)
+
+        return "Success. Record in database has been updated."
 
 
 
