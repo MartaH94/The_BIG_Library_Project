@@ -62,7 +62,7 @@ class TestJsonServices(TestCase):
 
 
     def test_checking_file_exists(self):    # test ok
-        """Test that the JSON file existence check works and creates a new file if needed."""
+        """ Test checking if the json file exist. If not, should create a new file with empty list and return status ok."""
         file_to_check = self.json_services.file_path
         self.json_services.file_exists_checking()
         with open(file_to_check, encoding="utf-8") as f:
@@ -72,7 +72,7 @@ class TestJsonServices(TestCase):
 
 
     def test_load_json_file(self):
-        """Test that the file load operation can be performed without errors,verifies the returned data type is a list, 
+        """ Test that the file load operation can be performed without errors,verifies the returned data type is a list, 
             and ensures the file remains readable after loading.
         """
         result = self.json_services.load_json_file()
@@ -80,7 +80,7 @@ class TestJsonServices(TestCase):
         
 
     def test_validate_file_data(self):
-        """Test that the data in the file is list"""
+        """ Test that the data in the file is list"""
         data_to_validate = self.json_services.load_json_file()
         self.json_services.validate_file_data(data_to_validate, self.json_services.schema)
         self.assertIsInstance(data_to_validate, dict, msg="Validation data against schema should confirm data is a dict.")
