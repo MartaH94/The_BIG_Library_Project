@@ -24,8 +24,9 @@ class JsonFilesService():
         self.schema = schema
 
     def file_exists_checking(self):
-        """ Check if the JSON file exists; if not, create new file with empty list.
-        Returns: str - Message indicating the status of the file."""
+        """ The method to check if the JSON file exists. If not, creates a new file with an empty list.
+        Returns: str - Status message indicating whether the file existed or was created.
+        """
         file_content = []
 
         if not self.file_path.exists():
@@ -39,8 +40,9 @@ class JsonFilesService():
         
 
     def load_json_file(self):   
-        """Read JSON file content. 
-        Returns: list - Content of the JSON file as a list of items."""
+        """ The method to load data from the JSON file. 
+        Returns: list - Content of the JSON file as a list of items.
+        """
         self.file_exists_checking()
         
         try:
@@ -56,8 +58,9 @@ class JsonFilesService():
         
         
     def write_json_data(self, data):
-        """ Write data to the JSON file.
+        """ The method to write data to the JSON file.
             Args: data (list) - Data to write to the JSON file. 
+            Returns: str - confirmation message.
         """
         if not data:
             raise exc.FileError("Data is empty. Cannot save empty data to the file.")
@@ -71,8 +74,8 @@ class JsonFilesService():
 
 
     def append_data_to_file(self, data_to_append):
-        """ Append new data to the JSON file.
-        Args: data_to_append (dict) - Data to append to the JSON file must be dictionary of data to append like new user data or new book data, etc.
+        """ The method to append a new record to the JSON file.
+        Args: data_to_append (dict): The new record to append to the JSON file. 
         Returns: str - confirmation message."""
 
         current_data = self.load_json_file() 
@@ -87,10 +90,16 @@ class JsonFilesService():
 
 
     def validate_against_schema(self, data, schema):
-        """The method to validate values type and structure against the given schema. 
+        """ Recursively validate a data structure against a given schema.
+
+        This method checks that the given data is a dictionary and that it contains all keys defined in the schema with values of the expected types or nested structures.
+        For nested dictionaries, the methos calls itself recursively using the corresponding subschema. A ValidationError is raised if the data is missing required keys,
+        contains values of incorrect types, or does not match the schema structure.
         Args:
-            data: The data to validate.
-            schema: The schema to validate against.
+            data (dict): The data to validate.
+            schema (dict): The schema to validate against.
+
+        Returns: str - Success message if data matches the schema; raises ValidationError otherwise.
         """
         if isinstance(schema, dict):
             if not isinstance(data, dict):
@@ -107,7 +116,11 @@ class JsonFilesService():
 
 
     def validate_file_data(self): 
-        """ Veryfying if the list of items in the JSON file is not empty and each item matches the expected schema.
+        """ Validate all records loaded  from JSON file against the service schema.
+
+        This method loads the JSON file content, ensures it is a non-empty list of dictionary records, and validates each record using the configured schema via validate_against_schema().
+        A ValidationError is raised if the file is empty, a record is not a dictionary, or any record fails schema validation. Returns True if all records are valid.
+        
         Returns: bool - True if all items in the file match the schema; raises ValidationError otherwise.
         """
         self.file_exists_checking()
