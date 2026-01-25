@@ -80,7 +80,6 @@ class TestJsonServices(TestCase):
         
 
     def test_write_json_data(self):
-        #self.data_to_write = self.json_services.???
         self.data_to_write = [{"key": "value"}, {"number": 123}]
         self.saved_data = self.json_services.write_json_data(self.data_to_write)
         self.assertTrue(self.saved_data, msg="Data should be written to the JSON file successfully.")
@@ -90,10 +89,13 @@ class TestJsonServices(TestCase):
         self.data_to_append = {"key" : "value"}
         self.adding_data = self.json_services.append_data_to_file(self.data_to_append)
         self.assertTrue(self.adding_data, msg="New record data should be saved in JSON file successfully.")
-        pass
-
+        
 
     def test_validate_data_against_schema(self):
+        self.data = {"key" : "value"}
+        self.schema_to_validate_against = self.json_services.schema
+        self.data_validation = self.json_services.validate_against_schema(self.data, self.schema_to_validate_against)
+        self.assertTrue(self.data_validation, msg="Data should be validated against schema successfully.")
         pass
 
 
@@ -124,12 +126,6 @@ class TestJsonServices(TestCase):
 
     def test_update_data_in_file(self):
         pass
-
-
-    
-
-
-    
 
 
     def test_get_backup_dir(self):
