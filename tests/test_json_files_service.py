@@ -79,6 +79,22 @@ class TestJsonServices(TestCase):
         self.assertIsInstance(result, list, msg="The loaded JSON data from load_json_file() should be a list.")
         
 
+    def test_write_json_data(self):
+        #self.data_to_write = self.json_services.???
+        self.data_to_write = [{"key": "value"}, {"number": 123}]
+        self.saved_data = self.json_services.write_json_data(self.data_to_write)
+        self.assertTrue(self.saved_data, msg="Data should be written to the JSON file successfully.")
+        
+
+    def test_append_data_to_file(self):
+        
+        pass
+
+
+    def test_validate_data_against_schema(self):
+        pass
+
+
     def test_validate_file_data(self):
         """ Test that the data in the file is list"""
         data_to_validate = self.json_services.load_json_file()
@@ -86,7 +102,17 @@ class TestJsonServices(TestCase):
         self.assertIsInstance(data_to_validate, dict, msg="Validation data against schema should confirm data is a dict.")
                 
         
+    def test_get_or_create_backup_dir(self):
+        pass
+
+
+    def test_build_backup_filename(self):
+        pass
+
+
     def test_create_backup_file(self):
+        """ Test that the backup file is created.
+        """
         pass
 
 
@@ -98,20 +124,17 @@ class TestJsonServices(TestCase):
         pass
 
 
-    def test_write_json_data(self):
-        pass
+    
 
 
-    def test_create_backup_dir(self):
-        pass
+    
 
 
     def test_get_backup_dir(self):
         pass
 
 
-    def test_build_backup_filename(self):
-        pass
+    
 
 
 
