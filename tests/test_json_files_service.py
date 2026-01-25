@@ -87,7 +87,9 @@ class TestJsonServices(TestCase):
         
 
     def test_append_data_to_file(self):
-        
+        self.data_to_append = {"key" : "value"}
+        self.adding_data = self.json_services.append_data_to_file(self.data_to_append)
+        self.assertTrue(self.adding_data, msg="New record data should be saved in JSON file successfully.")
         pass
 
 
