@@ -107,7 +107,9 @@ class TestJsonServices(TestCase):
                 
         
     def test_get_or_create_backup_dir(self):
-        pass
+        """ Test that the backup directory exists and its path is accessible.
+        """
+        pass        
 
 
     def test_build_backup_filename(self):
