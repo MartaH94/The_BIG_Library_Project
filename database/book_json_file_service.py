@@ -35,10 +35,16 @@ class BookJsonFileService:
         self.file_path = file_path
 
     def get_book_data(self, book_id):
-        """This method retrieves book data from database file by book ID. It returns book data as dictionary. It can be used to display book details in GUI.
+        """Retrieve a single book record by its ID.
 
         Args:
-            book_id (str): Unique ID of the book.
+            book_id (str): Unique book identifier.
+
+        Returns:
+            dict: The matching book record.
+
+        Raises:
+            exc.BookNotFoundError: If no book with the given ID is found.
         """
         current_data = self.json_service.load_json_file()
         book_found = False
@@ -57,12 +63,21 @@ class BookJsonFileService:
         return book_data
 
     def add_book_data(self, book_data):
-        """This method adds new book data record to database file. It validates book_data against schema and checks uniqueness of book ID. It can be used to create new book record in library.
+        """Add a new book record to the database.
+
+        Validates the incoming data against the schema and ensures the book ID is unique.
 
         Args:
-            book_data (dict): Book data to be added to database.
+            book_data (dict): New book record.
+
         Returns:
-            str: Confirmation message that book record was added successfully.
+            str: Confirmation message.
+
+        Raises:
+            exc.DataError: If the payload is missing.
+            exc.DataTypeError: If the record is not a dict.
+            exc.BookError: If the ID already exists.
+            exc.BookValidationError: If schema validation fails.
         """
         current_data = self.json_service.load_json_file()
         validated_book_data = self.json_service.validate_against_schema(book_data)
@@ -94,13 +109,19 @@ class BookJsonFileService:
         return "New book record added to the database without errors."
 
     def get_all_books_list(self, book_id):
-        """This method returns list of all books in database. It can be used to display all books in GUI and makes possible to manage on the books (searching, deleting, updating etc.)
+        """Return all books that match a given ID.
+
+        Note : Typical “get all books” functions do not filter by ID.
 
         Args:
-            book_id (int): Unique identifier of the book.
+            book_id (int): Book identifier to filter.
 
         Returns:
-            list: List of all books in database.
+            list: List of matching books.
+
+        Raises:
+            exc.BookNotFoundError: If no matching books are found.
+
         """
         current_data = self.json_service.load_json_file()
         self.get_book_data(book_id)
