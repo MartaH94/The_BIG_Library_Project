@@ -5,7 +5,17 @@ database.json_files_major_services.py
 Database service for JSON files.
 __________________________________________________________
 
-This module provides a generic service class for handling JSON file operations.
+
+Utility service for managing JSON-based data storage in the project.
+This module provides a high-level interface for working with JSON files, including:
+- loading and saving data,
+- validating records against a defined schema,
+- appending and updating entries,
+- removing records by key/value,
+- and generating timestamped backups.
+
+It is designed to keep file operations consistent, safe, and schema‑compliant across the system.
+
 
 """
 
