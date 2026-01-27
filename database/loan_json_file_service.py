@@ -5,19 +5,14 @@ database.loan_json_file_service
 Service class for managing book loan data in a JSON file.
 __________________________________________________________
 
-TO DO HERE:
-- Delete permission checks in all methods. <-- Checking permissions will go to functionality layer.
-- verify imports
-- update docstrings
+Loan JSON storage service.
 
-METHODS:
-1. get_loan_data() --> implemented
-2. add_loan() --> implemented
-3. get_all_loans_list() --> implemented
-4. update_file data() --> reviewed
-5. delete_data_from_file() --> reviewed
+This module provides a high‑level interface for managing book loan records stored in
+a JSON file. It supports adding new loans, retrieving individual records, listing
+loans, updating loan details, and deleting loan entries. All I/O operations and schema
+validation are delegated to JsonFilesService, ensuring consistent data handling across
+the application.
 
---> General review of methods.
 """
 
 import exceptions as exc
@@ -26,8 +21,10 @@ from utils.config import LOANS_LIST_FILE_PATH
 
 
 class LoanJsonFileService:
-    """Service class for managing book loan data in a JSON file. This class provides methods to add, retrieve, update, and delete book loan records,
-    while ensuring data validation. It can be used to manage the library's book loan records.
+    """High‑level operations for loan records stored in a JSON file.
+
+    Provides helper methods to load, modify, validate, and delete loan entries.
+    Works together with JsonFilesService to maintain correct structure and data integrity.
     """
 
     def __init__(self, json_service: JsonFilesService, file_path=LOANS_LIST_FILE_PATH):
@@ -35,13 +32,16 @@ class LoanJsonFileService:
         self.file_path = file_path
 
     def get_loan_data(self, loan_id):
-        """This method retrieves loan data from record in database file by loan ID. It returns loan data as dictionary. It can be used to display single loan details in GUI.
+        """Retrieve a single loan record by loan ID.
 
         Args:
-            loan_id (int): Unique number of loan
+            loan_id (int): Identifier of the loan to fetch.
 
         Returns:
-            dict: Loan data as a dictionary.
+            dict: Matching loan record.
+
+        Raises:
+            exc.LoanNotFoundError: If the loan does not exist.
         """
         current_data = self.json_service.load_json_file()
         loan_found = False
@@ -60,14 +60,23 @@ class LoanJsonFileService:
         return loan_data
 
     def add_loan_data(self, loan_data):
-        """This method adds new loan data record to database file. It validates loan_data against schema and checks uniqueness of loan ID. It can be used to create new loan record.
-        This method works with all kinds of loan actions - new loan, return of book, extend loan period.
+        """Add a new loan record.
+
+        Validates the incoming data against the schema, checks the loan ID for uniqueness,
+        and saves the updated list back to the JSON file. Supports new loans, returns,
+        and loan extensions.
 
         Args:
-            loan_data (dict): Loan data to be added to database.
+            loan_data (dict): Loan details to store.
 
         Returns:
-            str: Confirmation message that new loan data record was added to the database.
+            str: Confirmation message.
+
+        Raises:
+            exc.DataError: If input data is missing.
+            exc.DataTypeError: If the payload is not a dict.
+            exc.LoanError: If the loan ID already exists.
+            exc.LoanValidationError: If schema validation fails.
         """
         current_data = self.json_service.load_json_file()
         validated_loan_data = self.json_service.validate_against_schema(loan_data)
@@ -99,13 +108,22 @@ class LoanJsonFileService:
         return "New loan record added to the database without errors."
 
     def get_all_loans_list(self, loan_id):
-        """This method returns list of all loans in database. It can be used to display all loans in GUI and makes possible to manage on the loans (searching, deleting, updating etc.)
+        """This method SHOULD return list of all loans in database.
+
+        Return all loans matching a given ID.
+
+        Note: The method keeps the original behavior, even though the name suggests
+        listing all loans. It filters the records using the given ID.
 
         Args:
-            loan_id (int): Unique numerber of loan
+            loan_id (int): Loan identifier.
 
         Returns:
-            list: This method returns a list of all loans in database file.
+            list: List of matching loan records.
+
+        Raises:
+            exc.LoanNotFoundError: If no matching records are found.
+
         """
         current_data = self.json_service.load_json_file()
         self.get_loan_data(loan_id)
