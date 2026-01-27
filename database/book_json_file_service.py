@@ -16,7 +16,6 @@ to maintain the library’s book collection in a consistent and safe way
 
 import exceptions as exc
 from database.json_files_major_services import JsonFilesService
-from services.authorisation_service import UserAuthorisation
 from utils.config import THE_LIBRARY_FILE_PATH
 
 
@@ -30,11 +29,9 @@ class BookJsonFileService:
     def __init__(
         self,
         json_service: JsonFilesService,
-        authorisation: UserAuthorisation,
         file_path=THE_LIBRARY_FILE_PATH,
     ):
         self.json_service = json_service
-        self.authorisation = authorisation
         self.file_path = file_path
 
     def get_book_data(self, book_id):
