@@ -11,7 +11,6 @@ This module provides a thin service layer for managing user records stored in a 
 file. It offers simple helpers to load, add, query, update, and delete users while
 leveraging a lower-level JSON file service for I/O, validation, and persistence.
 
-
 """
 
 import exceptions as exc
@@ -35,11 +34,16 @@ class UsersJsonFileService:
         self.file_path = file_path
 
     def get_user_data(self, user_id):
-        """Retrieve a user data record from the JSON file by user ID. It can be used to display user details in GUI.
+        """Return a single user record by ID.
+
         Args:
-            user_id (int): The ID of the user to retrieve.
+            user_id (int): ID of the user to retrieve.
+
         Returns:
-            user_data (dict) - The data for the specified user returned as a dictionary.
+            dict: The matching user record.
+
+        Raises:
+            exc.UserNotFoundError: If the user is not present in the database.
         """
         current_data = self.json_service.load_json_file()
         user_found = False
@@ -58,12 +62,22 @@ class UsersJsonFileService:
         return user_data
 
     def add_user_data(self, user_data):
-        """Add a new user record to the JSON file. This method checks user's permissions to edit data, loads current data from file, validates new user data against schema,
-            checks for unique user ID, appends new user data to current data, and writes updated data back to the file. It can be used to create a new user record.
+        """Add a new user record.
+
+        Validates the incoming record against the schema, enforces unique ID,
+        appends it to the list, and persists changes.
+
         Args:
-            user_data (dict): The user data to add.
+            user_data (dict): User data to insert.
+
         Returns:
-            str - Confirmation message with the new user's ID.
+            str: Confirmation message with the new user's ID.
+
+        Raises:
+            exc.DataError: If the input payload is missing.
+            exc.DataTypeError: If the payload is not a dict.
+            exc.UserError: If the user ID already exists.
+            exc.UserValidationError: If validation against the schema fails.
         """
         current_data = self.json_service.load_json_file()
         validated_data = self.json_service.validate_against_schema(user_data)
@@ -95,11 +109,16 @@ class UsersJsonFileService:
         return f"Added new user to database with ID: {user_id}"
 
     def get_all_users_list(self, user_login_name):
-        """Retrieve all user records from the JSON file that match the given login name. It can be used to display user details in GUI.
+        """Return all user records matching the given login name.
+
         Args:
-            user_login_name (str): The login name of the user to retrieve. For example john_example3
+            user_login_name (str): Login name to filter by (e.g., 'john_example3').
+
         Returns:
-            list - A list of user records matching the login name.
+            list: All matching user records.
+
+        Raises:
+            exc.UserNotFoundError: If no users match the provided login name.
         """
         current_data = self.json_service.load_json_file()
         self.get_user_data(user_login_name)
@@ -123,14 +142,23 @@ class UsersJsonFileService:
         return all_users
 
     def update_user_data(self, user_id, field, new_value):
-        """Update an existing user record in the JSON file with new data. This method is about to work on previously verified file using load_json_file method() from
-            json_files_major_services module, which returns checked and ready to work json file. Also this method validates data and save changes in the file.
+        """Update a field on the specified user.
+
+        Loads the current data, ensures the user exists, updates the field,
+        validates the file contents, and persists changes.
+
         Args:
-            user_id (int): The ID of the user to update.
-            field (str): The field to update.
-            new_value (str): The new value to update the field with.
+            user_id (int): ID of the user to update.
+            field (str): Field name to modify.
+            new_value (str): New value to set.
+
         Returns:
-            str - Confirmation message indicating successful update.
+            str: Confirmation message.
+
+        Raises:
+            exc.DataError: If the new value is missing.
+            exc.UserNotFoundError: If the user or field is not found.
+
         """
         self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()
@@ -159,12 +187,19 @@ class UsersJsonFileService:
         return f"For user with ID: {user_id}, data updated successfully."
 
     def delete_user_by_id(self, user_id):
-        """This method is for deleting user by id from the JSON file. It checks permission to delete data.
+        """Delete a user by ID.
+
+        Loads the current data, removes the matching record,
+        validates the file state, and persists changes.
 
         Args:
-            user_id (int): The ID of the user to delete.
+            user_id (int): ID of the user to delete.
+
         Returns:
-            str - Confirmation message indicating successful deletion.
+            str: Confirmation message.
+
+        Raises:
+            exc.UserError: If the user could not be removed.
         """
         self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()
