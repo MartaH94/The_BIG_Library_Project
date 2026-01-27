@@ -144,18 +144,23 @@ class BookJsonFileService:
         return all_books
 
     def update_book_data(self, book_id, field, new_value):
-        """This method updates book data in database file by book ID. It checks if new value is not empty, retrieves current data from file, updates specified field with new value, validates updated data against schema, and writes updated data back to the file.
-        It can be used to modify book details in library.
+        """Update a specific field in an existing book record.
+
+        Loads the data, checks the book exists, updates the field, validates the file
+        contents, and persists the modified data.
 
         Args:
-            book_id (int): Unique identifier of the book.
-            field (str): Field to be updated.
-            new_value (str): New value for the field.
+            book_id (int): Identifier of the book to modify.
+            field (str): Field name to update.
+            new_value (str): New value to write.
 
         Returns:
-            str: A message indicating the success of the update.
-        """
+            str: Confirmation message.
 
+        Raises:
+            exc.BookValidationError: If the new value is empty or invalid.
+            exc.BookNotFoundError: If the book or field is missing.
+        """
         current_data = self.json_service.load_json_file()
         self.get_book_data(book_id)
         book_found = False
@@ -187,14 +192,19 @@ class BookJsonFileService:
         )
 
     def delete_book_by_id(self, book_id):
-        """This method deletes book from database file by book ID. It checks if book exists in database, removes book from current data, validates updated data against schema, and writes updated data back to the file.
-        It can be used to remove book from library.
+        """Delete a book record by its ID.
+
+        Loads current data, removes the matching entry, validates the updated dataset,
+        and writes the result back to the file.
 
         Args:
-            book_id (int): Unique identifier of the book.
+            book_id (int): Book identifier.
 
         Returns:
-            str: A message indicating the success of the deletion.
+            str: Confirmation message.
+
+        Raises:
+            exc.BookError: If the book cannot be removed.
         """
         self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()
