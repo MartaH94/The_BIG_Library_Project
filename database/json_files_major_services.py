@@ -247,7 +247,7 @@ class JsonFilesService:
         for record_id in records_to_remove:
             del file_content[record_id]
 
-        self.validate_file_data(file_content)
+        self.validate_file_data()
         self.write_json_data(file_content)
         return f"Success. Data from the file deleted for record: {key_name}"
 
@@ -273,7 +273,7 @@ class JsonFilesService:
         if updated == 0:
             raise exc.DatabaseError(f"No matching element to {item}.")
 
-        self.validate_file_data(file_content)
+        self.validate_file_data()
         self.write_json_data(file_content)
 
         return "Success. Record in database has been updated."
