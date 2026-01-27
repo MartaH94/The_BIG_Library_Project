@@ -142,13 +142,22 @@ class LoanJsonFileService:
         return all_loans_list
 
     def update_file_data(self, loan_id, field, new_value):
-        """This method updates existing loan record in the JSON file with new data. It can be used to update loan details such as return date, loan status, etc.
+        """Update an existing loan record.
+
+        Loads the JSON data, ensures the loan exists, updates the selected field,
+        validates the modified structure, and saves the updated file.
+
         Args:
-            loan_id (int): The ID of the loan to update.
-            field (str): The field to update.
-            new_value: The new value to set for the specified field.
+            loan_id (int): Identifier of the loan to update.
+            field (str): Field name to modify.
+            new_value: New value to assign.
+
         Returns:
-            str: Confirmation message that loan data was updated successfully.
+            str: Confirmation message.
+
+        Raises:
+            exc.LoanValidationError: If new_value is missing.
+            exc.LoanNotFoundError: If the loan or field cannot be updated.
         """
         self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()
@@ -180,11 +189,19 @@ class LoanJsonFileService:
         return f"For loan with ID: {loan_id}, data updated successfully."
 
     def delete_data_from_file(self, loan_id):
-        """This method deletes loan record from the JSON file by loan ID. It can be used to remove loan records that are no longer needed.
+        """Delete a loan entry from the JSON file.
+
+        Loads the file, verifies the loan exists, removes the matching record,
+        validates updated data, and saves the final version.
+
         Args:
-            loan_id (int): The ID of the loan to delete.
+            loan_id (int): Identifier of the loan to remove.
+
         Returns:
-            str: Confirmation message that loan record was deleted successfully.
+            str: Confirmation message.
+
+        Raises:
+            exc.LoanNotFoundError: If the loan cannot be deleted.
         """
         self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()
