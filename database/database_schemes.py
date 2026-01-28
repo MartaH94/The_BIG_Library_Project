@@ -1,8 +1,18 @@
-""" This module defines the database schemas for the library management system. 
-    Each schema is represented as a dictionary where keys are field names and values are their expected data types."""
+"""This module defines the database schemas for the library management system.
+Each schema is represented as a dictionary where keys are field names and values are their expected data types.
+
+
+
+This schema requires rebuilding. Tasks here to do:
+- Each JSON file type has its own SCHEMA variable (user_schema, book_schema etc.)
+- Each schema is just a dict of key → Python type
+
+"""
+
+from datetime import date, datetime
 
 from models.user import valid_roles
-from datetime import date, datetime
+
 """ date - if you need only the date, e.g.: date of book return (YYYY-MM-DD)
     datetime - if you need an hour too. """
 
@@ -10,23 +20,21 @@ from datetime import date, datetime
 # and checking corectness of file's format
 
 database_schemes = {
-    "User" : {
+    "User": {
         "user_id": int,
         "role": list(valid_roles),
         "is_active": bool,
         "last_login": datetime,
-
-        "profile": {
+        "user_profile": {
             "user_name": str,
             "first_name": str,
             "last_name": str,
             "email": str,
             "phone_number": int,
-            "password_hash": str
-        }
+            "password_hash": str,
+        },
     },
-
-    "Book":{
+    "Book": {
         "book_id": int,
         "title": str,
         "author": str,
@@ -36,33 +44,20 @@ database_schemes = {
         "language": str,
         "book_status": str,
         "borrower_id": str,
-        "due_date": date
+        "due_date": date,
     },
-
     "Loan": {
         "loan_id": int,
         "user_id": int,
         "book_id": int,
         "loan_date": date,
         "return_date": date,
-        
-
     },
-
     "reservation": {
         "reservation_id": int,
         "user_id": int,
         "book_id": int,
-        "reservation_date": date
+        "reservation_date": date,
     },
-    
-    "backup":{
-        "file_name": str,
-        "backup_date": date
-    }
-
-
+    "backup": {"file_name": str, "backup_date": date},
 }
-
-
-
