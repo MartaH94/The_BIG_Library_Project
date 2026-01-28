@@ -137,8 +137,6 @@ class JsonFilesService:
         Raises:
             exc.ValidationError: If given data is None, schema is empty or data has wrong type.
         """
-        self.file_exists_checking()
-
         if data is None:
             raise exc.ValidationError("Given value is None. Cannot validate NoneType.")
 
@@ -147,6 +145,18 @@ class JsonFilesService:
                 "Given schema is empty. Cannot validate against empty schema."
             )
 
+        if isinstance(schema, dict):
+            if not isinstance(data, dict):
+                raise exc.ValidationError(
+                    "Provided data has wrong type. Expected data type is dict."
+                )
+
+            for key, subschema in schema.items():
+                if key not in data:
+                    raise exc.ValidationError(f"Missing key {key}")
+                self.validate_against_schema(data[key], subschema)
+            return "Success. Data is dictionary and matches the schema."
+
         if isinstance(schema, type):
             if not isinstance(data, schema):
                 raise exc.ValidationError(
@@ -154,8 +164,6 @@ class JsonFilesService:
                 )
             else:
                 return "Success. Data type matches the schema type."
-
-        self.validate_against_schema(data, schema)
 
         # if isinstance(schema, dict):
         #     if not isinstance(data, dict):
