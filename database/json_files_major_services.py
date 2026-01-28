@@ -126,20 +126,17 @@ class JsonFilesService:
         return f"Success. Data had been added and saved to file: {self.file_path.name}"
 
     def validate_against_schema(self, data, schema):
-        """Recursively validate value types and structure against a given schema.
+        """Recursively validate value types against a given schema.
 
-        This method checks that the given data is a dictionary and that it contains all keys defined in the schema with values of the expected types or nested structures.
-        For nested dictionaries, the methos calls itself recursively using the corresponding subschema. A ValidationError is raised if the data is missing required keys,
-        contains values of incorrect types, or does not match the schema structure.
         Args:
             data: The data to validate.
-            schema: The schema (dict or type) to validate against.
+            schema: The schema to validate against.
 
         Returns:
             str - Confirmation message (If data matches the schema)
 
         Raises:
-            exc.ValidationError: If keys are missing or types do not match.
+            exc.ValidationError: If given data is None, schema is empty or data has wrong type.
         """
         self.file_exists_checking()
 
