@@ -141,16 +141,26 @@ class JsonFilesService:
         Raises:
             exc.ValidationError: If keys are missing or types do not match.
         """
-        if isinstance(schema, dict):
-            if not isinstance(data, dict):
-                raise exc.ValidationError(f"Given value {data} should be a dictionary")
-            for key, subschema in schema.items():
-                if key not in data:
-                    raise exc.ValidationError(f"Missing key {key} in {subschema}")
-                self.validate_against_schema(data[key], subschema)
-        else:
+        if data is None:
+            raise exc.ValidationError("Given value is None. Cannot validate NoneType.")
+
+        if isinstance(schema, type):
             if not isinstance(data, schema):
-                raise exc.ValidationError("Wrong type of data. Expected dict.")
+                raise exc.ValidationError(
+                    f"Wrong type of data. Expected {schema.__name__}, got {type(data).__name__}."
+                )
+        self.validate_against_schema(data, schema)
+
+        # if isinstance(schema, dict):
+        #     if not isinstance(data, dict):
+        #         raise exc.ValidationError(f"Given value {data} should be a dictionary")
+        #     for key, subschema in schema.items():
+        #         if key not in data:
+        #             raise exc.ValidationError(f"Missing key {key} in {subschema}")
+        #         self.validate_against_schema(data[key], subschema)
+        # else:
+        #     if not isinstance(data, schema):
+        #         raise exc.ValidationError("Wrong type of data. Expected dict.")
 
         return "Success. Data has been validated and matches the file schema."
 
@@ -234,7 +244,7 @@ class JsonFilesService:
         records_to_remove = []
         deleted_records_counter = 0
 
-        for record_id, record_data in file_content.items():
+        for record_id, record_data in file_content:
             if key_name in record_data and record_data[key_name] == key_value:
                 records_to_remove.append(record_id)
                 deleted_records_counter += 1
@@ -266,7 +276,7 @@ class JsonFilesService:
         updated = 0
         if not new_data:
             raise exc.FileError(f"New data can't be empty value.")
-        for record_id, record_data in file_content.items():
+        for record_id, record_data in file_content:
             if item in record_data:
                 record_data[item] = new_data
                 updated += 1
