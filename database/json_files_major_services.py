@@ -144,6 +144,11 @@ class JsonFilesService:
         if data is None:
             raise exc.ValidationError("Given value is None. Cannot validate NoneType.")
 
+        if not schema:
+            raise exc.ValidationError(
+                "Given schema is empty. Cannot validate against empty schema."
+            )
+
         if isinstance(schema, type):
             if not isinstance(data, schema):
                 raise exc.ValidationError(
