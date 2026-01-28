@@ -45,16 +45,26 @@ class JsonFilesService:
         Returns:
             str: Status message about the verification/creation.
         """
-        file_content = []
 
         if not self.file_path.exists():
-            self.write_json_data(file_content)
-            return "File didn't exist. Created new file with empty list."
-        elif self.file_path.stat().st_size == 0:
-            self.write_json_data(file_content)
-            return "File was empty. Created new file with empty list."
-        else:
-            return "File verified: existing or newly created with empty list."
+            with self.file_path.open("w", encoding="utf-8") as f:
+                json.dump([], f, indent=4, sort_keys=True)
+                return "File didn't exist. Created new file with empty list."
+
+        if self.file_path.stat().st_size == 0:
+            with self.file_path.open("w", encoding="utf-8") as f:
+                json.dump([], f, indent=4, sort_keys=True)
+
+        return "Success. File exists and is initialized."
+
+        # if not self.file_path.exists():
+        #     self.write_json_data(file_content)
+        #     return "File didn't exist. Created new file with empty list."
+        # elif self.file_path.stat().st_size == 0:
+        #     self.write_json_data(file_content)
+        #     return "File was empty. Created new file with empty list."
+        # else:
+        #     return "File verified: existing or newly created with empty list."
 
     def load_json_file(self):
         """Load and return the JSON file content.
