@@ -141,6 +141,8 @@ class JsonFilesService:
         Raises:
             exc.ValidationError: If keys are missing or types do not match.
         """
+        self.file_exists_checking()
+
         if data is None:
             raise exc.ValidationError("Given value is None. Cannot validate NoneType.")
 
@@ -154,6 +156,9 @@ class JsonFilesService:
                 raise exc.ValidationError(
                     f"Wrong type of data. Expected {schema.__name__}, got {type(data).__name__}."
                 )
+            else:
+                return "Success. Data type matches the schema type."
+
         self.validate_against_schema(data, schema)
 
         # if isinstance(schema, dict):
@@ -166,8 +171,6 @@ class JsonFilesService:
         # else:
         #     if not isinstance(data, schema):
         #         raise exc.ValidationError("Wrong type of data. Expected dict.")
-
-        return "Success. Data has been validated and matches the file schema."
 
     def validate_file_data(self):
         """Validate all records loaded  from JSON file against the service schema.
