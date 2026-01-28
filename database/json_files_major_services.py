@@ -165,17 +165,6 @@ class JsonFilesService:
             else:
                 return "Success. Data type matches the schema type."
 
-        # if isinstance(schema, dict):
-        #     if not isinstance(data, dict):
-        #         raise exc.ValidationError(f"Given value {data} should be a dictionary")
-        #     for key, subschema in schema.items():
-        #         if key not in data:
-        #             raise exc.ValidationError(f"Missing key {key} in {subschema}")
-        #         self.validate_against_schema(data[key], subschema)
-        # else:
-        #     if not isinstance(data, schema):
-        #         raise exc.ValidationError("Wrong type of data. Expected dict.")
-
     def validate_file_data(self):
         """Validate all records loaded  from JSON file against the service schema.
 
