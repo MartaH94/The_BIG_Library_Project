@@ -95,11 +95,14 @@ class JsonFilesService:
             raise exc.FileError("Data is empty. Cannot save empty data to the file.")
         if not isinstance(data, list):
             raise exc.FileError("Data is not a list. Cannot save data to the file.")
-        self.validate_against_schema(data, [self.schema])
+
+        for record in data:
+            self.validate_against_schema(record, self.schema)
+
         with self.file_path.open("w", encoding="utf-8") as f:
             json.dump(data, f, indent=4, sort_keys=True)
 
-        return "Success. Changes has been saved."
+        return "Success. Data have been saved in the file."
 
     def append_data_to_file(self, data_to_append):
         """Append a new record to the JSON file.
