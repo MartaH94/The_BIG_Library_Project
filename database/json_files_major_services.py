@@ -248,7 +248,7 @@ class JsonFilesService:
         records_to_remove = []
         records_to_delete_counter = 0
 
-        for index, record_data in enumerate(file_content):
+        for record_id, record_data in enumerate(file_content):
             if not isinstance(record_data, dict):
                 raise exc.ValidationError(
                     "Incorrect type of record data. Expected type is dict."
