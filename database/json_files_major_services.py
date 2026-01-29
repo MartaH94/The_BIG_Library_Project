@@ -246,19 +246,23 @@ class JsonFilesService:
         """
         file_content = self.load_json_file()
         records_to_remove = []
-        deleted_records_counter = 0
+        records_to_delete_counter = 0
 
-        for record_id, record_data in file_content:
-            if key_name in record_data and record_data[key_name] == key_value:
+        for index, record_data in enumerate(file_content):
+            if not isinstance(record_data, dict):
+                raise exc.ValidationError(
+                    "Incorrect type of record data. Expected type is dict."
+                )
+            elif key_name in record_data and record_data[key_name] == key_value:
                 records_to_remove.append(record_id)
-                deleted_records_counter += 1
+                records_to_delete_counter += 1
 
-        if deleted_records_counter == 0:
+        if records_to_delete_counter == 0:
             raise exc.DatabaseError(
                 f"No matching elements to key {key_name} and value {key_value}"
             )
 
-        for record_id in records_to_remove:
+        for record_id in records_to_remove.sort(reverse=True):
             del file_content[record_id]
 
         self.validate_file_data()
