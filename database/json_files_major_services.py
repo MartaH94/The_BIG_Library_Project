@@ -289,13 +289,16 @@ class JsonFilesService:
         file_content = self.load_json_file()
         updated = 0
 
+        if item == "":
+            raise exc.FileError("Item to update can't be empty value.")
+
         if not new_data:
             raise exc.FileError(f"New data can't be empty value.")
 
         for record in enumerate(file_content):
             if not isinstance(record, dict):
                 raise exc.ValidationError(
-                    "Incorrect type of record data. Expected Type is dict"
+                    "Incorrect type of record data. Expected type is dict."
                 )
             elif item in record:
                 record[item] = new_data
