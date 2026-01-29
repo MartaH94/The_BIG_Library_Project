@@ -232,7 +232,7 @@ class JsonFilesService:
 
         with backup_path.open("w", encoding="utf-8") as f_backup:
             json.dump(data, f_backup, ensure_ascii=False, indent=4, sort_keys=True)
-        return f_backup
+        return backup_path
 
     def remove_from_file(self, key_name, key_value):
         """Remove records matching a key/value pair.
