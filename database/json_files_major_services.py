@@ -248,6 +248,9 @@ class JsonFilesService:
         records_to_remove = []
         records_to_delete_counter = 0
 
+        if key_name == "" or key_value == "":
+            raise exc.FileError("Key name or key value can't be empty.")
+
         for record_id, record_data in enumerate(file_content):
             if not isinstance(record_data, dict):
                 raise exc.ValidationError(
@@ -262,8 +265,11 @@ class JsonFilesService:
                 f"No matching elements to key {key_name} and value {key_value}"
             )
 
-        for record_id in records_to_remove.sort(reverse=True):
-            del file_content[record_id]
+        sorted_records_to_remove = records_to_remove.sort(reverse=True)
+
+        for record_id in sorted_records_to_remove:
+            if record_id < len(file_content):
+                del file_content[record_id]
 
         self.validate_file_data()
         self.write_json_data(file_content)
