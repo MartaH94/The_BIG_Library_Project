@@ -248,7 +248,7 @@ class JsonFilesService:
         records_to_remove = []
         records_to_delete_counter = 0
 
-        if key_name == "" or key_value == "":
+        if key_name == None or key_value == None:
             raise exc.FileError("Key name or key value can't be empty.")
 
         for record_id, record_data in enumerate(file_content):
@@ -289,10 +289,10 @@ class JsonFilesService:
         file_content = self.load_json_file()
         updated = 0
 
-        if item == "":
+        if item == None:
             raise exc.FileError("Item to update can't be empty value.")
 
-        if not new_data:
+        if new_data == None:
             raise exc.FileError(f"New data can't be empty value.")
 
         for record in enumerate(file_content):
