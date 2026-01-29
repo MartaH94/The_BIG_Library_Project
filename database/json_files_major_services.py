@@ -79,8 +79,6 @@ class JsonFilesService:
                 f"Cannot read the file: {e} from program data directory."
             )
 
-        return data
-
     def write_json_data(self, data):
         """Overwrite the file with the provided data after validation.
 
