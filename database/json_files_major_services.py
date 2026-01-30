@@ -120,6 +120,9 @@ class JsonFilesService:
                 "New record is empty. Cannot save dictionary to the file."
             )
 
+        if data_to_append == None:
+            raise exc.ValidationError("New data cannot be an empty value.")
+
         if not isinstance(data_to_append, dict):
             raise exc.ValidationError(
                 "Incorrect type of data to append. Cannot add data to database, expected type of data is dict."
@@ -304,6 +307,9 @@ class JsonFilesService:
             raise exc.InvalidFieldError(
                 f"The field {item} is not present in file schema."
             )
+
+        if not new_data:
+            raise exc.ValidationError("New data to update not provided.")
 
         if new_data == None:
             raise exc.FileError(f"New data can't be empty value.")
