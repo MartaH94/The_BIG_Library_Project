@@ -14,7 +14,7 @@ This module provides a high-level interface for working with JSON files, includi
 - removing records by key/value,
 - and generating timestamped backups.
 
-It is designed to keep file operations consistent, safe, and schema‑compliant across the system.
+It is designed to keep file operations consistent, safe, and schema-compliant across the system.
 
 
 """
@@ -25,7 +25,6 @@ from pathlib import Path
 
 import exceptions as exc
 import utils.config as config
-from database import database_schemes
 
 
 class JsonFilesService:
@@ -90,15 +89,17 @@ class JsonFilesService:
             exc.ValidationError: If data does not match the schema.
         """
         if not data:
-            raise exc.FileError("Data is empty. Cannot save empty data to the file.")
+            raise exc.FileError(
+                "Data is empty. Cannot save empty data to the file.")
         if not isinstance(data, list):
-            raise exc.FileError("Data is not a list. Cannot save data to the file.")
+            raise exc.FileError(
+                "Data is not a list. Cannot save data to the file.")
 
         for record in data:
             self.validate_against_schema(record, self.schema)
 
         with self.file_path.open("w", encoding="utf-8") as f:
-            json.dump(data, f, indent=4, sort_keys=True)
+            json.dump(data, f, ensure_ascii=False, indent=4, sort_keys=True)
 
         return "Success. Data have been saved in the file."
 
@@ -147,7 +148,8 @@ class JsonFilesService:
             exc.ValidationError: If given data is None, schema is empty or data has wrong type.
         """
         if data is None:
-            raise exc.ValidationError("Given value is None. Cannot validate NoneType.")
+            raise exc.ValidationError(
+                "Given value is None. Cannot validate NoneType.")
 
         if not schema:
             raise exc.ValidationError(
@@ -195,7 +197,8 @@ class JsonFilesService:
             )
         for index, item in enumerate(file_content):
             if not isinstance(item, dict):
-                raise exc.ValidationError(f"The record {index+1} is not a dictionary.")
+                raise exc.ValidationError(
+                    f"The record {index+1} is not a dictionary.")
             self.validate_against_schema(item, self.schema)
         return True
 
@@ -237,7 +240,8 @@ class JsonFilesService:
         data = self.load_json_file()
 
         with backup_path.open("w", encoding="utf-8") as f_backup:
-            json.dump(data, f_backup, ensure_ascii=False, indent=4, sort_keys=True)
+            json.dump(data, f_backup, ensure_ascii=False,
+                      indent=4, sort_keys=True)
         return backup_path
 
     def remove_from_file(self, key_name, key_value):
