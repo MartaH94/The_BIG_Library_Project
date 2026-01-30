@@ -254,6 +254,11 @@ class JsonFilesService:
         if key_name == None or key_value == None:
             raise exc.FileError("Key name or key value can't be empty.")
 
+        if not key_name in self.schema:
+            raise exc.InvalidFieldError(
+                f"The key: {key_name} is not present in file schema."
+            )
+
         for record_id, record_data in enumerate(file_content):
             if not isinstance(record_data, dict):
                 raise exc.ValidationError(
@@ -265,7 +270,7 @@ class JsonFilesService:
 
         if records_to_delete_counter == 0:
             raise exc.DatabaseError(
-                f"No matching elements to key {key_name} and value {key_value}"
+                f"No matching elements to key {key_name} and value {key_value}. No data deleted."
             )
 
         sorted_records_to_remove = records_to_remove.sort(reverse=True)
@@ -294,6 +299,11 @@ class JsonFilesService:
 
         if item == None:
             raise exc.FileError("Item to update can't be empty value.")
+
+        if not item in self.schema:
+            raise exc.InvalidFieldError(
+                f"The field {item} is not present in file schema."
+            )
 
         if new_data == None:
             raise exc.FileError(f"New data can't be empty value.")
