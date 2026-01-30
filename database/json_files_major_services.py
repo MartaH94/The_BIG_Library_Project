@@ -120,6 +120,11 @@ class JsonFilesService:
                 "New record is empty. Cannot save dictionary to the file."
             )
 
+        if not isinstance(data_to_append, dict):
+            raise exc.ValidationError(
+                "Incorrect type of data to append. Cannot add data to database, expected type of data is dict."
+            )
+
         self.validate_against_schema(data_to_append, self.schema)
         current_data.append(data_to_append)
         self.write_json_data(current_data)
