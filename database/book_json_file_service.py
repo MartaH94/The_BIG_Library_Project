@@ -137,6 +137,12 @@ class BookJsonFileService:
         all_books = []
         book_found = False
 
+        if not book_id:
+            raise exc.ValidationError("Book ID is missing.")
+
+        if book_id == None:
+            raise exc.DataError("Book ID cannot be an empty value.")
+
         for book in current_data:
             if book["book_id"] == book_id:
                 try:
