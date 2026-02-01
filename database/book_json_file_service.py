@@ -180,6 +180,18 @@ class BookJsonFileService:
         self.get_book_data(book_id)
         book_found = False
 
+        if not book_id:
+            raise exc.ValidationError("Book ID cannot be an empty value.")
+        
+        if book_id == None:
+            raise exc.DataError("Book ID cannot be an empty value.")
+        
+        if not field:
+            raise exc.FileError(f"The field {field} is missing.")
+        
+        if field == None:
+            raise exc.ValidationError("Field value cannot be an empty value.")
+
         if not new_value:
             raise exc.BookValidationError(
                 "New value to update book record is incorrect or is empty value."
