@@ -90,7 +90,10 @@ class BookJsonFileService:
         book_id = book_data["book_id"]
 
         if not book_data:
-            raise exc.DataError("Book data to save is missing or it's incorrect.")
+            raise exc.ValidationError("Book data to save is missing.")
+        
+        if book_data == None:
+            raise exc.DataError("Book data cannot be an empty value.")
 
         if not isinstance(book_data, dict):
             raise exc.DataTypeError(
