@@ -9,8 +9,14 @@ Book JSON storage service.
 
 This module provides a service layer for managing book records stored in a JSON file.
 It supports adding, retrieving, updating, and deleting book entries while relying on
-a lower‑level JSON file service for schema validation, loading, and saving. It is used
-to maintain the library’s book collection in a consistent and safe way
+a lower-level JSON file service for schema validation, loading, and saving. It is used
+to maintain the library's book collection in a consistent and safe way
+
+
+TO DO:
+- Verify and change if needed the raised errors and match them to situation
+- Update docstrings
+- Review and make more matching return messages
 
 """
 
