@@ -17,6 +17,11 @@ This module provides a high-level interface for working with JSON files, includi
 It is designed to keep file operations consistent, safe, and schema-compliant across the system.
 
 
+TO DO:
+- Verify and change if needed the raised errors and match them to situation
+- Update docstrings
+- Review and make more matching return messages
+
 """
 
 import json
@@ -122,7 +127,7 @@ class JsonFilesService:
             )
 
         if data_to_append == None:
-            raise exc.ValidationError("New data cannot be an empty value.")
+            raise exc.DataError("New data cannot be an empty value.")
 
         if not isinstance(data_to_append, dict):
             raise exc.ValidationError(
