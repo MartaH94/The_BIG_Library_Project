@@ -28,7 +28,7 @@ class UsersJsonFileService:
     def __init__(
         self,
         json_service: JsonFilesService,
-        file_path=PROGRAM_USERS_FILE_PATH,
+        file_path: str = PROGRAM_USERS_FILE_PATH,
     ):
         self.json_service = json_service
         self.file_path = file_path
