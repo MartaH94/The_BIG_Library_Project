@@ -211,9 +211,7 @@ class BookJsonFileService:
         Raises:
             exc.BookError: If the book cannot be removed.
         """
-        self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()
-        self.get_book_data(book_id)
         book_deleted = False
 
         for book in current_data:
@@ -227,6 +225,6 @@ class BookJsonFileService:
                 f"Book with ID: {book_id} couldn't be removed from database."
             )
 
-        self.json_service.validate_against_schema()  # add an argument
+        self.json_service.validate_against_schema(current_data)
         self.json_service.write_json_data(current_data)
-        return f"Book with ID: {book_id} has beed deleted from the library. "
+        return f"Book with ID: {book_id} has been deleted from the library. "
