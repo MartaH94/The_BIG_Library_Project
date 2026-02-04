@@ -15,6 +15,7 @@ the application.
 
 """
 
+import database.database_schemes as schema
 import exceptions as exc
 from database.json_files_major_services import JsonFilesService
 from utils.config import LOANS_LIST_FILE_PATH
@@ -47,10 +48,15 @@ class LoanJsonFileService:
         loan_found = False
         loan_data = None
 
+        if loan_id == None:
+            raise exc.ValidationError(
+                "Loan ID is missing or it's an empty value.")
+
         for loan in current_data:
             if loan["loan_id"] == loan_id:
                 loan_data = loan
                 loan_found = True
+                break
 
         if not loan_found:
             raise exc.LoanNotFoundError(
@@ -79,22 +85,23 @@ class LoanJsonFileService:
             exc.LoanValidationError: If schema validation fails.
         """
         current_data = self.json_service.load_json_file()
-        validated_loan_data = self.json_service.validate_against_schema(loan_data)
-        loan_id = loan_data["loan_id"]
 
         if not loan_data:
-            raise exc.DataError("Book data to save is missing or it's incorrect.")
+            raise exc.DataError(
+                "Book data to save is missing or it's incorrect.")
 
         if not isinstance(loan_data, dict):
             raise exc.DataTypeError(
                 "Book data type is incorrect. Book data must be a dictionary"
             )
-
+        loan_id = loan_data["loan_id"]
         for loan in current_data:
             if loan["loan_id"] == loan_id:
                 raise exc.LoanError(
                     f"Loan with ID: {loan['loan_id']} exists in the database. ID number must be unique value."
                 )
+        validated_loan_data = self.json_service.validate_against_schema(
+            loan_data, schema.loan_schema)
 
         if not validated_loan_data:
             raise exc.LoanValidationError(
@@ -136,9 +143,11 @@ class LoanJsonFileService:
                     all_loans_list.append(loan)
                     loan_found = True
                 except KeyError:
-                    raise exc.LoanNotFoundError(f"Loan with ID: {loan_id} not found.")
+                    raise exc.LoanNotFoundError(
+                        f"Loan with ID: {loan_id} not found.")
             if not loan_found:
-                raise exc.LoanNotFoundError(f"Loan with ID: {loan_id} not found.")
+                raise exc.LoanNotFoundError(
+                    f"Loan with ID: {loan_id} not found.")
         return all_loans_list
 
     def update_file_data(self, loan_id, field, new_value):
