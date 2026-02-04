@@ -140,7 +140,6 @@ class BookJsonFileService:
             exc.BookError: If no books are found.
         """
         current_data = self.json_service.load_json_file()
-        self.get_book_data(book_id)
         all_books = []
         book_found = False
 
