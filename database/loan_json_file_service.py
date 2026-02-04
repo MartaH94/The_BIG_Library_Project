@@ -184,21 +184,19 @@ class LoanJsonFileService:
             )
 
         for loan in current_data:
-            if loan["id"] == loan_id:
-                try:
-                    loan[field] = new_value
-                    loan_id_found = True
-                except KeyError:
-                    raise exc.LoanNotFoundError(
-                        f"Loan with ID: {loan_id} not found in database."
-                    )
+            if field not in loan:
+                raise exc.ValidationError(
+                    "The field value is missing or it's an empty value.")
+            else:
+                loan[field] = new_value
+                loan_id_found = True
 
-            if not loan_id_found:
-                raise exc.LoanNotFoundError(
-                    f"Loan with ID: {loan_id} not found in database."
-                )
+        if not loan_id_found:
+            raise exc.LoanNotFoundError(
+                f"Loan with ID: {loan_id} not found in database.")
 
-        self.json_service.validate_against_schema()
+        self.json_service.validate_against_schema(
+            current_data, schema.loan_schema)
         self.json_service.write_json_data(current_data)
         return f"For loan with ID: {loan_id}, data updated successfully."
 
