@@ -20,6 +20,7 @@ TO DO:
 
 """
 
+import database.database_schemes as schema
 import exceptions as exc
 from database.json_files_major_services import JsonFilesService
 from utils.config import THE_LIBRARY_FILE_PATH
@@ -108,7 +109,7 @@ class BookJsonFileService:
                     f"Book with ID: {book['book_id']} exists in the database. ID number must be unique value."
                 )
         validated_book_data = self.json_service.validate_against_schema(
-            book_data)
+            book_data, schema.book_schema)
 
         if not validated_book_data:
             raise exc.BookValidationError(
@@ -190,7 +191,8 @@ class BookJsonFileService:
                 "No matching book for current searching parameters."
             )
 
-        self.json_service.validate_against_schema(current_data)
+        self.json_service.validate_against_schema(
+            current_data, schema.book_schema)
         self.json_service.write_json_data(current_data)
         return (
             f"New data value has been saved for book with ID: {book_id}"
@@ -225,6 +227,6 @@ class BookJsonFileService:
                 f"Book with ID: {book_id} couldn't be removed from database."
             )
 
-        self.json_service.validate_against_schema(current_data)
+        # self.json_service.validate_against_schema(current_data)
         self.json_service.write_json_data(current_data)
         return f"Book with ID: {book_id} has been deleted from the library. "
