@@ -49,7 +49,7 @@ class BookJsonFileService:
         book_found = False
         book_data = None
 
-        if not book_id and book_id == None:
+        if book_id == None:
             raise exc.ValidationError(
                 "Book ID is missing or it's an empty value. Getting book data not possible.")
 
