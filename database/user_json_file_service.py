@@ -116,7 +116,7 @@ class UsersJsonFileService:
 
         return f"Added new user to database with ID: {user_id}"
 
-    def get_all_users_list(self, user_login_name):
+    def get_all_users_list(self):
         """Return all user records matching the given login name.
 
         Args:
@@ -129,23 +129,19 @@ class UsersJsonFileService:
             exc.UserNotFoundError: If no users match the provided login name.
         """
         current_data = self.json_service.load_json_file()
-        self.get_user_data(user_login_name)
         all_users = []
         user_found = False
 
         for user in current_data:
-            if user["user_name"] == user_login_name:
-                try:
-                    all_users.append(user)
-                    user_found = True
-                except KeyError:
-                    raise exc.UserNotFoundError(
-                        f"User with login: {user_login_name} not found in database."
-                    )
+            if user["user_name"]:
+                all_users.append(user)
+                user_found = True
+            else:
+                raise exc.UserNotFoundError(
+                    "User not found in database.")
             if not user_found:
                 raise exc.UserNotFoundError(
-                    f"User with login: {user_login_name} not found in database."
-                )
+                    "User not found in database.")
 
         return all_users
 
