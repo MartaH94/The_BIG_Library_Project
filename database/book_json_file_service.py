@@ -127,9 +127,9 @@ class BookJsonFileService:
             else:
                 raise exc.BookNotFoundError(
                     "No book found in the database.")
-            if not book_found:
-                raise exc.BookNotFoundError(
-                    "No book found in the database.")
+        if not book_found:
+            raise exc.BookNotFoundError("No book found in the database.")
+
         return all_books
 
     def update_book_data(self, book_id, field, new_value):
