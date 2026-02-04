@@ -180,11 +180,11 @@ class BookJsonFileService:
         current_data = self.json_service.load_json_file()
         book_found = False
 
-        if not book_id and book_id == None:
+        if book_id == None:
             raise exc.ValidationError(
                 "Book ID is missing or it's an empty value.")
 
-        if not field and field == None:
+        if field == None:
             raise exc.FileError(
                 "The field value is missing or it's an empty value.")
 
@@ -200,7 +200,7 @@ class BookJsonFileService:
                     book_found = True
                 except KeyError:
                     raise exc.BookValidationError(
-                        "Book ID is invalid or it's an emppty value."
+                        "The field value is missing."
                     )
 
         if not book_found:
