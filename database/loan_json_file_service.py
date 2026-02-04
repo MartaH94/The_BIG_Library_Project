@@ -133,21 +133,20 @@ class LoanJsonFileService:
 
         """
         current_data = self.json_service.load_json_file()
-        self.get_loan_data(loan_id)
         all_loans_list = []
         loan_found = False
 
         for loan in current_data:
-            if loan["loan_id"] == loan_id:
-                try:
-                    all_loans_list.append(loan)
-                    loan_found = True
-                except KeyError:
-                    raise exc.LoanNotFoundError(
-                        f"Loan with ID: {loan_id} not found.")
-            if not loan_found:
+            if loan["loan_id"]:
+                all_loans_list.append(loan)
+                loan_found = True
+            else:
                 raise exc.LoanNotFoundError(
                     f"Loan with ID: {loan_id} not found.")
+
+        if not loan_found:
+            raise exc.LoanNotFoundError(f"Loan with ID: {loan_id} not found.")
+
         return all_loans_list
 
     def update_file_data(self, loan_id, field, new_value):
