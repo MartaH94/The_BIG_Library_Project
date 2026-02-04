@@ -33,7 +33,6 @@ user_schema = {
     }
 }
 
-
 book_schema = {
     "book_id": int,
     "title": str,
@@ -47,7 +46,6 @@ book_schema = {
     "due_date": date,
 }
 
-
 loan_schema = {
     "loan_id": int,
     "user_id": int,
@@ -56,13 +54,11 @@ loan_schema = {
     "return_date": date,
 }
 
-
 reservation_schema = {
     "reservation_id": int,
     "user_id": int,
     "book_id": int,
     "reservation_date": date,
 }
-
 
 backup_schema = {"file_name": str, "backup_date": date}
