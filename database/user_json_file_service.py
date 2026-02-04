@@ -86,8 +86,6 @@ class UsersJsonFileService:
             exc.UserValidationError: If validation against the schema fails.
         """
         current_data = self.json_service.load_json_file()
-        validated_data = self.json_service.validate_against_schema(user_data)
-        user_id = user_data["id"]
 
         if not user_data:
             raise exc.DataError("User data to add is missing.")
@@ -97,18 +95,22 @@ class UsersJsonFileService:
                 "User data type is incorrect. User data must be a dict type."
             )
 
+        user_id = user_data["id"]
+
         for user in current_data:
             if user["id"] == user_id:
                 raise exc.UserError(
                     f"User with ID: {user_id} already exists in the database. User ID must be unique value."
                 )
+        validated_user_data = self.json_service.validate_against_schema(
+            user_data, schema.user_schema)
 
-        if not validated_data:
+        if not validated_user_data:
             raise exc.UserValidationError(
-                f"Validation new user data {user_data} does not match file schema."
+                "Validation failed. User data doesn't match the schema."
             )
         else:
-            current_data.append(user_data)
+            current_data.append(validated_user_data)
 
         self.json_service.write_json_data(current_data)
 
