@@ -170,7 +170,7 @@ class BookJsonFileService:
 
         if not book_found:
             raise exc.BookNotFoundError(
-                "Book with ID: {book_id} not found in database."
+                f"Book with ID: {book_id} not found in database."
             )
 
         self.json_service.validate_against_schema(
