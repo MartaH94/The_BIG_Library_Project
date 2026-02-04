@@ -121,42 +121,27 @@ class BookJsonFileService:
 
         return "New book record added to the database without errors."
 
-    def get_all_books_list(self, book_id):
-        """Return all books that match a given ID.
-
-        Note : Typical “get all books” functions do not filter by ID.
-
-        Args:
-            book_id (int): Book identifier.
+    def get_all_books_list(self):
+        """Retrieve a list of all book records in the database.
         Returns:
-            list: List of matching book records.
+            list: List of all book records.
         Raises:
-            exc.BookNotFoundError: If no books match the given ID.
-            exc.ValidationError: If the book ID is missing.
-            exc.DataError: If the book ID is an empty value.
-            exc.BookError: If no books are found.
+            exc.BookNotFoundError: If no books are found in the database.
         """
         current_data = self.json_service.load_json_file()
         all_books = []
         book_found = False
 
-        if not book_id and book_id == None:
-            raise exc.ValidationError(
-                "Book ID is missing or it's an empty value.")
-
         for book in current_data:
-            if book["book_id"] == book_id:
-                try:
-                    all_books.append(book)
-                    book_found = True
-                except KeyError:
-                    raise exc.BookNotFoundError(
-                        f"Book with ID {book_id} not found in database."
-                    )
+            if book["book_id"]:
+                all_books.append(book)
+                book_found = True
+            else:
+                raise exc.BookNotFoundError(
+                    "No book found in the database.")
             if not book_found:
                 raise exc.BookNotFoundError(
-                    f"Book with ID {book_id} not found in database."
-                )
+                    "No book found in the database.")
         return all_books
 
     def update_book_data(self, book_id, field, new_value):
