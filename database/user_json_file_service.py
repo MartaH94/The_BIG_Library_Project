@@ -35,16 +35,11 @@ class UsersJsonFileService:
         self.file_path = file_path
 
     def get_user_data(self, user_id):
-        """Return a single user record by ID.
-
+        """Return a single user record by its ID.
         Args:
             user_id (int): ID of the user to retrieve.
-
         Returns:
-            dict: The matching user record.
-
-        Raises:
-            exc.UserNotFoundError: If the user is not present in the database.
+            user_data (dict): The matching user record.
         """
         current_data = self.json_service.load_json_file()
         user_found = False
@@ -68,22 +63,16 @@ class UsersJsonFileService:
         return user_data
 
     def add_user_data(self, user_data):
-        """Add a new user record.
-
-        Validates the incoming record against the schema, enforces unique ID,
-        appends it to the list, and persists changes.
-
+        """Add a new user record to the JSON file.
         Args:
-            user_data (dict): User data to insert.
-
+            user_data (dict): The user data to add.
         Returns:
-            str: Confirmation message with the new user's ID.
-
+            str: Confirmation message.
         Raises:
-            exc.DataError: If the input payload is missing.
-            exc.DataTypeError: If the payload is not a dict.
-            exc.UserError: If the user ID already exists.
-            exc.UserValidationError: If validation against the schema fails.
+            exc.DataError: If the user data is missing.
+            exc.DataTypeError: If the user data is not a dictionary.
+            exc.UserValidationError: If the user data fails schema validation.
+            exc.UserError: If a user with the same ID already exists.
         """
         current_data = self.json_service.load_json_file()
 
@@ -117,16 +106,11 @@ class UsersJsonFileService:
         return f"Added new user to database with ID: {user_id}"
 
     def get_all_users_list(self):
-        """Return all user records matching the given login name.
-
-        Args:
-            user_login_name (str): Login name to filter by (e.g., 'john_example3').
-
+        """Retrieve all user records from the database.
         Returns:
-            list: All matching user records.
-
+            all_users (list): List of all user records.
         Raises:
-            exc.UserNotFoundError: If no users match the provided login name.
+            exc.UserNotFoundError: If no users are found in the database.
         """
         current_data = self.json_service.load_json_file()
         all_users = []
@@ -146,23 +130,16 @@ class UsersJsonFileService:
         return all_users
 
     def update_user_data(self, user_id, field, new_value):
-        """Update a field on the specified user.
-
-        Loads the current data, ensures the user exists, updates the field,
-        validates the file contents, and persists changes.
-
+        """Update a single user record by its ID.
         Args:
             user_id (int): ID of the user to update.
-            field (str): Field name to modify.
-            new_value (str): New value to set.
-
+            field (str): The field to update.
+            new_value: The new value to set.
         Returns:
             str: Confirmation message.
-
         Raises:
-            exc.DataError: If the new value is missing.
-            exc.UserNotFoundError: If the user or field is not found.
-
+            exc.ValidationError: If any input parameter is missing or invalid.
+            exc.UserNotFoundError: If the user with the given ID is not found.
         """
         current_data = self.json_service.load_json_file()
         user_found = False
@@ -180,41 +157,31 @@ class UsersJsonFileService:
                 "New value to update data is missing or it's an empty value.")
 
         for user in current_data:
-            if user["id"] == user_id:
-                try:
-                    user[field] = new_value
-                    user_found = True
-                except KeyError:
-                    raise exc.UserNotFoundError(
-                        f"User with ID: {user_id} not found in database."
-                    )
-            if not user_found:
-                raise exc.UserNotFoundError(
-                    f"User with ID: {user_id} not found in database."
-                )
+            if field not in user:
+                raise exc.ValidationError(
+                    "The field value is missing or it's an empty value.")
+            else:
+                user[field] = new_value
+                user_found = True
 
-        self.json_service.validate_file_data()
+        if not user_found:
+            raise exc.UserNotFoundError(
+                f"User with ID: {user_id} not found in database.")
+
+        self.json_service.validate_file_data(current_data, schema.user_schema)
         self.json_service.write_json_data(current_data)
         return f"For user with ID: {user_id}, data updated successfully."
 
     def delete_user_by_id(self, user_id):
-        """Delete a user by ID.
-
-        Loads the current data, removes the matching record,
-        validates the file state, and persists changes.
-
+        """ Delete a user record by its ID.
         Args:
             user_id (int): ID of the user to delete.
-
         Returns:
             str: Confirmation message.
-
         Raises:
-            exc.UserError: If the user could not be removed.
+            exc.UserError: If the user with the given ID is not found.
         """
-        self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()
-        self.get_user_data(user_id)
         user_deleted = False
 
         for user in current_data:
@@ -225,10 +192,9 @@ class UsersJsonFileService:
 
         if not user_deleted:
             raise exc.UserError(
-                f"User with ID: {user_id} couldn't be removed from database."
+                f"User with ID: {user_id} not found in database and couldn't be removed from database."
             )
 
-        self.json_service.validate_file_data()
         self.json_service.write_json_data(current_data)
 
         return f"User with ID {user_id} deleted from database."
