@@ -13,6 +13,7 @@ leveraging a lower-level JSON file service for I/O, validation, and persistence.
 
 """
 
+import database.database_schemes as schema
 import exceptions as exc
 from database.json_files_major_services import JsonFilesService
 from utils.config import PROGRAM_USERS_FILE_PATH
@@ -49,14 +50,19 @@ class UsersJsonFileService:
         user_found = False
         user_data = None
 
+        if user_id == None:
+            raise exc.ValidationError(
+                "User ID is missing or it's an empty value.")
+
         for user in current_data:
             if user["id"] == user_id:
                 user_data = user
                 user_found = True
+                break
 
         if not user_found:
             raise exc.UserNotFoundError(
-                f"User with {user_id} does not exist in database"
+                f"User with {user_id} does not exist in database."
             )
 
         return user_data
