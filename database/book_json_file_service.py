@@ -170,33 +170,30 @@ class BookJsonFileService:
                 "Book ID is missing or it's an empty value.")
 
         if field == None:
-            raise exc.FileError(
+            raise exc.ValidationError(
                 "The field value is missing or it's an empty value.")
 
-        if not new_value:
-            raise exc.BookValidationError(
+        if new_value == None:
+            raise exc.ValidationError(
                 "New value to update book record is incorrect or is empty value."
             )
 
         for book in current_data:
-            if book["book_id"] == book_id:
-                try:
-                    book[field] = new_value
-                    book_found = True
-                except KeyError:
-                    raise exc.BookValidationError(
-                        "The field value is missing."
-                    )
+            if field not in book:
+                raise exc.ValidationError("The field value is missing.")
+            else:
+                book[field] = new_value
+                book_found = True
 
         if not book_found:
             raise exc.BookNotFoundError(
-                "New value to update book record is incorrect or empty value."
+                "No matching book for current searching parameters."
             )
 
-        self.json_service.validate_against_schema()
+        self.json_service.validate_against_schema(current_data)
         self.json_service.write_json_data(current_data)
         return (
-            f"Data in book with book ID: {book_id} has been changed in field: {field}."
+            f"New data value has been saved for book with ID: {book_id}"
         )
 
     def delete_book_by_id(self, book_id):
@@ -230,6 +227,6 @@ class BookJsonFileService:
                 f"Book with ID: {book_id} couldn't be removed from database."
             )
 
-        self.json_service.validate_against_schema()
+        self.json_service.validate_against_schema()  # add an argument
         self.json_service.write_json_data(current_data)
         return f"Book with ID: {book_id} has beed deleted from the library. "
