@@ -67,6 +67,7 @@ class BookJsonFileService:
             if book["book_id"] == book_id:
                 book_data = book
                 book_found = True
+                break
 
         if not book_found:
             raise exc.BookNotFoundError(
