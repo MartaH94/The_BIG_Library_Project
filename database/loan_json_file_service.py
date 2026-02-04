@@ -167,14 +167,20 @@ class LoanJsonFileService:
             exc.LoanValidationError: If new_value is missing.
             exc.LoanNotFoundError: If the loan or field cannot be updated.
         """
-        self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()
-        self.get_loan_data(loan_id)
         loan_id_found = False
 
-        if not new_value:
+        if loan_id == None:
+            raise exc.ValidationError(
+                "Loan ID is missing or it's an empty value.")
+
+        if field == None:
+            raise exc.ValidationError(
+                "The field value is missing or it's an empty value.")
+
+        if new_value == None:
             raise exc.LoanValidationError(
-                "New value to update loand data is missing or is not correct."
+                "New value to update loand data is missing or it's an empty value."
             )
 
         for loan in current_data:
