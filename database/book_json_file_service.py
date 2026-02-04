@@ -57,7 +57,8 @@ class BookJsonFileService:
         book_data = None
 
         if not book_id:
-            raise exc.ValidationError("Book ID is missing. Getting book data not possible.")
+            raise exc.ValidationError(
+                "Book ID is missing. Getting book data not possible.")
 
         if book_id == None:
             raise exc.DataError("Book ID cannot be an empty value.")
@@ -92,32 +93,31 @@ class BookJsonFileService:
             exc.BookValidationError: If schema validation fails.
         """
         current_data = self.json_service.load_json_file()
-        validated_book_data = self.json_service.validate_against_schema(book_data)
-        book_id = book_data["book_id"]
 
         if not book_data:
             raise exc.ValidationError("Book data to save is missing.")
-        
-        if book_data == None:
-            raise exc.DataError("Book data cannot be an empty value.")
 
         if not isinstance(book_data, dict):
             raise exc.DataTypeError(
                 "Book data type is incorrect. Book data must be a dict type."
             )
 
+        book_id = book_data["book_id"]
+
         for book in current_data:
             if book["book_id"] == book_id:
                 raise exc.BookError(
-                    f"Book with ID: {book["book_id"]} exists in the database. ID number must be unique value."
+                    f"Book with ID: {book['book_id']} exists in the database. ID number must be unique value."
                 )
+        validated_book_data = self.json_service.validate_against_schema(
+            book_data)
 
         if not validated_book_data:
             raise exc.BookValidationError(
                 "Validation failed. Book data doesn't match database file schema."
             )
         else:
-            current_data.append(book_data)
+            current_data.append(validated_book_data)
 
         self.json_service.write_json_data(current_data)
 
@@ -129,14 +129,14 @@ class BookJsonFileService:
         Note : Typical “get all books” functions do not filter by ID.
 
         Args:
-            book_id (int): Book identifier to filter.
-
+            book_id (int): Book identifier.
         Returns:
-            list: List of matching books.
-
+            list: List of matching book records.
         Raises:
-            exc.BookNotFoundError: If no matching books are found.
-
+            exc.BookNotFoundError: If no books match the given ID.
+            exc.ValidationError: If the book ID is missing.
+            exc.DataError: If the book ID is an empty value.
+            exc.BookError: If no books are found.
         """
         current_data = self.json_service.load_json_file()
         self.get_book_data(book_id)
@@ -188,13 +188,13 @@ class BookJsonFileService:
 
         if not book_id:
             raise exc.ValidationError("Book ID cannot be an empty value.")
-        
+
         if book_id == None:
             raise exc.DataError("Book ID cannot be an empty value.")
-        
+
         if not field:
             raise exc.FileError(f"The field {field} is missing.")
-        
+
         if field == None:
             raise exc.ValidationError("Field value cannot be an empty value.")
 
