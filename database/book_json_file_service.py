@@ -12,12 +12,6 @@ It supports adding, retrieving, updating, and deleting book entries while relyin
 a lower-level JSON file service for schema validation, loading, and saving. It is used
 to maintain the library's book collection in a consistent and safe way
 
-
-TO DO:
-- Verify and change if needed the raised errors and match them to situation
-- Update docstrings
-- Review and make more matching return messages
-
 """
 
 import database.database_schemes as schema
@@ -30,7 +24,7 @@ class BookJsonFileService:
     """High-level operations for books stored in a JSON file.
 
     Works with JsonFilesService to load, validate, and modify book data while exposing
-    convenient methods for interacting with the library’s book collection.
+    convenient methods for interacting with the library's book collection.
     """
 
     def __init__(
@@ -42,16 +36,14 @@ class BookJsonFileService:
         self.file_path = file_path
 
     def get_book_data(self, book_id):
-        """Retrieve a single book record by its ID.
-
+        """Return a single book record by its ID.
         Args:
-            book_id (str): Unique book identifier.
-
+            book_id (int): ID of the book to retrieve.
         Returns:
             dict: The matching book record.
-
         Raises:
-            exc.BookNotFoundError: If no book with the given ID is found.
+            exc.BookNotFoundError: If the book is not present in the database.
+            exc.ValidationError: If the book_id is missing or None.
         """
         current_data = self.json_service.load_json_file()
         book_found = False
@@ -76,20 +68,15 @@ class BookJsonFileService:
 
     def add_book_data(self, book_data):
         """Add a new book record to the database.
-
-        Validates the incoming data against the schema and ensures the book ID is unique.
-
         Args:
-            book_data (dict): New book record.
-
+            book_data (dict): Book data to insert.
         Returns:
             str: Confirmation message.
-
         Raises:
-            exc.DataError: If the payload is missing.
-            exc.DataTypeError: If the record is not a dict.
-            exc.BookError: If the ID already exists.
-            exc.BookValidationError: If schema validation fails.
+            exc.BookValidationError: If the book data fails schema validation.
+            exc.DataTypeError: If the book data is not a dictionary.
+            exc.ValidationError: If the book data is missing.
+            exc.BookError: If a book with the same ID already exists.
         """
         current_data = self.json_service.load_json_file()
 
@@ -146,22 +133,16 @@ class BookJsonFileService:
         return all_books
 
     def update_book_data(self, book_id, field, new_value):
-        """Update a specific field in an existing book record.
-
-        Loads the data, checks the book exists, updates the field, validates the file
-        contents, and persists the modified data.
-
+        """Update a specific field of a book record by its ID.
         Args:
-            book_id (int): Identifier of the book to modify.
-            field (str): Field name to update.
-            new_value (str): New value to write.
-
+            book_id (int): ID of the book to update.
+            field (str): The field to update.
+            new_value: The new value to set for the specified field.
         Returns:
             str: Confirmation message.
-
         Raises:
-            exc.BookValidationError: If the new value is empty or invalid.
-            exc.BookNotFoundError: If the book or field is missing.
+            exc.ValidationError: If any of the input parameters are missing or invalid.
+            exc.BookNotFoundError: If the book with the specified ID is not found.
         """
         current_data = self.json_service.load_json_file()
         book_found = False
@@ -181,14 +162,15 @@ class BookJsonFileService:
 
         for book in current_data:
             if field not in book:
-                raise exc.ValidationError("The field value is missing.")
+                raise exc.ValidationError(
+                    "The field value is missing or it's an empty value.")
             else:
                 book[field] = new_value
                 book_found = True
 
         if not book_found:
             raise exc.BookNotFoundError(
-                "No matching book for current searching parameters."
+                "Book with ID: {book_id} not found in database."
             )
 
         self.json_service.validate_against_schema(
@@ -199,19 +181,13 @@ class BookJsonFileService:
         )
 
     def delete_book_by_id(self, book_id):
-        """Delete a book record by its ID.
-
-        Loads current data, removes the matching entry, validates the updated dataset,
-        and writes the result back to the file.
-
+        """Delete a book record from the database by its ID.
         Args:
-            book_id (int): Book identifier.
-
+            book_id (int): ID of the book to delete.
         Returns:
             str: Confirmation message.
-
         Raises:
-            exc.BookError: If the book cannot be removed.
+            exc.BookError: If the book with the specified ID could not be removed.
         """
         current_data = self.json_service.load_json_file()
         book_deleted = False
@@ -224,7 +200,7 @@ class BookJsonFileService:
 
         if not book_deleted:
             raise exc.BookError(
-                f"Book with ID: {book_id} couldn't be removed from database."
+                f"Book with ID: {book_id} could not be removed from the database."
             )
 
         # self.json_service.validate_against_schema(current_data)
