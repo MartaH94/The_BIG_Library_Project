@@ -178,20 +178,15 @@ class BookJsonFileService:
             exc.BookNotFoundError: If the book or field is missing.
         """
         current_data = self.json_service.load_json_file()
-        self.get_book_data(book_id)
         book_found = False
 
-        if not book_id:
-            raise exc.ValidationError("Book ID cannot be an empty value.")
+        if not book_id and book_id == None:
+            raise exc.ValidationError(
+                "Book ID is missing or it's an empty value.")
 
-        if book_id == None:
-            raise exc.DataError("Book ID cannot be an empty value.")
-
-        if not field:
-            raise exc.FileError(f"The field {field} is missing.")
-
-        if field == None:
-            raise exc.ValidationError("Field value cannot be an empty value.")
+        if not field and field == None:
+            raise exc.FileError(
+                "The field value is missing or it's an empty value.")
 
         if not new_value:
             raise exc.BookValidationError(
