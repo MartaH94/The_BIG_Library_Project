@@ -215,21 +215,19 @@ class LoanJsonFileService:
         Raises:
             exc.LoanNotFoundError: If the loan cannot be deleted.
         """
-        self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()
-        self.get_loan_data(loan_id)
         loan_id_found = False
 
         for loan in current_data:
             if loan["id"] == loan_id:
                 current_data.remove(loan)
                 loan_id_found = True
+                break
 
         if not loan_id_found:
             raise exc.LoanNotFoundError(
                 "Loan ID to delete record is incorrect or missing in the loans database file."
             )
 
-        self.json_service.validate_against_schema()
         self.json_service.write_json_data(current_data)
         return f"Loan record with ID {loan_id} has been deleted from database."
