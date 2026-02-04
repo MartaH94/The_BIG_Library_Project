@@ -19,45 +19,50 @@ from models.user import valid_roles
 # In validation implement file format convertion frm text file to type date / datetime
 # and checking corectness of file's format
 
-database_schemes = {
-    "User": {
-        "user_id": int,
-        "role": list(valid_roles),
-        "is_active": bool,
-        "last_login": datetime,
-        "user_profile": {
-            "user_name": str,
-            "first_name": str,
-            "last_name": str,
-            "email": str,
-            "phone_number": int,
-            "password_hash": str,
-        },
-    },
-    "Book": {
-        "book_id": int,
-        "title": str,
-        "author": str,
-        "isbn": str,
-        "publication_year": int,
-        "category": str,
-        "language": str,
-        "book_status": str,
-        "borrower_id": str,
-        "due_date": date,
-    },
-    "Loan": {
-        "loan_id": int,
-        "user_id": int,
-        "book_id": int,
-        "loan_date": date,
-        "return_date": date,
-    },
-    "reservation": {
-        "reservation_id": int,
-        "user_id": int,
-        "book_id": int,
-        "reservation_date": date,
-    },
-    "backup": {"file_name": str, "backup_date": date},
+
+user_schema = {
+    "user_id": int,
+    "role": list(valid_roles),
+    "is_active": bool,
+    "last_login": datetime,
+    "user_profile": {
+        "user_name": str,
+        "email": str,
+        "phone_number": int,
+        "password_hash": str,
+    }
 }
+
+
+book_schema = {
+    "book_id": int,
+    "title": str,
+    "author": str,
+    "isbn": str,
+    "publication_year": int,
+    "category": str,
+    "language": str,
+    "book_status": str,
+    "borrower_id": str,
+    "due_date": date,
+}
+
+
+loan_schema = {
+    "loan_id": int,
+    "user_id": int,
+    "book_id": int,
+    "loan_date": date,
+    "return_date": date,
+}
+
+
+reservation_schema = {
+    "reservation_id": int,
+    "user_id": int,
+    "book_id": int,
+    "reservation_date": date,
+}
+
+
+backup_schema = {"file_name": str, "backup_date": date}
