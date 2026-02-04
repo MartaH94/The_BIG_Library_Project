@@ -164,13 +164,20 @@ class UsersJsonFileService:
             exc.UserNotFoundError: If the user or field is not found.
 
         """
-        self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()
-        self.get_user_data(user_id)
         user_found = False
 
-        if not new_value:
-            raise exc.DataError("New value to update user data is missing.")
+        if user_id == None:
+            raise exc.ValidationError(
+                "User ID is missing or it's an empty value.")
+
+        if field == None:
+            raise exc.ValidationError(
+                "Field value is missing or it's an empty value.")
+
+        if new_value == None:
+            raise exc.ValidationError(
+                "New value to update data is missing or it's an empty value.")
 
         for user in current_data:
             if user["id"] == user_id:
