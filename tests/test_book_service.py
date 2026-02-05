@@ -39,11 +39,11 @@ class TestBookService(unittest.TestCase):
 
 # [TESTS FOR: ADDING BOOK]        
     def test_add_book(self):
-        print("\n[TEST CASE FOR: ADDING BOOK] test_add_book: Adding new book.")
+        #print("\n[TEST CASE FOR: ADDING BOOK] test_add_book: Adding new book.")
         book_to_add = self.book_service.books[0]
         self.admin_service.add_book(book_to_add)
         self.assertIn(book_to_add, self.admin_service.books)
-        print(f"[PASS] test_add_book: Book '{book_to_add.title}' added succesfully.")
+        #print(f"[PASS] test_add_book: Book '{book_to_add.title}' added succesfully.")
         
     def test_add_book_without_author_or_title(self):
         print("\n[TEST CASE FOR: ADDING BOOK] add book with empty data (author or title): Adding book with empty author or title... ")
