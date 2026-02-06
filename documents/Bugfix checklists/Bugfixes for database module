@@ -2,17 +2,17 @@
 
 database_schemes.py
 
-role type: change schema from list(valid_roles) → str (validator checks types, not allowed‑values lists). [FAQs for S...d OneDrive | Word]
-borrower_id type: make int (aligns with user IDs used elsewhere). [FAQs for S...d OneDrive | Word]
-Cross‑file contract: services must use user_id (not id) and respect user_profile.user_name nesting defined here. [FAQs for S...d OneDrive | Word]
+role type: change schema from list(valid_roles) → str (validator checks types, not allowed‑values lists). 
+borrower_id type: make int (aligns with user IDs used elsewhere). 
+Cross‑file contract: services must use user_id (not id) and respect user_profile.user_name nesting defined here. 
 
 
 json_files_major_services.py
 
-Sorting bug: don’t assign .sort() result; iterate the list after records_to_remove.sort(reverse=True). [Confluence...umentation | PDF]
-Update loop: replace for record in enumerate(file_content): with for record in file_content:; the current code treats (index, value) tuple as a dict. [Confluence...umentation | PDF]
-Validation placement: remove_from_file calls validate_file_data() before persisting; it reads from disk, so it validates stale data—move validation after write_json_data() or validate the in‑memory list per record. [Confluence...umentation | PDF]
-Return types in docs: create_backup_file() returns a Path (docstring says str)—align docstring. [Confluence...umentation | PDF]
+Sorting bug: don’t assign .sort() result; iterate the list after records_to_remove.sort(reverse=True). 
+Update loop: replace for record in enumerate(file_content): with for record in file_content:; the current code treats (index, value) tuple as a dict. 
+Validation placement: remove_from_file calls validate_file_data() before persisting; it reads from disk, so it validates stale data—move validation after write_json_data() or validate the in‑memory list per record.
+Return types in docs: create_backup_file() returns a Path (docstring says str)—align docstring. 
 
 
 book_json_file_service.py
