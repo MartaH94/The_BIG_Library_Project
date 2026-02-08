@@ -230,7 +230,7 @@ class JsonFilesService:
         """Create a JSON backup with a timestamped filename in the backup directory.
 
         Returns:
-            str: Confirmation that backup has been created, including the target path.
+            Path : Confirmation that backup has been created, including the target path.
         """
         self.file_exists_checking()
         backup_dir = self.get_or_create_backup_dir()
