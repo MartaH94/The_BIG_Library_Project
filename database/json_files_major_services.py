@@ -265,25 +265,22 @@ class JsonFilesService:
                 f"The key: {key_name} is not present in file schema."
             )
 
-        for record_id, record_data in enumerate(file_content):
-            if not isinstance(record_data, dict):
+        for record in file_content:
+            if not isinstance(record, dict):
                 raise exc.ValidationError(
                     "Incorrect type of record data. Expected type is dict."
                 )
-            elif key_name in record_data and record_data[key_name] == key_value:
-                records_to_remove.append(record_id)
+            elif key_name in record and record[key_name] == key_value:
+                records_to_remove.append(record)
                 records_to_delete_counter += 1
 
         if records_to_delete_counter == 0:
             raise exc.DatabaseError(
                 f"No matching elements to key {key_name} and value {key_value}. No data deleted."
             )
-
-        sorted_records_to_remove = records_to_remove.sort(reverse=True)
-
-        for record_id in sorted_records_to_remove:
-            if record_id < len(file_content):
-                del file_content[record_id]
+        
+        for record in records_to_remove.sort(reverse=True):
+            file_content.remove(record)
 
         self.validate_file_data()
         self.write_json_data(file_content)
