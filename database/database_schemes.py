@@ -1,11 +1,7 @@
 """This module defines the database schemas for the library management system.
 Each schema is represented as a dictionary where keys are field names and values are their expected data types.
 
-
-
-This schema requires rebuilding. Tasks here to do:
-- Each JSON file type has its own SCHEMA variable (user_schema, book_schema etc.)
-- Each schema is just a dict of key → Python type
+Each schema is just a dict of key → Python type
 
 """
 
