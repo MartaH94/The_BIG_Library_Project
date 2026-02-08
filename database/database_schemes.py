@@ -22,7 +22,7 @@ from models.user import valid_roles
 
 user_schema = {
     "user_id": int,
-    "role": list(valid_roles),
+    "role": str(valid_roles),
     "is_active": bool,
     "last_login": datetime,
     "user_profile": {
@@ -42,7 +42,7 @@ book_schema = {
     "category": str,
     "language": str,
     "book_status": str,
-    "borrower_id": str,
+    "borrower_id": int,
     "due_date": date,
 }
 
