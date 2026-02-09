@@ -120,7 +120,7 @@ class JsonFilesService:
                 "New record is empty. Cannot save dictionary to the file."
             )
 
-        if data_to_append == None:
+        if data_to_append is None:
             raise exc.DataError("New data cannot be an empty value.")
 
         if not isinstance(data_to_append, dict):
@@ -141,7 +141,7 @@ class JsonFilesService:
             schema: The schema to validate against.
 
         Returns:
-            str - Confirmation message (If data matches the schema)
+            data: The validated data if it matches the schema.
 
         Raises:
             exc.ValidationError: If given data is None, schema is empty or data has wrong type.
@@ -165,7 +165,7 @@ class JsonFilesService:
                 if key not in data:
                     raise exc.ValidationError(f"Missing key {key}")
                 self.validate_against_schema(data[key], subschema)
-            return "Success. Data is dictionary and matches the schema."
+            return data
 
         if isinstance(schema, type):
             if not isinstance(data, schema):
@@ -173,7 +173,7 @@ class JsonFilesService:
                     f"Wrong type of data. Expected {schema.__name__}, got {type(data).__name__}."
                 )
             else:
-                return "Success. Data type matches the schema type."
+                return data
 
     def validate_file_data(self):
         """Validate all records loaded  from JSON file against the service schema.
@@ -246,6 +246,8 @@ class JsonFilesService:
     def remove_from_file(self, key_name, key_value):
         """Remove records matching a key/value pair.
 
+        TO DO: Implement recursive existence checks (for supporting nested keys)
+
         Args:
             key_name (str): Field name to match.
             key_value: Value to match for removal.
@@ -257,7 +259,7 @@ class JsonFilesService:
         records_to_remove = []
         records_to_delete_counter = 0
 
-        if key_name == None or key_value == None:
+        if key_name is None or key_value is None:
             raise exc.FileError("Key name or key value can't be empty.")
 
         if not key_name in self.schema:
@@ -278,8 +280,8 @@ class JsonFilesService:
             raise exc.DatabaseError(
                 f"No matching elements to key {key_name} and value {key_value}. No data deleted."
             )
-        
-        for record in records_to_remove.sort(reverse=True):
+
+        for record in records_to_remove:
             file_content.remove(record)
 
         self.validate_file_data()
@@ -288,6 +290,8 @@ class JsonFilesService:
 
     def update_data_in_file(self, item, new_data):
         """Update a field in all records where it exists.
+
+        TO DO: Implement recursive existence checks (for supporting nested keys)
 
         Args:
             item (str): Field name to update.
@@ -300,7 +304,7 @@ class JsonFilesService:
         file_content = self.load_json_file()
         updated = 0
 
-        if item == None:
+        if item is None:
             raise exc.FileError("Item to update can't be empty value.")
 
         if not item in self.schema:
@@ -311,10 +315,10 @@ class JsonFilesService:
         if not new_data:
             raise exc.ValidationError("New data to update not provided.")
 
-        if new_data == None:
+        if new_data is None:
             raise exc.FileError(f"New data can't be empty value.")
 
-        for record in enumerate(file_content):
+        for record in file_content:
             if not isinstance(record, dict):
                 raise exc.ValidationError(
                     "Incorrect type of record data. Expected type is dict."
