@@ -119,7 +119,7 @@ class BookJsonFileService:
         book_found = False
 
         for book in current_data:
-            if book["book_id"]:
+            if book["book_id"] in book:
                 all_books.append(book)
                 book_found = True
             else:
@@ -145,15 +145,11 @@ class BookJsonFileService:
         current_data = self.json_service.load_json_file()
         book_found = False
 
-        if book_id == None:
+        if book_id is None:
             raise exc.ValidationError(
                 "Book ID is missing or it's an empty value.")
 
-        if field == None:
-            raise exc.ValidationError(
-                "The field value is missing or it's an empty value.")
-
-        if new_value == None:
+        if new_value is None:
             raise exc.ValidationError(
                 "New value to update book record is incorrect or is empty value."
             )
@@ -161,10 +157,14 @@ class BookJsonFileService:
         for book in current_data:
             if field not in book:
                 raise exc.ValidationError(
-                    "The field value is missing or it's an empty value.")
+                    f"The field '{field}' is missing in this book entry.")
             else:
                 book[field] = new_value
                 book_found = True
+
+        if field is None:
+            raise exc.ValidationError(
+                "The field value is missing or it's an empty value.")
 
         if not book_found:
             raise exc.BookNotFoundError(
@@ -190,6 +190,10 @@ class BookJsonFileService:
         current_data = self.json_service.load_json_file()
         book_deleted = False
 
+        if book_id is None:
+            raise exc.ValidationError(
+                "Book ID is missing or it's an empty value.")
+
         for book in current_data:
             if book["book_id"] == book_id:
                 current_data.remove(book)
@@ -201,6 +205,5 @@ class BookJsonFileService:
                 f"Book with ID: {book_id} could not be removed from the database."
             )
 
-        # self.json_service.validate_against_schema(current_data)
         self.json_service.write_json_data(current_data)
         return f"Book with ID: {book_id} has been deleted from the library. "
