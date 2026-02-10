@@ -38,9 +38,6 @@ class LoanJsonFileService:
             loan_id (int): ID of the loan to retrieve.
         Returns:
             loan_data (dict): The matching loan record.
-        Raises:
-            exc.LoanNotFoundError: If the loan is not present in the database.
-            exc.ValidationError: If the loan_id is missing or None.
         """
         current_data = self.json_service.load_json_file()
         loan_found = False
@@ -68,12 +65,7 @@ class LoanJsonFileService:
         Args:
             loan_data (dict): The loan data to add.
         Returns:
-            str: Confirmation message.      
-        Raises:
-            exc.DataError: If the loan data is missing.
-            exc.DataTypeError: If the loan data is not a dictionary.
-            exc.LoanError: If a loan with the same ID already exists.
-            exc.LoanValidationError: If the loan data fails schema validation.
+            str: Message with confirmation of success.      
         """
         current_data = self.json_service.load_json_file()
 
@@ -108,8 +100,6 @@ class LoanJsonFileService:
         """Retrieve all loan records from the database.
         Returns:
             all_loans_list (list): List of all loan records.
-        Raises:
-            exc.LoanNotFoundError: If no loans are found in the database.
         """
         current_data = self.json_service.load_json_file()
         all_loans_list = []
@@ -135,11 +125,7 @@ class LoanJsonFileService:
             field (str): The field to update.
             new_value: The new value to set for the specified field.
         Returns:
-            str: Confirmation message.
-        Raises:
-            exc.ValidationError: If loan_id or field is missing.
-            exc.LoanValidationError: If the new value is missing.
-            exc.LoanNotFoundError: If the loan with the given ID is not found.
+            str: Message with confirmation of success.
         """
         current_data = self.json_service.load_json_file()
         loan_id_found = False
@@ -179,9 +165,7 @@ class LoanJsonFileService:
         Args:
             loan_id (int): ID of the loan to delete.
         Returns:
-            str: Confirmation message.
-        Raises:
-            exc.LoanNotFoundError: If the loan with the given ID is not found.
+            str: Message with confirmation of success.
         """
         current_data = self.json_service.load_json_file()
         loan_id_found = False
