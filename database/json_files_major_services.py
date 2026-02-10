@@ -350,7 +350,6 @@ class JsonFilesService:
         if updated == 0:
             raise exc.DatabaseError(f"No matching element to {item}.")
 
-        self.validate_file_data()
         self.write_json_data(file_content)
 
         return "Success. Record in database has been updated."
