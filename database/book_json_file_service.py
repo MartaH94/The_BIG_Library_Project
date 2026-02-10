@@ -39,12 +39,10 @@ class BookJsonFileService:
         """Return a single book record by its ID.
         Args:
             book_id (int): ID of the book to retrieve.
-        Returns:
+        Returns:    
             book_data (dict): The matching book record.
-        Raises:
-            exc.BookNotFoundError: If the book is not present in the database.
-            exc.ValidationError: If the book_id is missing or None.
         """
+
         current_data = self.json_service.load_json_file()
         book_found = False
         book_data = None
@@ -67,16 +65,13 @@ class BookJsonFileService:
         return book_data
 
     def add_book_data(self, book_data):
-        """Add a new book record to the database.
+        """Add a new book record to the JSON file.
         Args:
-            book_data (dict): Book data to insert.
+            book_data (dict): The book data to add.
         Returns:
-            str: Confirmation message.
-        Raises:
-            exc.BookValidationError: If the book data fails schema validation.
-            exc.ValidationError: If the book data is missing.
-            exc.BookError: If a book with the same ID already exists.
+            str: Message with confirmation of success.
         """
+
         current_data = self.json_service.load_json_file()
 
         if not book_data:
@@ -107,12 +102,11 @@ class BookJsonFileService:
         return f"Added new book to data base with ID: {book_id}."
 
     def get_all_books_list(self):
-        """Retrieve a list of all book records in the database.
+        """Return a list of all book records in the JSON file.
         Returns:
-            list: List of all book records.
-        Raises:
-            exc.BookNotFoundError: If no books are found in the database.
+            all_books (list): A list of all book records.
         """
+
         current_data = self.json_service.load_json_file()
         all_books = []
         book_found = False
@@ -133,16 +127,14 @@ class BookJsonFileService:
         """Update a specific field of a book record by its ID.
         Args:
             book_id (int): ID of the book to update.
-            field (str): The field to update.
+            field (str): The field name to update.
             new_value: The new value to set for the specified field.
         Returns:
-            str: Confirmation message.
-        Raises:
-            exc.ValidationError: If any of the input parameters are missing or invalid.
-            exc.BookNotFoundError: If the book with the specified ID is not found.
+            str: Message with confirmation of success.
         """
+
         current_data = self.json_service.load_json_file()
-        book_found = False
+        book_id_found = False
 
         if book_id is None:
             raise exc.ValidationError(
@@ -164,10 +156,10 @@ class BookJsonFileService:
                         f"The field '{field}' is missing in this book entry.")
 
                 book[field] = new_value
-                book_found = True
+                book_id_found = True
                 break
 
-        if not book_found:
+        if not book_id_found:
             raise exc.BookNotFoundError(
                 f"Book with ID: {book_id} not found in database."
             )
@@ -182,10 +174,9 @@ class BookJsonFileService:
         Args:
             book_id (int): ID of the book to delete.
         Returns:
-            str: Confirmation message.
-        Raises:
-            exc.BookError: If the book with the specified ID could not be removed.
+            str: Message with confirmation of success.
         """
+
         current_data = self.json_service.load_json_file()
         book_deleted = False
 
