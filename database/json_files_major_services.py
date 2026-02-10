@@ -133,8 +133,9 @@ class JsonFilesService:
                 "Incorrect type of data to append. Cannot add data to database, expected type of data is dict."
             )
 
-        self.validate_against_schema(data_to_append, self.schema)
-        current_data.append(data_to_append)
+        validated_record = self.validate_against_schema(
+            data_to_append, self.schema)
+        current_data.append(validated_record)
         self.write_json_data(current_data)
         return f"Success. Data had been added and saved to file: {self.file_path.name}"
 
