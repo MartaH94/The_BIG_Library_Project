@@ -40,7 +40,7 @@ class BookJsonFileService:
         Args:
             book_id (int): ID of the book to retrieve.
         Returns:
-            dict: The matching book record.
+            book_data (dict): The matching book record.
         Raises:
             exc.BookNotFoundError: If the book is not present in the database.
             exc.ValidationError: If the book_id is missing or None.
@@ -74,7 +74,6 @@ class BookJsonFileService:
             str: Confirmation message.
         Raises:
             exc.BookValidationError: If the book data fails schema validation.
-            exc.DataTypeError: If the book data is not a dictionary.
             exc.ValidationError: If the book data is missing.
             exc.BookError: If a book with the same ID already exists.
         """
@@ -105,7 +104,7 @@ class BookJsonFileService:
 
         current_data.append(validated_book_data)
         self.json_service.write_json_data(current_data)
-        return "New book record added to the database without errors."
+        return f"Added new book to data base with ID: {book_id}."
 
     def get_all_books_list(self):
         """Retrieve a list of all book records in the database.
@@ -166,6 +165,7 @@ class BookJsonFileService:
 
                 book[field] = new_value
                 book_found = True
+                break
 
         if not book_found:
             raise exc.BookNotFoundError(
