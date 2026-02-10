@@ -87,7 +87,7 @@ class JsonFilesService:
             exc.FileError: If data is empty or not a list.
             exc.ValidationError: If data does not match the schema.
         """
-        if not data:
+        if data is None:
             raise exc.FileError(
                 "Data is empty. Cannot save empty data to the file.")
         if not isinstance(data, list):
@@ -115,13 +115,10 @@ class JsonFilesService:
             exc.ValidationError: If the record is empty or invalid.
         """
         current_data = self.load_json_file()
-        if not data_to_append:
-            raise exc.ValidationError(
-                "New record is empty. Cannot save dictionary to the file."
-            )
-
         if data_to_append is None:
-            raise exc.DataError("New data cannot be an empty value.")
+            raise exc.ValidationError(
+                "New data is missig or it's an empty value."
+            )
 
         if not isinstance(data_to_append, dict):
             raise exc.ValidationError(
@@ -148,7 +145,7 @@ class JsonFilesService:
         """
         if data is None:
             raise exc.ValidationError(
-                "Given value is None. Cannot validate NoneType.")
+                "Data to validate is missing or it's an empty value.")
 
         if not schema:
             raise exc.ValidationError(
@@ -259,8 +256,13 @@ class JsonFilesService:
         records_to_remove = []
         records_to_delete_counter = 0
 
-        if key_name is None or key_value is None:
-            raise exc.FileError("Key name or key value can't be empty.")
+        if key_name is None:
+            raise exc.ValidationError(
+                "Key name is missing or it's an empty value.")
+
+        if key_value is None:
+            raise exc.ValidationError(
+                "Key value is missing or it's an empty value.")
 
         if not key_name in self.schema:
             raise exc.InvalidFieldError(
@@ -312,11 +314,9 @@ class JsonFilesService:
                 f"The field {item} is not present in file schema."
             )
 
-        if not new_data:
-            raise exc.ValidationError("New data to update not provided.")
-
         if new_data is None:
-            raise exc.FileError(f"New data can't be empty value.")
+            raise exc.ValidationError(
+                "New data is missing or it's an empty value.")
 
         for record in file_content:
             if not isinstance(record, dict):
