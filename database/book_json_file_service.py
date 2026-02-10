@@ -149,30 +149,29 @@ class BookJsonFileService:
             raise exc.ValidationError(
                 "Book ID is missing or it's an empty value.")
 
+        if field is None:
+            raise exc.ValidationError(
+                "The field value is missing or it's an empty value.")
+
         if new_value is None:
             raise exc.ValidationError(
                 "New value to update book record is incorrect or is empty value."
             )
 
         for book in current_data:
-            if field not in book:
-                raise exc.ValidationError(
-                    f"The field '{field}' is missing in this book entry.")
-            else:
+            if book.get("book_id") == book_id:
+                if field not in book:
+                    raise exc.ValidationError(
+                        f"The field '{field}' is missing in this book entry.")
+
                 book[field] = new_value
                 book_found = True
-
-        if field is None:
-            raise exc.ValidationError(
-                "The field value is missing or it's an empty value.")
 
         if not book_found:
             raise exc.BookNotFoundError(
                 f"Book with ID: {book_id} not found in database."
             )
 
-        self.json_service.validate_against_schema(
-            current_data, schema.book_schema)
         self.json_service.write_json_data(current_data)
         return (
             f"New data value has been saved for book with ID: {book_id}"
