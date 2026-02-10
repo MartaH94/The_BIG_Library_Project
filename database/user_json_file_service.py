@@ -67,11 +67,7 @@ class UsersJsonFileService:
         Args:
             user_data (dict): The user data to add.
         Returns:
-            str: Confirmation message.
-        Raises:
-            exc.DataTypeError: If the user data is not a dictionary.
-            exc.UserValidationError: If the user data fails schema validation.
-            exc.UserError: If a user with the same ID already exists.
+            str: Message with confirmation of success.
         """
         current_data = self.json_service.load_json_file()
 
@@ -108,8 +104,6 @@ class UsersJsonFileService:
         """Retrieve all user records from the database.
         Returns:
             all_users (list): List of all user records.
-        Raises:
-            exc.UserNotFoundError: If no users are found in the database.
         """
         current_data = self.json_service.load_json_file()
         all_users = []
@@ -135,10 +129,7 @@ class UsersJsonFileService:
             field (str): The field to update.
             new_value: The new value to set.
         Returns:
-            str: Confirmation message.
-        Raises:
-            exc.ValidationError: If any input parameter is missing or invalid.
-            exc.UserNotFoundError: If the user with the given ID is not found.
+            str: Message with confirmation of success.
         """
         current_data = self.json_service.load_json_file()
         user_found = False
@@ -177,9 +168,7 @@ class UsersJsonFileService:
         Args:
             user_id (int): ID of the user to delete.
         Returns:
-            str: Confirmation message.
-        Raises:
-            exc.UserError: If the user with the given ID is not found.
+            str: Message with confirmation of success.
         """
         current_data = self.json_service.load_json_file()
         user_deleted = False
