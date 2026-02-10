@@ -307,7 +307,6 @@ class JsonFilesService:
         for record in records_to_remove:
             file_content.remove(record)
 
-        self.validate_file_data()
         self.write_json_data(file_content)
         return f"Success. Data from the file deleted for record: {key_name}"
 
