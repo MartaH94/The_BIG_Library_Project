@@ -49,7 +49,7 @@ class BookJsonFileService:
         book_found = False
         book_data = None
 
-        if book_id == None:
+        if book_id is None:
             raise exc.ValidationError(
                 "Book ID is missing or it's an empty value. Getting book data not possible.")
 
@@ -102,11 +102,9 @@ class BookJsonFileService:
             raise exc.BookValidationError(
                 "Validation failed. Book data doesn't match database file schema."
             )
-        else:
-            current_data.append(validated_book_data)
 
+        current_data.append(validated_book_data)
         self.json_service.write_json_data(current_data)
-
         return "New book record added to the database without errors."
 
     def get_all_books_list(self):
