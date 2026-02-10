@@ -37,6 +37,10 @@ class JsonFilesService:
         self.file_path = file_path
         self.schema = schema
 
+    # -------------------------
+    # File I/O helpers
+    # -------------------------
+
     def file_exists_checking(self):
         """Ensure the JSON file exists and is initialized. If the file is missing or empty, it is created with an empty list.
 
@@ -102,6 +106,10 @@ class JsonFilesService:
 
         return "Success. Data have been saved in the file."
 
+    # -------------------------
+    # CRUD operations
+    # -------------------------
+
     def append_data_to_file(self, data_to_append):
         """Append a new record to the JSON file.
 
@@ -129,6 +137,10 @@ class JsonFilesService:
         current_data.append(data_to_append)
         self.write_json_data(current_data)
         return f"Success. Data had been added and saved to file: {self.file_path.name}"
+
+    # -------------------------
+    # Core validation
+    # -------------------------
 
     def validate_against_schema(self, data, schema):
         """Recursively validate value types against a given schema.
@@ -198,6 +210,10 @@ class JsonFilesService:
             self.validate_against_schema(item, self.schema)
         return True
 
+    # -------------------------
+    # Backup helpers
+    # -------------------------
+
     def get_or_create_backup_dir(self):
         """Return the directory where backups are stored, creating it if needed.
 
@@ -239,6 +255,10 @@ class JsonFilesService:
             json.dump(data, f_backup, ensure_ascii=False,
                       indent=4, sort_keys=True)
         return backup_path
+
+    # -------------------------
+    # Remove/Update operations
+    # -------------------------
 
     def remove_from_file(self, key_name, key_value):
         """Remove records matching a key/value pair.
