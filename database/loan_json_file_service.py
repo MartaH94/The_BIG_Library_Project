@@ -5,175 +5,185 @@ database.loan_json_file_service
 Service class for managing book loan data in a JSON file.
 __________________________________________________________
 
-TO DO HERE: 
-- Delete permission checks in all methods. <-- Checking permissions will go to functionality layer. 
-- verify imports
-- update docstrings
+Loan JSON storage service.
 
-METHODS:
-1. get_loan_data() --> implemented
-2. add_loan() --> implemented
-3. get_all_loans_list() --> implemented
-4. update_file data() --> reviewed
-5. delete_data_from_file() --> reviewed
+This module provides a high-level interface for managing book loan records stored in
+a JSON file. It supports adding new loans, retrieving individual records, listing
+loans, updating loan details, and deleting loan entries. All I/O operations and schema
+validation are delegated to JsonFilesService, ensuring consistent data handling across
+the application.
 
---> General review of methods.
 """
 
-
-
+import database.database_schemes as schema
 import exceptions as exc
-
-from utils.config import LOANS_LIST_FILE_PATH
 from database.json_files_major_services import JsonFilesService
-from services.authorisation_service import UserAuthorisation
+from utils.config import LOANS_LIST_FILE_PATH
 
-class LoanJsonFileService():
-    """ Service class for managing book loan data in a JSON file. This class provides methods to add, retrieve, update, and delete book loan records,
-        while ensuring data validation. It can be used to manage the library's book loan records.
+
+class LoanJsonFileService:
+    """High-level operations for loan records stored in a JSON file.
+
+    Provides helper methods to load, modify, validate, and delete loan entries.
+    Works together with JsonFilesService to maintain correct structure and data integrity.
     """
-    def __init__(self, json_service: JsonFilesService, authorisation: UserAuthorisation, file_path=LOANS_LIST_FILE_PATH):
+
+    def __init__(self, json_service: JsonFilesService, file_path=LOANS_LIST_FILE_PATH):
         self.json_service = json_service
-        self.authorisation = authorisation
         self.file_path = file_path
 
     def get_loan_data(self, loan_id):
-        """ This method retrieves loan data from record in database file by loan ID. It returns loan data as dictionary. It can be used to display single loan details in GUI.
-
+        """Return a single loan record by its ID.
         Args:
-            loan_id (int): Unique number of loan
-
+            loan_id (int): ID of the loan to retrieve.
         Returns:
-            dict: Loan data as a dictionary.
+            loan_data (dict): The matching loan record.
         """
         current_data = self.json_service.load_json_file()
         loan_found = False
         loan_data = None
 
+        if loan_id is None:
+            raise exc.ValidationError(
+                "Loan ID is missing or it's an empty value. Getting loan record data is not possible.")
+
         for loan in current_data:
             if loan["loan_id"] == loan_id:
                 loan_data = loan
                 loan_found = True
+                break
 
         if not loan_found:
-            raise exc.LoanNotFoundError(f"Loan with {loan_id} does not exists in database.")
-        
+            raise exc.LoanNotFoundError(
+                f"Loan with {loan_id} does not exists in database."
+            )
+
         return loan_data
-        
 
     def add_loan_data(self, loan_data):
-        """ This method adds new loan data record to database file. It validates loan_data against schema and checks uniqueness of loan ID. It can be used to create new loan record.
-        This method works with all kinds of loan actions - new loan, return of book, extend loan period.
-
+        """Add a new loan record to the JSON file.
         Args:
-            loan_data (dict): Loan data to be added to database.
-
+            loan_data (dict): The loan data to add.
         Returns:
-            str: Confirmation message that new loan data record was added to the database.
+            str: Message with confirmation of success.      
         """
         current_data = self.json_service.load_json_file()
-        validated_loan_data = self.json_service.validate_against_schema(loan_data)
-        loan_id = loan_data["loan_id"]
 
         if not loan_data:
-            raise exc.DataError("Book data to save is missing or it's incorrect.")
-        
+            raise exc.ValidationError(
+                "Loan data to save is missing or it's incorrect.")
+
         if not isinstance(loan_data, dict):
-            raise exc.DataTypeError("Book data type is incorrect. Book data must be a dictionary")
-        
+            raise exc.DataTypeError(
+                "Loan data type is incorrect. Loan data must be a dictionary"
+            )
+        loan_id = loan_data["loan_id"]
+
         for loan in current_data:
             if loan["loan_id"] == loan_id:
-                raise exc.LoanError(f"Loan with ID: {loan['loan_id']} exists in the database. ID number must be unique value.")
-            
+                raise exc.LoanError(
+                    f"Loan with ID: {loan['loan_id']} exists in the database. ID number must be unique value."
+                )
+        validated_loan_data = self.json_service.validate_against_schema(
+            loan_data, schema.loan_schema)
+
         if not validated_loan_data:
-            raise exc.LoanValidationError("Validation failed. Book data doesn't match database file schema.")
-        else:
-            current_data.append(loan_data)
+            raise exc.LoanValidationError(
+                "Validation failed. Loan data doesn't match database file schema."
+            )
 
+        current_data.append(loan_data)
         self.json_service.write_json_data(current_data)
-
-        return "New loan record added to the database without errors."
-    
+        return f"Added new loan to data base with ID: {loan_id}."
 
     def get_all_loans_list(self, loan_id):
-        """ This method returns list of all loans in database. It can be used to display all loans in GUI and makes possible to manage on the loans (searching, deleting, updating etc.)
-
-        Args:
-            loan_id (int): Unique numerber of loan 
-
+        """Retrieve all loan records from the database.
         Returns:
-            list: This method returns a list of all loans in database file. 
+            all_loans_list (list): List of all loan records.
         """
         current_data = self.json_service.load_json_file()
-        self.get_loan_data(loan_id)
         all_loans_list = []
         loan_found = False
 
         for loan in current_data:
-            if loan["loan_id"] == loan_id:
-                try:
-                    all_loans_list.append(loan)
-                    loan_found = True
-                except KeyError:
-                    raise exc.LoanNotFoundError(f"Loan with ID: {loan_id} not found.")
-            if not loan_found:
-                raise exc.LoanNotFoundError(f"Loan with ID: {loan_id} not found.")
+            if loan["loan_id"]:
+                all_loans_list.append(loan)
+                loan_found = True
+            else:
+                raise exc.LoanNotFoundError(
+                    f"Loan with ID: {loan_id} not found.")
+
+        if not loan_found:
+            raise exc.LoanNotFoundError(f"Loan with ID: {loan_id} not found.")
+
         return all_loans_list
-            
-        
-    def update_file_data(self, loan_id, field, new_value):
-        """ This method updates existing loan record in the JSON file with new data. It can be used to update loan details such as return date, loan status, etc.
+
+    def update_loan_data(self, loan_id, field, new_value):
+        """Update a specific field in a loan record.
         Args:
-            loan_id (int): The ID of the loan to update.
+            loan_id (int): ID of the loan to update.
             field (str): The field to update.
             new_value: The new value to set for the specified field.
         Returns:
-            str: Confirmation message that loan data was updated successfully.
+            str: Message with confirmation of success.
         """
-        self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()
-        self.get_loan_data(loan_id)
         loan_id_found = False
 
-        if not new_value:
-            raise exc.LoanValidationError("New value to update loand data is missing or is not correct.")
-        
-        for loan in current_data:
-            if loan["id"] == loan_id:
-                try:
-                    loan[field] = new_value
-                    loan_id_found = True
-                except KeyError:
-                    raise exc.LoanNotFoundError(f"Loan with ID: {loan_id} not found in database.")
-                
-            if not loan_id_found:
-                raise exc.LoanNotFoundError(f"Loan with ID: {loan_id} not found in database.")
+        if loan_id is None:
+            raise exc.ValidationError(
+                "Loan ID is missing or it's an empty value.")
 
-        self.json_service.validate_against_schema()    
+        if field is None:
+            raise exc.ValidationError(
+                "The field value is missing or it's an empty value.")
+
+        if new_value is None:
+            raise exc.ValidationError(
+                "New value to update loan data is missing or it's an empty value."
+            )
+
+        for loan in current_data:
+            if loan.get("loan_id") == loan_id:
+                if field not in loan:
+                    raise exc.ValidationError(
+                        f"The field '{field}' is missing in this loan record entry.")
+
+            loan[field] = new_value
+            loan_id_found = True
+            break
+
+        if not loan_id_found:
+            raise exc.LoanNotFoundError(
+                f"Loan with ID: {loan_id} not found in database.")
+
         self.json_service.write_json_data(current_data)
         return f"For loan with ID: {loan_id}, data updated successfully."
 
-
     def delete_data_from_file(self, loan_id):
-        """ This method deletes loan record from the JSON file by loan ID. It can be used to remove loan records that are no longer needed.
+        """Delete a loan record by its ID.
         Args:
-            loan_id (int): The ID of the loan to delete.
+            loan_id (int): ID of the loan to delete.
         Returns:
-            str: Confirmation message that loan record was deleted successfully.
+            str: Message with confirmation of success.
         """
-        self.json_service.file_exists_checking()
         current_data = self.json_service.load_json_file()
-        self.get_loan_data(loan_id)
         loan_id_found = False
+
+        if loan_id is None:
+            raise exc.ValidationError(
+                "Loan ID is missing or it's an empty value.")
 
         for loan in current_data:
             if loan["id"] == loan_id:
                 current_data.remove(loan)
                 loan_id_found = True
+                break
 
         if not loan_id_found:
-            raise exc.LoanNotFoundError("Loan ID to delete record is incorrect or missing in the loans database file.")
+            raise exc.LoanNotFoundError(
+                "Loan ID to delete record is incorrect or missing in the loans database file."
+            )
 
-        self.json_service.validate_against_schema()
         self.json_service.write_json_data(current_data)
         return f"Loan record with ID {loan_id} has been deleted from database."

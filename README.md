@@ -4,8 +4,8 @@ It is a long-term project developed to deepen my skills in Python, software desi
 
 The project focuses on clean architecture, modular design, and test-driven development principles, with an emphasis on writing readable, scalable, and well-structured code.
 
-The software is developed with real users in mind and follows real-world constraints.
-Initially, it targets a specific group of users and is designed to be adaptable to company standards and enterprise environments. In parallel, the project is also developed independently as a standalone product.
+The software is developed with real users in mind and follows real-world constraints. It targets users interested in searching for books in local library and loan it. 
+
 
 ### Current status
 
