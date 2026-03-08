@@ -133,8 +133,10 @@ class TestJsonServices(TestCase):
 
 
     def test_update_data_in_file(self):
-        pass
-
+        """ Test that the method updates records in the JSON file that match the given key with the new data, and returns True if any records were updated, otherwise False."""
+        key_to_update = "testkey"
+        new_data = {"key": "newvalue"}
+        self.assertTrue(self.json_services.update_data_in_file(key_to_update, new_data), msg="Records in the JSON file that match the given key should be updated with the new data, and return True if any records were updated, otherwise False.")
 
     def test_get_backup_dir(self):
         pass
