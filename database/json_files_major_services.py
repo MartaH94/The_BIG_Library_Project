@@ -228,10 +228,10 @@ class JsonFilesService:
         return backup_dir
 
     def build_backup_file_name(self):
-        """Build a timestamped backup filename based on project alias and file name.
+        """Build a timestamped backup filename based on project alias and file name. 
 
         Returns:
-            str: Backup filename.
+            str: Backup filename. Example: "library_copy_users_2024-06-01_12-00-00.json"
         """
         alias = config.PROJECT_ALIAS
         name = self.file_path.stem
