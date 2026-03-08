@@ -107,17 +107,10 @@ class TestJsonServices(TestCase):
                 
         
     def test_get_or_create_backup_dir(self):
-<<<<<<< HEAD
-        """ Test that the backup directory exists and its path is accessible.
-        """
-        pass        
-
-=======
         """ Test that the backup directory is created if it does not exist, and that the method returns the correct path to the backup directory."""
         backup_dir = self.json_services.get_or_create_backup_dir()
         self.assertTrue(backup_dir.exists(), msg="Backup directory should be created if it does not exist.")
         self.assertEqual(backup_dir, Path(config.BACKUP_FILES_DIRECTORY), msg="The method should return the correct path to the backup directory.")
->>>>>>> dev
 
     def test_build_backup_filename(self):
         pass
