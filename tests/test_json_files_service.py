@@ -113,13 +113,16 @@ class TestJsonServices(TestCase):
         self.assertEqual(backup_dir, Path(config.BACKUP_FILES_DIRECTORY), msg="The method should return the correct path to the backup directory.")
 
     def test_build_backup_filename(self):
-        pass
+        """ Test that backup filename is correctly created."""
+        backup_filename = self.json_services.build_backup_file_name()
+        
 
 
     def test_create_backup_file(self):
         """ Test that the backup file is created.
         """
-        pass
+        backup_file = self.json_services.create_backup_file()
+        self.assertTrue(backup_file.exists(), msg="Backup file should be created successfully in backup directory.")
 
 
     def test_remove_from_file(self):
