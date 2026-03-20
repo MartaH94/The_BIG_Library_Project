@@ -1,5 +1,5 @@
 ==Status: **In progress**
-Last updated: 01.03.2026
+Last updated: 20.03.2026
 
 Documentation draft
 ##### Overview:
@@ -7,7 +7,7 @@ Documentation draft
 Checklist: 
 - [ ] Project name 
 - [x] description (what it is) 
-- [ ] Short paragraph explaining the main idea 
+- [x] Short paragraph explaining the main idea 
 - [x] Primary goal of the application 
 - [ ] Who this project is for 
 - [ ] Current project status (idea / prototype / MVP / in progress) 
@@ -84,7 +84,7 @@ Guiding questions:
 ##### Technical Architecture Purpose: 
 *Explain technical design decisions clearly.* 
 Checklist: 
-- [ ] Why Python was chosen 
+- [x] Why Python was chosen 
 - [ ] High-level structure of the codebase 
 - [ ] Key modules and their responsibilities 
 - [ ] Important architectural decisions 
@@ -126,3 +126,11 @@ Guiding questions:
 • What assumptions might change?
 
 
+`database`
+`documents`
+`gui`
+`models`
+`program_data`
+`services`
+`tests`
+`utils`
