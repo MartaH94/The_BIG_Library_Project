@@ -153,7 +153,18 @@ class TestMethodBuildBackupFileName(unittest.TestCase):
 
 
 class TestMethodCreateBackupFile(unittest.TestCase):
-    pass
+    def test_creates_backup_file_and_returns_path(self):
+        pass
+
+    def test_backup_file_contains_same_data_as_source_file(self):
+        pass
+
+    def test_creates_backup_directory_if_missing(self):
+        pass
+
+    def test_backup_file_name_contains_alias_stem_and_timestamp(self):
+        pass
+
 
 # -------------------------
 # Remove/Update operations
