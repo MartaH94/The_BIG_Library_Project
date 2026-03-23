@@ -10,18 +10,7 @@ TO DO HERE:
 
 Test cases should cover behaviors for all methods, including edge cases and error handling.
 
-List of tests to implement:
-- test_checking_file_exists
-- test_loading_json_file
-- test_validate_file_data
-- test_create_backup_file
-- test_remove_from_file
-- test_update_data_in_file
-- test_write_json_data
-- test_get_or_create_backup_dir
-- test_build_backup_file_name
-- test_check_file_returns_correct_data
-- test_exceptions_handling_in_methods
+
 
 
 """
@@ -40,7 +29,66 @@ from models.user import User
 from services.authorisation_service import UserAuthorisation
 
 
+# -------------------------
+# File I/O helpers
+# -------------------------
 class TestMethodFileExistsChecking(unittest.TestCase):
+    pass
+
+
+class TestMethodLoadJsonFile(unittest.TestCase):
+    pass
+
+
+class TestMethodWriteJsonData(unittest.TestCase):
+    pass
+
+# -------------------------
+# CRUD operations
+# -------------------------
+
+
+class TestMethodAppendDataToFile(unittest.TestCase):
+    pass
+
+# -------------------------
+# Core validation
+# -------------------------
+
+
+class TestMethodValidateAgainsSchema(unittest.TestCase):
+    pass
+
+
+class TestMethodValidateFileData(unittest.TestCase):
+    pass
+
+# -------------------------
+# Backup helpers
+# -------------------------
+
+
+class TestMethodGetOrCreateBackupDir(unittest.TestCase):
+    pass
+
+
+class TestMethodBuildBackupFileName(unittest.TestCase):
+    pass
+
+
+class TestMethodCreateBackupFile(unittest.TestCase):
+    pass
+
+# -------------------------
+# Remove/Update operations
+# -------------------------
+
+
+class TestMethodRemoveFromFile(unittest.TestCase):
+    pass
+
+
+class TestMethodUpdateDataInFile(unittest.TestCase):
     pass
 
 
