@@ -76,7 +76,17 @@ class TestMethodWriteJsonData(unittest.TestCase):
 
 
 class TestMethodAppendDataToFile(unittest.TestCase):
-    pass
+    def test_raises_validation_error_if_data_is_none(self):
+        pass
+
+    def test_raises_validation_error_if_data_is_not_dict(self):
+        pass
+
+    def test_appends_valid_record_to_file(self):
+        pass
+
+    def test_raises_validation_error_for_invalid_record(self):
+        pass
 
 # -------------------------
 # Core validation
