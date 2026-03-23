@@ -33,6 +33,7 @@ import unittest
 from pathlib import Path
 from unittest import TestCase
 
+import database.database_schemes as schemas
 import database.json_files_major_services as json_files_major_services
 import exceptions as exc
 import utils.config as config
@@ -52,11 +53,16 @@ class TestJsonServices(TestCase):
         self.reader_authorisation = UserAuthorisation(self.reader_user)
         self.reader_authorisation.login(self.reader_user)
 
+        # self.user_schema = schemas.user_schema
+        # self.book_schema = schemas.book_schema
+        # self.loan_schema = schemas.loan_schema
+        # self.backup_schema = schemas.backup_schema
+
         self.test_directory = tempfile.TemporaryDirectory()
         self.test_file = Path(self.test_directory.name)/"testing_file.json"
         self.test_file.write_text("[]", encoding="utf-8")
         self.json_services = json_files_major_services.JsonFilesService(
-            file_path=self.test_file)
+            file_path=self.test_file, )
 
     def tearDown(self):
         self.test_directory.cleanup()
@@ -105,8 +111,7 @@ class TestJsonServices(TestCase):
     def test_validate_file_data(self):
         """ Test that the data in the file is list"""
         data_to_validate = self.json_services.load_json_file()
-        self.json_services.validate_file_data(
-            data_to_validate, self.json_services.schema)
+        self.json_services.validate_file_data()
         self.assertIsInstance(
             data_to_validate, dict, msg="Validation data against schema should confirm data is a dict.")
 
