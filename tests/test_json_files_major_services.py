@@ -172,7 +172,20 @@ class TestMethodCreateBackupFile(unittest.TestCase):
 
 
 class TestMethodRemoveFromFile(unittest.TestCase):
-    pass
+    def test_raises_validation_error_if_key_name_is_none(self):
+        pass
+
+    def test_raises_validation_error_if_key_value_is_none(self):
+        pass
+
+    def test_raises_invalid_field_error_if_key_not_in_schema(self):
+        pass
+
+    def test_raises_database_error_if_no_matching_record_found(self):
+        pass
+
+    def test_removes_matching_records_and_saves_file(self):
+        pass
 
 
 class TestMethodUpdateDataInFile(unittest.TestCase):
