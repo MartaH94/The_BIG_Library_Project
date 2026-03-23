@@ -189,7 +189,20 @@ class TestMethodRemoveFromFile(unittest.TestCase):
 
 
 class TestMethodUpdateDataInFile(unittest.TestCase):
-    pass
+    def test_raises_file_error_if_item_is_none(self):
+        pass
+
+    def test_raises_invalid_field_error_if_item_not_in_schema(self):
+        pass
+
+    def test_raises_validation_error_if_new_data_is_none(self):
+        pass
+
+    def test_raises_database_error_if_item_not_found_in_records(self):
+        pass
+
+    def test_updates_existing_field_and_saves_file(self):
+        pass
 
 
 if __name__ == '__main__':
