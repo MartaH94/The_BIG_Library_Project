@@ -114,7 +114,18 @@ class TestMethodValidateAgainstSchema(unittest.TestCase):
 
 
 class TestMethodValidateFileData(unittest.TestCase):
-    pass
+    def test_raises_validation_error_if_file_is_empty(self):
+        pass
+
+    def test_raises_validation_error_if_record_is_not_dict(self):
+        pass
+
+    def test_raises_validation_error_if_record_does_not_match_schema(self):
+        pass
+
+    def test_returns_true_if_all_records_are_valid(self):
+        pass
+
 
 # -------------------------
 # Backup helpers
