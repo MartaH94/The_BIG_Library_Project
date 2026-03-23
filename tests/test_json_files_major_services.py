@@ -39,12 +39,22 @@ class TestMethodFileExistsChecking(unittest.TestCase):
     def test_initializes_empty_file(self):
         pass
 
-    def test_no_acion_when_file_has_content(self):
+    def test_no_action_when_file_has_content(self):
         pass
 
 
 class TestMethodLoadJsonFile(unittest.TestCase):
-    pass
+    def test_creates_missing_file_and_returns_empty_list(self):
+        pass
+
+    def test_reads_existing_list_from_file(self):
+        pass
+
+    def test_raises_file_error_if_json_doesnt_contain_list(self):
+        pass
+
+    def test_raises_file_error_for_invalid_json_file(self):
+        pass
 
 
 class TestMethodWriteJsonData(unittest.TestCase):
