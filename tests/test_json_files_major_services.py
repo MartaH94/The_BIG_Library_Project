@@ -1,12 +1,12 @@
 """
 ________________________________________________________
-tests.test_json_files_service
+tests.test_json_files_major_service.py
 ========================================================
-Test Class for json_files_major_services module.
+Test for the file json_files_major_services.py
 ________________________________________________________
 
 TO DO HERE:
-- Create unit tests for all methods in json_files_major_services module.
+- Create unit tests for all methods in json_files_major_services module. method by method.
 
 Test cases should cover behaviors for all methods, including edge cases and error handling.
 
@@ -38,6 +38,11 @@ import utils.config as config
 from database.json_files_major_services import JsonFilesService
 from models.user import User
 from services.authorisation_service import UserAuthorisation
+
+
+class TestMethodFileExistsChecking(unittest.TestCase):
+    pass
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
