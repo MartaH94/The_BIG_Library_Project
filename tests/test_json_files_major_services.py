@@ -142,7 +142,14 @@ class TestMethodGetOrCreateBackupDir(unittest.TestCase):
 
 
 class TestMethodBuildBackupFileName(unittest.TestCase):
-    pass
+    def test_backup_name_has_correct_name(self):
+        pass
+
+    def test_backup_name_contains_timestamp(self):
+        pass
+
+    def test_backup_name_has_json_extension(self):
+        pass
 
 
 class TestMethodCreateBackupFile(unittest.TestCase):
