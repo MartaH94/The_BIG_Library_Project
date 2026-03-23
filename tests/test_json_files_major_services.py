@@ -133,7 +133,12 @@ class TestMethodValidateFileData(unittest.TestCase):
 
 
 class TestMethodGetOrCreateBackupDir(unittest.TestCase):
-    pass
+
+    def test_creates_backup_directory_if_missing(self):
+        pass
+
+    def test_returns_existing_backup_directory(self):
+        pass
 
 
 class TestMethodBuildBackupFileName(unittest.TestCase):
