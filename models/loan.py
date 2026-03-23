@@ -1,11 +1,13 @@
 # loan class with attributes and methods (who borrowed the book, when it was borrowed, when it was returned)
 
 from datetime import datetime
-from models.book import Book
+
 import exceptions as exc
+from models.book import Book
+
 
 class LoanedBook:
-    def __init__(self, book : Book, borrowed_by, is_borrowed=False, loan_date=None, return_date=None):
+    def __init__(self, book: Book, borrowed_by, is_borrowed=False, loan_date=None, return_date=None):
         self.book = book
         self.borrowed_by = borrowed_by
         self.is_borrowed = is_borrowed
@@ -18,10 +20,12 @@ class LoanedBook:
             self.loan_date = datetime.now()
             self.return_date = None
         else:
-            raise exc.BookAlreadyBorrowed("This book  is already borrowed.")
+            raise exc.AlreadyLoanedError(
+                "The book is already loaned by another user.")
+
 
 class BookReservation:
-    def __init__(self, book : Book, reserved_by, reservation_date=None):
+    def __init__(self, book: Book, reserved_by, reservation_date=None):
         self.book = book
         self.reserved_by = reserved_by
         self.reservation_date = reservation_date
@@ -29,6 +33,3 @@ class BookReservation:
     def reserve_book(self, reserved_by=None):
         self.reservation_date = datetime.now()
         self.reserved_by = reserved_by
-
-
-
