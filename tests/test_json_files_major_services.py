@@ -58,7 +58,17 @@ class TestMethodLoadJsonFile(unittest.TestCase):
 
 
 class TestMethodWriteJsonData(unittest.TestCase):
-    pass
+    def test_raises_file_error_if_data_is_none(self):
+        pass
+
+    def test_raises_file_error_if_data_is_not_list(self):
+        pass
+
+    def test_writes_valid_list_to_file(self):
+        pass
+
+    def test_raises_validation_error_for_invalid_record(self):
+        pass
 
 # -------------------------
 # CRUD operations
