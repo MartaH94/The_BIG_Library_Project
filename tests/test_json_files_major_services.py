@@ -33,7 +33,14 @@ from services.authorisation_service import UserAuthorisation
 # File I/O helpers
 # -------------------------
 class TestMethodFileExistsChecking(unittest.TestCase):
-    pass
+    def test_creates_file_when_missing(self):
+        pass
+
+    def test_initializes_empty_file(self):
+        pass
+
+    def test_no_acion_when_file_has_content(self):
+        pass
 
 
 class TestMethodLoadJsonFile(unittest.TestCase):
