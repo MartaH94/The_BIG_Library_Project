@@ -93,8 +93,24 @@ class TestMethodAppendDataToFile(unittest.TestCase):
 # -------------------------
 
 
-class TestMethodValidateAgainsSchema(unittest.TestCase):
-    pass
+class TestMethodValidateAgainstSchema(unittest.TestCase):
+    def test_raises_validation_error_if_data_is_none(self):
+        pass
+
+    def test_raises_validation_error_if_schema_is_empty(self):
+        pass
+
+    def test_raises_validation_error_if_data_is_not_dict(self):
+        pass
+
+    def test_raises_validation_error_if_required_key_is_missing(self):
+        pass
+
+    def test_raises_validation_error_if_field_type_is_wrong(self):
+        pass
+
+    def test_returns_data_if_schema_matches(self):
+        pass
 
 
 class TestMethodValidateFileData(unittest.TestCase):
