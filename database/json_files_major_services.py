@@ -22,6 +22,7 @@ import json
 from datetime import datetime
 from pathlib import Path
 
+import database.database_schemes as schemas
 import exceptions as exc
 import utils.config as config
 
@@ -33,7 +34,7 @@ class JsonFilesService:
         schema (dict): Schema used to validate the JSON file structure and field types.
     """
 
-    def __init__(self, file_path: Path, schema: dict):
+    def __init__(self, file_path: Path, schema: dict | None = None):
         self.file_path = file_path
         self.schema = schema
 
