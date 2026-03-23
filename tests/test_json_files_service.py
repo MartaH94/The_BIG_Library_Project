@@ -137,8 +137,9 @@ class TestJsonServices(TestCase):
     def test_remove_from_file(self):
         """ Test that remove records matching the given key from the JSON file and returns True if any records were removed, otherwise False."""
         key_to_remove = "testkey"
+        key_value = "testvalue"
         self.assertTrue(self.json_services.remove_from_file(
-            key_to_remove), msg="Records matching the given key should be removed from the JSON file and return True if any records were removed, otherwise False.")
+            key_to_remove, key_value), msg="Records matching the given key should be removed from the JSON file and return True if any records were removed, otherwise False.")
 
     def test_update_data_in_file(self):
         """ Test that the method updates records in the JSON file that match the given key with the new data, and returns True if any records were updated, otherwise False."""
