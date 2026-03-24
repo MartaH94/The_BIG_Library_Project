@@ -58,7 +58,7 @@ class TestMethodFileExistsChecking(unittest.TestCase):  # 4
         with open(file_to_check, encoding="utf-8") as f:
             file_content = json.load(f)
 
-        self.assertEqual(file_content, list)
+        self.assertIsInstance(file_content, list)
 
     def test_initializes_list_in_empty_file(self):
         self.json_service = JsonFilesService(file_path=self.path_to_empty_file)
