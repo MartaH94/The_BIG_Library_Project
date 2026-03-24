@@ -35,6 +35,17 @@ from services.authorisation_service import UserAuthorisation
 # File I/O helpers
 # -------------------------
 class TestMethodFileExistsChecking(unittest.TestCase):
+    def SetUp(self):
+        self.temporary_dir = tempfile.TemporaryDirectory()
+        self.path_to_non_existent_file = Path(
+            self.temporary_dir.name)/"non_existent_file.json"
+        self.path_to_empty_file = Path(
+            self.temporary_dir.name)/"empty_file.json"
+        self.path_to_empty_file.write_text("", encoding="utf-8")
+        self.path_to_file_with_content = Path(
+            self.temporary_dir.name)/"file_with_content.json"
+        self.path_to_file_with_content.write_text("[]", encoding="utf-8")
+
     def test_creates_file_when_missing(self):
         pass
 
