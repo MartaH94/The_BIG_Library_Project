@@ -38,17 +38,14 @@ class LoanJsonFileService:
             loan_id (int): ID of the loan to retrieve.
         Returns:
             loan_data (dict): The matching loan record.
-        Raises:
-            exc.LoanNotFoundError: If the loan is not present in the database.
-            exc.ValidationError: If the loan_id is missing or None.
         """
         current_data = self.json_service.load_json_file()
         loan_found = False
         loan_data = None
 
-        if loan_id == None:
+        if loan_id is None:
             raise exc.ValidationError(
-                "Loan ID is missing or it's an empty value.")
+                "Loan ID is missing or it's an empty value. Getting loan record data is not possible.")
 
         for loan in current_data:
             if loan["loan_id"] == loan_id:
@@ -68,24 +65,20 @@ class LoanJsonFileService:
         Args:
             loan_data (dict): The loan data to add.
         Returns:
-            str: Confirmation message.      
-        Raises:
-            exc.DataError: If the loan data is missing.
-            exc.DataTypeError: If the loan data is not a dictionary.
-            exc.LoanError: If a loan with the same ID already exists.
-            exc.LoanValidationError: If the loan data fails schema validation.
+            str: Message with confirmation of success.      
         """
         current_data = self.json_service.load_json_file()
 
         if not loan_data:
-            raise exc.DataError(
-                "Book data to save is missing or it's incorrect.")
+            raise exc.ValidationError(
+                "Loan data to save is missing or it's incorrect.")
 
         if not isinstance(loan_data, dict):
             raise exc.DataTypeError(
-                "Book data type is incorrect. Book data must be a dictionary"
+                "Loan data type is incorrect. Loan data must be a dictionary"
             )
         loan_id = loan_data["loan_id"]
+
         for loan in current_data:
             if loan["loan_id"] == loan_id:
                 raise exc.LoanError(
@@ -96,21 +89,17 @@ class LoanJsonFileService:
 
         if not validated_loan_data:
             raise exc.LoanValidationError(
-                "Validation failed. Book data doesn't match database file schema."
+                "Validation failed. Loan data doesn't match database file schema."
             )
-        else:
-            current_data.append(loan_data)
 
+        current_data.append(loan_data)
         self.json_service.write_json_data(current_data)
-
-        return "New loan record added to the database without errors."
+        return f"Added new loan to data base with ID: {loan_id}."
 
     def get_all_loans_list(self, loan_id):
         """Retrieve all loan records from the database.
         Returns:
             all_loans_list (list): List of all loan records.
-        Raises:
-            exc.LoanNotFoundError: If no loans are found in the database.
         """
         current_data = self.json_service.load_json_file()
         all_loans_list = []
@@ -129,49 +118,45 @@ class LoanJsonFileService:
 
         return all_loans_list
 
-    def update_file_data(self, loan_id, field, new_value):
+    def update_loan_data(self, loan_id, field, new_value):
         """Update a specific field in a loan record.
         Args:
             loan_id (int): ID of the loan to update.
             field (str): The field to update.
             new_value: The new value to set for the specified field.
         Returns:
-            str: Confirmation message.
-        Raises:
-            exc.ValidationError: If loan_id or field is missing.
-            exc.LoanValidationError: If the new value is missing.
-            exc.LoanNotFoundError: If the loan with the given ID is not found.
+            str: Message with confirmation of success.
         """
         current_data = self.json_service.load_json_file()
         loan_id_found = False
 
-        if loan_id == None:
+        if loan_id is None:
             raise exc.ValidationError(
                 "Loan ID is missing or it's an empty value.")
 
-        if field == None:
+        if field is None:
             raise exc.ValidationError(
                 "The field value is missing or it's an empty value.")
 
-        if new_value == None:
-            raise exc.LoanValidationError(
-                "New value to update loand data is missing or it's an empty value."
+        if new_value is None:
+            raise exc.ValidationError(
+                "New value to update loan data is missing or it's an empty value."
             )
 
         for loan in current_data:
-            if field not in loan:
-                raise exc.ValidationError(
-                    "The field value is missing or it's an empty value.")
-            else:
-                loan[field] = new_value
-                loan_id_found = True
+            if loan.get("loan_id") == loan_id:
+                if field not in loan:
+                    raise exc.ValidationError(
+                        f"The field '{field}' is missing in this loan record entry.")
+
+            loan[field] = new_value
+            loan_id_found = True
+            break
 
         if not loan_id_found:
             raise exc.LoanNotFoundError(
                 f"Loan with ID: {loan_id} not found in database.")
 
-        self.json_service.validate_against_schema(
-            current_data, schema.loan_schema)
         self.json_service.write_json_data(current_data)
         return f"For loan with ID: {loan_id}, data updated successfully."
 
@@ -180,12 +165,14 @@ class LoanJsonFileService:
         Args:
             loan_id (int): ID of the loan to delete.
         Returns:
-            str: Confirmation message.
-        Raises:
-            exc.LoanNotFoundError: If the loan with the given ID is not found.
+            str: Message with confirmation of success.
         """
         current_data = self.json_service.load_json_file()
         loan_id_found = False
+
+        if loan_id is None:
+            raise exc.ValidationError(
+                "Loan ID is missing or it's an empty value.")
 
         for loan in current_data:
             if loan["id"] == loan_id:

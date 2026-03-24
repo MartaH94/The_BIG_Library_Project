@@ -12,26 +12,22 @@ TO DO HERE:
 """
 
 
-
-
-
-
-from models.user import User
 import exceptions as exc
+from models.user import User
 
 # managing registration, login, permissions and authorisation of users
 
 user_permissions = {
-    "reader" : {
+    "reader": {
         "books": {
-            "borrow_book" : True,
-            "return_book" : True,
-            "reserve_book" : True,
-            "add_book" : False,
-            "edit_book" : False,
-            "delete_book" : False,
-            "search_book" : True,
-            "view_books" : True
+            "borrow_book": True,
+            "return_book": True,
+            "reserve_book": True,
+            "add_book": False,
+            "edit_book": False,
+            "delete_book": False,
+            "search_book": True,
+            "view_books": True
         },
 
         "account": {
@@ -43,12 +39,12 @@ user_permissions = {
 
         "actions": {
             "approve_reservations": False,
-            "manage_users" : False,
+            "manage_users": False,
             "view_logs": False,
             "generate_reports": False,
             "delegate_permissions": False,
-            "delete_data" : False,
-            "edit_data" : False
+            "delete_data": False,
+            "edit_data": False
         },
         "sensitive_users_data": {
             "view_data": False,
@@ -59,14 +55,14 @@ user_permissions = {
 
     "admin": {
         "books": {
-            "borrow_book" : False,
-            "return_book" : False,
-            "reserve_book" : True,
-            "add_book" : True,
-            "edit_book" : True,
-            "delete_book" : True,
-            "search_book" : True,
-            "view_books" : True
+            "borrow_book": False,
+            "return_book": False,
+            "reserve_book": True,
+            "add_book": True,
+            "edit_book": True,
+            "delete_book": True,
+            "search_book": True,
+            "view_books": True
         },
 
         "account": {
@@ -78,30 +74,30 @@ user_permissions = {
 
         "actions": {
             "approve_reservations": False,
-            "manage_users" : True,
+            "manage_users": True,
             "view_logs": True,
             "generate_reports": True,
             "delegate_permissions": True,
-            "delete_data" : True,
-            "edit_data" : True
+            "delete_data": True,
+            "edit_data": True
         },
         "sensitive_users_data": {
             "view_data": True,
             "edit_data": True,
             "delete_data": True,
-        }    
+        }
     },
 
     "librarian": {
         "books": {
-            "borrow_book" : False,
-            "return_book" : False,
-            "reserve_book" : True,
-            "add_book" : True,
-            "edit_book" : True,
-            "delete_book" : True,
-            "search_book" : True,
-            "view_books" : True
+            "borrow_book": False,
+            "return_book": False,
+            "reserve_book": True,
+            "add_book": True,
+            "edit_book": True,
+            "delete_book": True,
+            "search_book": True,
+            "view_books": True
         },
 
         "account": {
@@ -113,12 +109,12 @@ user_permissions = {
 
         "actions": {
             "approve_reservations": True,
-            "manage_users" : False,
+            "manage_users": False,
             "view_logs": False,
             "generate_reports": True,
             "delegate_permissions": False,
-            "delete_data" : True,
-            "edit_data" : True
+            "delete_data": True,
+            "edit_data": True
         },
         "sensitive_users_data": {
             "view_data": True,
@@ -129,14 +125,14 @@ user_permissions = {
 
     "guest": {
         "books": {
-            "borrow_book" : False,
-            "return_book" : False,
-            "reserve_book" : True,
-            "add_book" : False,
-            "edit_book" : False,
-            "delete_book" : False,
-            "search_book" : True,
-            "view_books" : True
+            "borrow_book": False,
+            "return_book": False,
+            "reserve_book": True,
+            "add_book": False,
+            "edit_book": False,
+            "delete_book": False,
+            "search_book": True,
+            "view_books": True
         },
 
         "account": {
@@ -148,12 +144,12 @@ user_permissions = {
 
         "actions": {
             "approve_reservations": False,
-            "manage_users" : False,
+            "manage_users": False,
             "view_logs": False,
             "generate_reports": False,
             "delegate_permissions": False,
-            "delete_data" : False,
-            "edit_data" : False
+            "delete_data": False,
+            "edit_data": False
         },
         "sensitive_users_data": {
             "view_data": False,
@@ -164,14 +160,14 @@ user_permissions = {
 
     "moderator": {
         "books": {
-            "borrow_book" : False,
-            "return_book" : False,
-            "reserve_book" : False,
-            "add_book" : True,
-            "edit_book" : True,
-            "delete_book" : False,
-            "search_book" : True,
-            "view_books" : True
+            "borrow_book": False,
+            "return_book": False,
+            "reserve_book": False,
+            "add_book": True,
+            "edit_book": True,
+            "delete_book": False,
+            "search_book": True,
+            "view_books": True
         },
 
         "account": {
@@ -183,20 +179,21 @@ user_permissions = {
 
         "actions": {
             "approve_reservations": False,
-            "manage_users" : False,
+            "manage_users": False,
             "view_logs": True,
             "generate_reports": True,
             "delegate_permissions": False,
-            "delete_data" : False,
-            "edit_data" : True
+            "delete_data": False,
+            "edit_data": True
         }
     },
-        "sensitive_users_data": {
-            "view_data": True,
-            "edit_data": False,
-            "delete_data": True,
-        }
+    "sensitive_users_data": {
+        "view_data": True,
+        "edit_data": False,
+        "delete_data": True,
+    }
 }
+
 
 def has_permission(role: str, action_path: str) -> bool:
     """This function checks if a specific role has permission to perform a specific action.
@@ -217,9 +214,6 @@ def has_permission(role: str, action_path: str) -> bool:
         if permissions is None:
             return False
     return bool(permissions)
-    
-
-
 
 
 class UserAuthorisation():
@@ -227,21 +221,22 @@ class UserAuthorisation():
         Authorised user can perform actions based on their role and associated permissions. User must be logged in to perform any action.
         This class logs user in and out, and checks if the logged-in user has permission to perform specific actions.
     """
+
     def __init__(self, user):
         self.logged_in_user = None
         self.user = user
-
 
     def login(self, user: User):
         self.logged_in_user = user
 
     def logout(self):
         self.logged_in_user = None
-    
+
     def check_permission(self, action):
         if not self.logged_in_user:
             raise exc.PermissionError("No logged in user.")
-        if not has_permission(self.logged_in_user, action):
-            raise exc.PermissionError(f"User: {self.logged_in_user.role} cannot perform action '{action}'")
-        
+        if not has_permission(self.logged_in_user.role, action):
+            raise exc.PermissionError(
+                f"User: {self.logged_in_user.role} cannot perform action '{action}'")
+
         return True

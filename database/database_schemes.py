@@ -1,11 +1,7 @@
 """This module defines the database schemas for the library management system.
 Each schema is represented as a dictionary where keys are field names and values are their expected data types.
 
-
-
-This schema requires rebuilding. Tasks here to do:
-- Each JSON file type has its own SCHEMA variable (user_schema, book_schema etc.)
-- Each schema is just a dict of key → Python type
+Each schema is just a dict of key → Python type
 
 """
 
@@ -22,7 +18,7 @@ from models.user import valid_roles
 
 user_schema = {
     "user_id": int,
-    "role": list(valid_roles),
+    "role": str(valid_roles),
     "is_active": bool,
     "last_login": datetime,
     "user_profile": {
@@ -42,7 +38,7 @@ book_schema = {
     "category": str,
     "language": str,
     "book_status": str,
-    "borrower_id": str,
+    "borrower_id": int,
     "due_date": date,
 }
 

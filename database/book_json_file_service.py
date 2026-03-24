@@ -39,17 +39,15 @@ class BookJsonFileService:
         """Return a single book record by its ID.
         Args:
             book_id (int): ID of the book to retrieve.
-        Returns:
-            dict: The matching book record.
-        Raises:
-            exc.BookNotFoundError: If the book is not present in the database.
-            exc.ValidationError: If the book_id is missing or None.
+        Returns:    
+            book_data (dict): The matching book record.
         """
+
         current_data = self.json_service.load_json_file()
         book_found = False
         book_data = None
 
-        if book_id == None:
+        if book_id is None:
             raise exc.ValidationError(
                 "Book ID is missing or it's an empty value. Getting book data not possible.")
 
@@ -67,17 +65,13 @@ class BookJsonFileService:
         return book_data
 
     def add_book_data(self, book_data):
-        """Add a new book record to the database.
+        """Add a new book record to the JSON file.
         Args:
-            book_data (dict): Book data to insert.
+            book_data (dict): The book data to add.
         Returns:
-            str: Confirmation message.
-        Raises:
-            exc.BookValidationError: If the book data fails schema validation.
-            exc.DataTypeError: If the book data is not a dictionary.
-            exc.ValidationError: If the book data is missing.
-            exc.BookError: If a book with the same ID already exists.
+            str: Message with confirmation of success.
         """
+
         current_data = self.json_service.load_json_file()
 
         if not book_data:
@@ -102,26 +96,23 @@ class BookJsonFileService:
             raise exc.BookValidationError(
                 "Validation failed. Book data doesn't match database file schema."
             )
-        else:
-            current_data.append(validated_book_data)
 
+        current_data.append(validated_book_data)
         self.json_service.write_json_data(current_data)
-
-        return "New book record added to the database without errors."
+        return f"Added new book to data base with ID: {book_id}."
 
     def get_all_books_list(self):
-        """Retrieve a list of all book records in the database.
+        """Return a list of all book records in the JSON file.
         Returns:
-            list: List of all book records.
-        Raises:
-            exc.BookNotFoundError: If no books are found in the database.
+            all_books (list): A list of all book records.
         """
+
         current_data = self.json_service.load_json_file()
         all_books = []
         book_found = False
 
         for book in current_data:
-            if book["book_id"]:
+            if book["book_id"] in book:
                 all_books.append(book)
                 book_found = True
             else:
@@ -136,45 +127,43 @@ class BookJsonFileService:
         """Update a specific field of a book record by its ID.
         Args:
             book_id (int): ID of the book to update.
-            field (str): The field to update.
+            field (str): The field name to update.
             new_value: The new value to set for the specified field.
         Returns:
-            str: Confirmation message.
-        Raises:
-            exc.ValidationError: If any of the input parameters are missing or invalid.
-            exc.BookNotFoundError: If the book with the specified ID is not found.
+            str: Message with confirmation of success.
         """
-        current_data = self.json_service.load_json_file()
-        book_found = False
 
-        if book_id == None:
+        current_data = self.json_service.load_json_file()
+        book_id_found = False
+
+        if book_id is None:
             raise exc.ValidationError(
                 "Book ID is missing or it's an empty value.")
 
-        if field == None:
+        if field is None:
             raise exc.ValidationError(
                 "The field value is missing or it's an empty value.")
 
-        if new_value == None:
+        if new_value is None:
             raise exc.ValidationError(
                 "New value to update book record is incorrect or is empty value."
             )
 
         for book in current_data:
-            if field not in book:
-                raise exc.ValidationError(
-                    "The field value is missing or it's an empty value.")
-            else:
-                book[field] = new_value
-                book_found = True
+            if book.get("book_id") == book_id:
+                if field not in book:
+                    raise exc.ValidationError(
+                        f"The field '{field}' is missing in this book entry.")
 
-        if not book_found:
+                book[field] = new_value
+                book_id_found = True
+                break
+
+        if not book_id_found:
             raise exc.BookNotFoundError(
                 f"Book with ID: {book_id} not found in database."
             )
 
-        self.json_service.validate_against_schema(
-            current_data, schema.book_schema)
         self.json_service.write_json_data(current_data)
         return (
             f"New data value has been saved for book with ID: {book_id}"
@@ -185,12 +174,15 @@ class BookJsonFileService:
         Args:
             book_id (int): ID of the book to delete.
         Returns:
-            str: Confirmation message.
-        Raises:
-            exc.BookError: If the book with the specified ID could not be removed.
+            str: Message with confirmation of success.
         """
+
         current_data = self.json_service.load_json_file()
         book_deleted = False
+
+        if book_id is None:
+            raise exc.ValidationError(
+                "Book ID is missing or it's an empty value.")
 
         for book in current_data:
             if book["book_id"] == book_id:
@@ -203,6 +195,5 @@ class BookJsonFileService:
                 f"Book with ID: {book_id} could not be removed from the database."
             )
 
-        # self.json_service.validate_against_schema(current_data)
         self.json_service.write_json_data(current_data)
         return f"Book with ID: {book_id} has been deleted from the library. "

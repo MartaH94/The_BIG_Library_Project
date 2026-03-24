@@ -29,7 +29,7 @@ class UsersJsonFileService:
     def __init__(
         self,
         json_service: JsonFilesService,
-        file_path: str = PROGRAM_USERS_FILE_PATH,
+        file_path=PROGRAM_USERS_FILE_PATH,
     ):
         self.json_service = json_service
         self.file_path = file_path
@@ -45,9 +45,9 @@ class UsersJsonFileService:
         user_found = False
         user_data = None
 
-        if user_id == None:
+        if user_id is None:
             raise exc.ValidationError(
-                "User ID is missing or it's an empty value.")
+                "User ID is missing or it's an empty value. Getting user data not possible.")
 
         for user in current_data:
             if user["id"] == user_id:
@@ -67,17 +67,12 @@ class UsersJsonFileService:
         Args:
             user_data (dict): The user data to add.
         Returns:
-            str: Confirmation message.
-        Raises:
-            exc.DataError: If the user data is missing.
-            exc.DataTypeError: If the user data is not a dictionary.
-            exc.UserValidationError: If the user data fails schema validation.
-            exc.UserError: If a user with the same ID already exists.
+            str: Message with confirmation of success.
         """
         current_data = self.json_service.load_json_file()
 
         if not user_data:
-            raise exc.DataError("User data to add is missing.")
+            raise exc.ValidationError("User data to add is missing.")
 
         if not isinstance(user_data, dict):
             raise exc.DataTypeError(
@@ -103,14 +98,12 @@ class UsersJsonFileService:
 
         self.json_service.write_json_data(current_data)
 
-        return f"Added new user to database with ID: {user_id}"
+        return f"Added new user to database with ID: {user_id}."
 
     def get_all_users_list(self):
         """Retrieve all user records from the database.
         Returns:
             all_users (list): List of all user records.
-        Raises:
-            exc.UserNotFoundError: If no users are found in the database.
         """
         current_data = self.json_service.load_json_file()
         all_users = []
@@ -136,39 +129,37 @@ class UsersJsonFileService:
             field (str): The field to update.
             new_value: The new value to set.
         Returns:
-            str: Confirmation message.
-        Raises:
-            exc.ValidationError: If any input parameter is missing or invalid.
-            exc.UserNotFoundError: If the user with the given ID is not found.
+            str: Message with confirmation of success.
         """
         current_data = self.json_service.load_json_file()
         user_found = False
 
-        if user_id == None:
+        if user_id is None:
             raise exc.ValidationError(
                 "User ID is missing or it's an empty value.")
 
-        if field == None:
+        if field is None:
             raise exc.ValidationError(
                 "Field value is missing or it's an empty value.")
 
-        if new_value == None:
+        if new_value is None:
             raise exc.ValidationError(
                 "New value to update data is missing or it's an empty value.")
 
         for user in current_data:
-            if field not in user:
-                raise exc.ValidationError(
-                    "The field value is missing or it's an empty value.")
-            else:
-                user[field] = new_value
-                user_found = True
+            if user.get("user_id") == user_id:
+                if field not in user:
+                    raise exc.ValidationError(
+                        f"The field '{field}' is missing in this user entry.")
+
+            user[field] = new_value
+            user_found = True
+            break
 
         if not user_found:
             raise exc.UserNotFoundError(
                 f"User with ID: {user_id} not found in database.")
 
-        self.json_service.validate_file_data(current_data, schema.user_schema)
         self.json_service.write_json_data(current_data)
         return f"For user with ID: {user_id}, data updated successfully."
 
@@ -177,12 +168,14 @@ class UsersJsonFileService:
         Args:
             user_id (int): ID of the user to delete.
         Returns:
-            str: Confirmation message.
-        Raises:
-            exc.UserError: If the user with the given ID is not found.
+            str: Message with confirmation of success.
         """
         current_data = self.json_service.load_json_file()
         user_deleted = False
+
+        if user_id is None:
+            raise exc.ValidationError(
+                "User ID is missing ir it's an empty value.")
 
         for user in current_data:
             if user["id"] == user_id:
@@ -196,5 +189,4 @@ class UsersJsonFileService:
             )
 
         self.json_service.write_json_data(current_data)
-
         return f"User with ID {user_id} deleted from database."
