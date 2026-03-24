@@ -47,13 +47,15 @@ class TestMethodFileExistsChecking(unittest.TestCase):
         self.path_to_file_with_content.write_text("[]", encoding="utf-8")
 
     def test_creates_file_when_missing(self):
-        pass
+        self.json_service = JsonFilesService(
+            file_path=self.path_to_non_existent_file)
 
-    def test_initializes_empty_file(self):
-        pass
+    def test_initializes_list_in_empty_file(self):
+        self.json_service = JsonFilesService(file_path=self.path_to_empty_file)
 
     def test_no_action_when_file_has_content(self):
-        pass
+        self.json_service = JsonFilesService(
+            file_path=self.path_to_file_with_content)
 
 
 class TestMethodLoadJsonFile(unittest.TestCase):
