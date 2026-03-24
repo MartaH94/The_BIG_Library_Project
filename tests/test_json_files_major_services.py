@@ -39,7 +39,7 @@ from services.authorisation_service import UserAuthorisation
 # File I/O helpers | Test cases: to do: 12
 # -------------------------
 class TestMethodFileExistsChecking(unittest.TestCase):  # 4
-    def SetUp(self):
+    def setUp(self):
         self.temporary_dir = tempfile.TemporaryDirectory()
         self.path_to_non_existent_file = Path(
             self.temporary_dir.name)/"non_existent_file.json"
@@ -72,6 +72,12 @@ class TestMethodFileExistsChecking(unittest.TestCase):  # 4
     def test_no_action_when_file_has_content(self):
         self.json_service = JsonFilesService(
             file_path=self.path_to_file_with_content)
+        file_to_check = self.path_to_file_with_content
+        self.json_service.file_exists_checking()
+        with open(file_to_check, encoding="utf-8") as f:
+            file_content = json.load(f)
+
+        self.assertIsNone(file_content)
 
 
 class TestMethodLoadJsonFile(unittest.TestCase):  # 4
