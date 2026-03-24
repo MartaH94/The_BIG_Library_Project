@@ -38,7 +38,7 @@ from services.authorisation_service import UserAuthorisation
 # -------------------------
 # File I/O helpers | Test cases: to do: 12
 # -------------------------
-class TestMethodFileExistsChecking(unittest.TestCase):  # 4
+class TestMethodFileExistsChecking(unittest.TestCase):  # 4/4
     def setUp(self):
         self.temporary_dir = tempfile.TemporaryDirectory()
         self.path_to_non_existent_file = Path(
