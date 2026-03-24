@@ -63,7 +63,7 @@ class TestMethodFileExistsChecking(unittest.TestCase):  # 4
     def test_initializes_list_in_empty_file(self):
         self.json_service = JsonFilesService(file_path=self.path_to_empty_file)
         file_to_check = self.path_to_empty_file
-        self.json_service.file_exists_checking
+        self.json_service.file_exists_checking()
         with open(file_to_check, encoding="utf-8") as f:
             file_content = json.load(f)
 
@@ -73,11 +73,15 @@ class TestMethodFileExistsChecking(unittest.TestCase):  # 4
         self.json_service = JsonFilesService(
             file_path=self.path_to_file_with_content)
         file_to_check = self.path_to_file_with_content
+
+        with open(file_to_check, encoding="utf-8") as f:
+            before_content = json.load(f)
+
         self.json_service.file_exists_checking()
         with open(file_to_check, encoding="utf-8") as f:
-            file_content = json.load(f)
+            after_content = json.load(f)
 
-        self.assertIsNone(file_content)
+        self.assertEqual(before_content, after_content)
 
 
 class TestMethodLoadJsonFile(unittest.TestCase):  # 4
