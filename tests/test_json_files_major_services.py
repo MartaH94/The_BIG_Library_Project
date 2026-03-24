@@ -11,6 +11,10 @@ TO DO HERE:
 Test cases should cover behaviors for all methods, including edge cases and error handling.
 
 
+Test classes: 11
+Test cases total: 45
+
+
 TO DO:
 Implement reusable helper with initial test data
 Implement all planned tests
@@ -32,9 +36,9 @@ from services.authorisation_service import UserAuthorisation
 
 
 # -------------------------
-# File I/O helpers
+# File I/O helpers | Test cases: to do: 12
 # -------------------------
-class TestMethodFileExistsChecking(unittest.TestCase):
+class TestMethodFileExistsChecking(unittest.TestCase):  # 4
     def SetUp(self):
         self.temporary_dir = tempfile.TemporaryDirectory()
         self.path_to_non_existent_file = Path(
@@ -64,7 +68,7 @@ class TestMethodFileExistsChecking(unittest.TestCase):
             file_path=self.path_to_file_with_content)
 
 
-class TestMethodLoadJsonFile(unittest.TestCase):
+class TestMethodLoadJsonFile(unittest.TestCase):  # 4
     def test_creates_missing_file_and_returns_empty_list(self):
         pass
 
@@ -78,7 +82,7 @@ class TestMethodLoadJsonFile(unittest.TestCase):
         pass
 
 
-class TestMethodWriteJsonData(unittest.TestCase):
+class TestMethodWriteJsonData(unittest.TestCase):  # 4
     def test_raises_file_error_if_data_is_none(self):
         pass
 
@@ -92,11 +96,11 @@ class TestMethodWriteJsonData(unittest.TestCase):
         pass
 
 # -------------------------
-# CRUD operations
+# CRUD operations | Test cases: to do: 4
 # -------------------------
 
 
-class TestMethodAppendDataToFile(unittest.TestCase):
+class TestMethodAppendDataToFile(unittest.TestCase):  # 4
     def test_raises_validation_error_if_data_is_none(self):
         pass
 
@@ -110,11 +114,11 @@ class TestMethodAppendDataToFile(unittest.TestCase):
         pass
 
 # -------------------------
-# Core validation
+# Core validation | Test cases: to do: 10
 # -------------------------
 
 
-class TestMethodValidateAgainstSchema(unittest.TestCase):
+class TestMethodValidateAgainstSchema(unittest.TestCase):  # 6
     def test_raises_validation_error_if_data_is_none(self):
         pass
 
@@ -134,7 +138,7 @@ class TestMethodValidateAgainstSchema(unittest.TestCase):
         pass
 
 
-class TestMethodValidateFileData(unittest.TestCase):
+class TestMethodValidateFileData(unittest.TestCase):  # 4
     def test_raises_validation_error_if_file_is_empty(self):
         pass
 
@@ -149,11 +153,11 @@ class TestMethodValidateFileData(unittest.TestCase):
 
 
 # -------------------------
-# Backup helpers
+# Backup helpers | Test cases: to do: 9
 # -------------------------
 
 
-class TestMethodGetOrCreateBackupDir(unittest.TestCase):
+class TestMethodGetOrCreateBackupDir(unittest.TestCase):  # 2
 
     def test_creates_backup_directory_if_missing(self):
         pass
@@ -162,7 +166,7 @@ class TestMethodGetOrCreateBackupDir(unittest.TestCase):
         pass
 
 
-class TestMethodBuildBackupFileName(unittest.TestCase):
+class TestMethodBuildBackupFileName(unittest.TestCase):  # 3
     def test_backup_name_has_correct_name(self):
         pass
 
@@ -173,7 +177,7 @@ class TestMethodBuildBackupFileName(unittest.TestCase):
         pass
 
 
-class TestMethodCreateBackupFile(unittest.TestCase):
+class TestMethodCreateBackupFile(unittest.TestCase):  # 4
     def test_creates_backup_file_and_returns_path(self):
         pass
 
@@ -188,11 +192,11 @@ class TestMethodCreateBackupFile(unittest.TestCase):
 
 
 # -------------------------
-# Remove/Update operations
+# Remove/Update operations | Test cases: to do: 10
 # -------------------------
 
 
-class TestMethodRemoveFromFile(unittest.TestCase):
+class TestMethodRemoveFromFile(unittest.TestCase):  # 5
     def test_raises_validation_error_if_key_name_is_none(self):
         pass
 
@@ -209,7 +213,7 @@ class TestMethodRemoveFromFile(unittest.TestCase):
         pass
 
 
-class TestMethodUpdateDataInFile(unittest.TestCase):
+class TestMethodUpdateDataInFile(unittest.TestCase):  # 5
     def test_raises_file_error_if_item_is_none(self):
         pass
 
