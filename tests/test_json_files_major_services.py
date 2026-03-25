@@ -54,6 +54,9 @@ class TestMethodFileExistsChecking(unittest.TestCase):  # 4/4
         
         self.path_to_file_with_content.write_text("[]", encoding="utf-8")
 
+    def tearDown(self):
+        self.temporary_dir.cleanup()
+
     def test_creates_file_when_missing(self):
         self.json_service = JsonFilesService(
             file_path=self.path_to_non_existent_file)
@@ -89,7 +92,7 @@ class TestMethodFileExistsChecking(unittest.TestCase):  # 4/4
 
 
 class TestMethodLoadJsonFile(unittest.TestCase):  # 4
-    def SetUp(self):
+    def setUp(self):
         self.temporary_dir = tempfile.TemporaryDirectory()
         self.temporary_dir_path = Path(self.temporary_dir.name)
 
@@ -102,6 +105,9 @@ class TestMethodLoadJsonFile(unittest.TestCase):  # 4
         
 
         self.valid_file_data = [{"service": "loan", "enabled": True}, {"user_id": 112233, "enabled": True}]
+
+    def tearDown(self):
+        self.temporary_dir.cleanup()
 
     def test_creates_missing_file_and_returns_empty_list(self):
         pass
