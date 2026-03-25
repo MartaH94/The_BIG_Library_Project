@@ -20,7 +20,6 @@ Implement all planned tests
 
 """
 
-
 import json
 import tempfile
 import unittest
@@ -40,26 +39,26 @@ from services.authorisation_service import UserAuthorisation
 class TestMethodFileExistsChecking(unittest.TestCase):  # 4/4
     def setUp(self):
         self.temporary_dir = tempfile.TemporaryDirectory()
-        
-        self.path_to_non_existent_file = Path(
-            self.temporary_dir.name)/"non_existent_file.json"
-        
-        self.path_to_empty_file = Path(
-            self.temporary_dir.name)/"empty_file.json"
-        
+
+        self.path_to_non_existent_file = (
+            Path(self.temporary_dir.name) / "non_existent_file.json"
+        )
+
+        self.path_to_empty_file = Path(self.temporary_dir.name) / "empty_file.json"
+
         self.path_to_empty_file.write_text("", encoding="utf-8")
-        
-        self.path_to_file_with_content = Path(
-            self.temporary_dir.name)/"file_with_content.json"
-        
+
+        self.path_to_file_with_content = (
+            Path(self.temporary_dir.name) / "file_with_content.json"
+        )
+
         self.path_to_file_with_content.write_text("[]", encoding="utf-8")
 
     def tearDown(self):
         self.temporary_dir.cleanup()
 
     def test_creates_file_when_missing(self):
-        self.json_service = JsonFilesService(
-            file_path=self.path_to_non_existent_file)
+        self.json_service = JsonFilesService(file_path=self.path_to_non_existent_file)
         file_to_check = self.path_to_non_existent_file
         self.json_service.file_exists_checking()
         with open(file_to_check, encoding="utf-8") as f:
@@ -77,8 +76,7 @@ class TestMethodFileExistsChecking(unittest.TestCase):  # 4/4
         self.assertEqual(file_content, [])
 
     def test_no_action_when_file_has_content(self):
-        self.json_service = JsonFilesService(
-            file_path=self.path_to_file_with_content)
+        self.json_service = JsonFilesService(file_path=self.path_to_file_with_content)
         file_to_check = self.path_to_file_with_content
 
         with open(file_to_check, encoding="utf-8") as f:
@@ -99,12 +97,15 @@ class TestMethodLoadJsonFile(unittest.TestCase):  # 4
         self.load_service = JsonFilesService(file_path=self.temporary_dir_path)
 
         """ Paths to test files """
-        self.valid_json_file = self.temporary_dir_path/"valid_file.json"
-        self.invalid_json_file = self.temporary_dir_path/"invalid_file.json"
-        self.empty_json_file = self.temporary_dir_path/"empty_file.json"
-        self.missing_json_file = self.temporary_dir_path/"missing_file.json"
+        self.valid_json_file = self.temporary_dir_path / "valid_file.json"
+        self.invalid_json_file = self.temporary_dir_path / "invalid_file.json"
+        self.empty_json_file = self.temporary_dir_path / "empty_file.json"
+        self.missing_json_file = self.temporary_dir_path / "missing_file.json"
 
-        self.valid_file_data = [{"service": "loan", "enabled": True}, {"user_id": 112233, "enabled": True}]
+        self.valid_file_data = [
+            {"service": "loan", "enabled": True},
+            {"user_id": 112233, "enabled": True},
+        ]
 
     def tearDown(self):
         self.temporary_dir.cleanup()
@@ -135,6 +136,7 @@ class TestMethodWriteJsonData(unittest.TestCase):  # 4
     def test_raises_validation_error_for_invalid_record(self):
         pass
 
+
 # -------------------------
 # CRUD operations | Test cases: to do: 4
 # -------------------------
@@ -152,6 +154,7 @@ class TestMethodAppendDataToFile(unittest.TestCase):  # 4
 
     def test_raises_validation_error_for_invalid_record(self):
         pass
+
 
 # -------------------------
 # Core validation | Test cases: to do: 10
@@ -270,5 +273,5 @@ class TestMethodUpdateDataInFile(unittest.TestCase):  # 5
         pass
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main(verbosity=2)
