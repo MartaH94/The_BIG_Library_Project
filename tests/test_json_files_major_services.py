@@ -16,7 +16,6 @@ Test cases total: 45
 
 
 TO DO:
-Implement reusable helper with initial test data
 Implement all planned tests
 
 """
@@ -85,6 +84,10 @@ class TestMethodFileExistsChecking(unittest.TestCase):  # 4/4
 
 
 class TestMethodLoadJsonFile(unittest.TestCase):  # 4
+    def SetUp(self):
+        self.temporary_dir = tempfile.TemporaryDirectory()
+        self.temporary_dir_path = Path(self.temporary_dir.name)
+
     def test_creates_missing_file_and_returns_empty_list(self):
         pass
 
