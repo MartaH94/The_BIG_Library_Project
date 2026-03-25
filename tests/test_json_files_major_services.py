@@ -40,13 +40,18 @@ from services.authorisation_service import UserAuthorisation
 class TestMethodFileExistsChecking(unittest.TestCase):  # 4/4
     def setUp(self):
         self.temporary_dir = tempfile.TemporaryDirectory()
+        
         self.path_to_non_existent_file = Path(
             self.temporary_dir.name)/"non_existent_file.json"
+        
         self.path_to_empty_file = Path(
             self.temporary_dir.name)/"empty_file.json"
+        
         self.path_to_empty_file.write_text("", encoding="utf-8")
+        
         self.path_to_file_with_content = Path(
             self.temporary_dir.name)/"file_with_content.json"
+        
         self.path_to_file_with_content.write_text("[]", encoding="utf-8")
 
     def test_creates_file_when_missing(self):
@@ -87,6 +92,11 @@ class TestMethodLoadJsonFile(unittest.TestCase):  # 4
     def SetUp(self):
         self.temporary_dir = tempfile.TemporaryDirectory()
         self.temporary_dir_path = Path(self.temporary_dir.name)
+
+        self.valid_json_file = self.temporary_dir_path/"valid_file.json"
+        self.invalid_json_file = self.temporary_dir_path/"invalid_file.json"
+        self.empty_json_file = self.temporary_dir_path/"empty_file.json"
+        
 
     def test_creates_missing_file_and_returns_empty_list(self):
         pass
