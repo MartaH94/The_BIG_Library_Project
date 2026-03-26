@@ -134,6 +134,7 @@ class TestMethodLoadJsonFile(unittest.TestCase):  # 1/4
         pass
 
     def test_raises_error_when_json_file_type_is_not_list(self):
+        """expected behavior: raising exc.FileError when JSON file doesn't consist of list of items."""
         pass
 
 
