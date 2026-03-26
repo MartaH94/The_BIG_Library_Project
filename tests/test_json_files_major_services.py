@@ -12,7 +12,7 @@ Test cases should cover behaviors for all methods, including edge cases and erro
 
 
 Test classes: 11
-Test cases total: 45
+Test cases total: 46
 
 
 TO DO:
@@ -34,7 +34,7 @@ from services.authorisation_service import UserAuthorisation
 
 
 # -------------------------
-# File I/O helpers | Test cases: to do: 12
+# File I/O helpers | Test cases: to do: 13
 # -------------------------
 class TestMethodFileExistsChecking(unittest.TestCase):  # 4/4
     def setUp(self):
@@ -89,7 +89,7 @@ class TestMethodFileExistsChecking(unittest.TestCase):  # 4/4
         self.assertEqual(before_content, after_content)
 
 
-class TestMethodLoadJsonFile(unittest.TestCase):  # 1/4
+class TestMethodLoadJsonFile(unittest.TestCase):  # 1/5
     def setUp(self):
         self.temporary_dir = tempfile.TemporaryDirectory()
         self.temporary_dir_path = Path(self.temporary_dir.name)
