@@ -94,14 +94,15 @@ class TestMethodLoadJsonFile(unittest.TestCase):  # 4
         self.temporary_dir = tempfile.TemporaryDirectory()
         self.temporary_dir_path = Path(self.temporary_dir.name)
 
-        self.load_service = JsonFilesService(file_path=self.temporary_dir_path)
-
         """ Paths to test files """
         self.valid_json_file_path = self.temporary_dir_path / "valid_file.json"
         self.invalid_json_file_path = self.temporary_dir_path / "invalid_file.json"
         self.empty_json_file_path = self.temporary_dir_path / "empty_file.json"
         self.missing_json_file_path = self.temporary_dir_path / "missing_file.json"
 
+        self.load_service = JsonFilesService(file_path=self.valid_json_file_path)
+
+        """ load_json_file expects a list in valid JSON file """
         self.valid_file_data = [
             {"service": "loan", "enabled": True},
             {"user_id": 112233, "enabled": True},
