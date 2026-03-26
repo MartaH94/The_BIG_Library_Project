@@ -116,15 +116,12 @@ class TestMethodLoadJsonFile(unittest.TestCase):  # 4
         pass
 
     def test_reads_existing_list_from_file(self):
-        self.valid_json_file = self.valid_json_file_path
-
-        with self.valid_json_file.open("w", encoding="utf-8") as f:
+        with self.valid_json_file_path.open("w", encoding="utf-8") as f:
             json.dump(self.valid_file_data, f)
 
         self.load_service.file_path = self.valid_json_file_path
 
         test_result = self.load_service.load_json_file()
-
         self.assertEqual(test_result, self.valid_file_data)
 
     def test_raises_file_error_if_json_doesnt_contain_list(self):
