@@ -89,7 +89,7 @@ class TestMethodFileExistsChecking(unittest.TestCase):  # 4/4
         self.assertEqual(before_content, after_content)
 
 
-class TestMethodLoadJsonFile(unittest.TestCase):  # 4
+class TestMethodLoadJsonFile(unittest.TestCase):  # 1/4
     def setUp(self):
         self.temporary_dir = tempfile.TemporaryDirectory()
         self.temporary_dir_path = Path(self.temporary_dir.name)
@@ -112,9 +112,6 @@ class TestMethodLoadJsonFile(unittest.TestCase):  # 4
     def tearDown(self):
         self.temporary_dir.cleanup()
 
-    def test_creates_missing_file_and_returns_empty_list(self):
-        pass
-
     def test_reads_existing_list_from_file(self):
         with self.valid_json_file_path.open("w", encoding="utf-8") as f:
             json.dump(self.valid_file_data, f)
@@ -124,10 +121,19 @@ class TestMethodLoadJsonFile(unittest.TestCase):  # 4
         test_result = self.load_service.load_json_file()
         self.assertEqual(test_result, self.valid_file_data)
 
-    def test_raises_file_error_if_json_doesnt_contain_list(self):
+    def test_raises_error_when_json_file_is_empty(self):
+        """expected behavior: JSON decoding fails and exc.FileError is raised"""
         pass
 
-    def test_raises_file_error_for_invalid_json_file(self):
+    def test_raises_error_when_json_file_is_invalid(self):
+        """expected behavior: json.JSONDecodeError is caught and exc.FileError is raised"""
+        pass
+
+    def test_raises_error_when_file_does_not_exist(self):
+        """expected behavior: file_exists_checking() fails and exc.FileError is raised"""
+        pass
+
+    def test_raises_error_when_json_file_type_is_not_list(self):
         pass
 
 
