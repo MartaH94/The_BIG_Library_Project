@@ -97,10 +97,10 @@ class TestMethodLoadJsonFile(unittest.TestCase):  # 4
         self.load_service = JsonFilesService(file_path=self.temporary_dir_path)
 
         """ Paths to test files """
-        self.valid_json_file = self.temporary_dir_path / "valid_file.json"
-        self.invalid_json_file = self.temporary_dir_path / "invalid_file.json"
-        self.empty_json_file = self.temporary_dir_path / "empty_file.json"
-        self.missing_json_file = self.temporary_dir_path / "missing_file.json"
+        self.valid_json_file_path = self.temporary_dir_path / "valid_file.json"
+        self.invalid_json_file_path = self.temporary_dir_path / "invalid_file.json"
+        self.empty_json_file_path = self.temporary_dir_path / "empty_file.json"
+        self.missing_json_file_path = self.temporary_dir_path / "missing_file.json"
 
         self.valid_file_data = [
             {"service": "loan", "enabled": True},
@@ -114,7 +114,11 @@ class TestMethodLoadJsonFile(unittest.TestCase):  # 4
         pass
 
     def test_reads_existing_list_from_file(self):
-        pass
+        self.valid_json_file = self.valid_json_file_path
+        with self.valid_json_file.open("w", encoding="utf-8") as f:
+            json.dump(self.valid_file_data, f)
+
+        self.load_service.load_json_file()
 
     def test_raises_file_error_if_json_doesnt_contain_list(self):
         pass
