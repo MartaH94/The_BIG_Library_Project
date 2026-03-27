@@ -91,7 +91,7 @@ class TestMethodFileExistsChecking(unittest.TestCase):  # 4/4
 
 class TestMethodLoadJsonFile(unittest.TestCase):
     """Method under test: load_json_file
-    Number of TestCases: 5
+    Number of TestCases: 4
     Done TestCases: 2
     """
 
@@ -132,15 +132,10 @@ class TestMethodLoadJsonFile(unittest.TestCase):
 
         self.load_service.file_path = self.empty_json_file_path
         test_result = self.load_service.load_json_file()
-
         self.assertEqual(test_result, [])
 
     def test_raises_error_when_json_file_is_invalid(self):  #
         """expected behavior: json.JSONDecodeError is caught and exc.FileError is raised"""
-        pass
-
-    def test_raises_error_when_file_does_not_exist(self):  #
-        """expected behavior: file_exists_checking() fails and exc.FileError is raised"""
         pass
 
     def test_raises_error_when_json_file_type_is_not_list(self):  #
