@@ -141,12 +141,24 @@ class TestMethodLoadJsonFile(unittest.TestCase):
             json.dump(self.invalid_file_data, f)
 
         self.load_service.file_path = self.invalid_json_file_path
-        with self.assertRaises(exc.FileError):
+        with self.assertRaises(exc.FileError) as cm:
             self.load_service.load_json_file()
 
+        self.assertIn("File is corrupted", str(cm.exception))
+
     def test_raises_error_when_json_file_type_is_not_list(self):  #
-        """expected behavior: raising exc.FileError when JSON file doesn't consist of list of items."""
-        pass
+        """expected behavior: raising exc.FileError when JSON file doesn't consist of list of items and has incorrect data type"""
+        with self.invalid_json_file_path.open("w", encoding="utf-8") as f:
+            json.dump(self.invalid_file_data, f)
+
+        self.load_service.file_path = self.invalid_json_file_path
+
+        with self.assertRaises(
+            exc.FileError
+        ) as cm:  # cm stands for: context manager result (the captured exception)
+            self.load_service.load_json_file()
+
+        self.assertIn("File should be a list", str(cm.exception))
 
 
 class TestMethodWriteJsonData(unittest.TestCase):  # 4
