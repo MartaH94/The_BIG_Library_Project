@@ -126,8 +126,8 @@ class TestMethodLoadJsonFile(unittest.TestCase):
         self.assertEqual(test_result, self.valid_file_data)
 
     def test_returns_empty_list_when_json_file_is_empty(self):  # done
-        """expected behavior: json_load_file returns an JSON content as an empty list"""
-        with self.empty_json_file_path.open("w", encoding="utf-8") as f:
+        """expected behavior: json_load_file returns an JSON content as an empty list in case file to load is empty"""
+        with self.empty_json_file_path.open("w", encoding="utf-8"):
             pass
 
         self.load_service.file_path = self.empty_json_file_path
