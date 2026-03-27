@@ -12,7 +12,7 @@ Test cases should cover behaviors for all methods, including edge cases and erro
 
 
 Test classes: 11
-Test cases total: 46
+Test cases total: 44
 
 
 TO DO:
@@ -34,9 +34,14 @@ from services.authorisation_service import UserAuthorisation
 
 
 # -------------------------
-# File I/O helpers | Test cases: to do: 13
+# File I/O helpers | Test cases: to do: 11
 # -------------------------
-class TestMethodFileExistsChecking(unittest.TestCase):  # 4/4
+class TestMethodFileExistsChecking(unittest.TestCase):  # 3/3
+    """Method under test: file_exists_checking
+    Number of TestCases: 4
+    Done TestCases: 4
+    """
+
     def setUp(self):
         self.temporary_dir = tempfile.TemporaryDirectory()
 
@@ -89,10 +94,10 @@ class TestMethodFileExistsChecking(unittest.TestCase):  # 4/4
         self.assertEqual(before_content, after_content)
 
 
-class TestMethodLoadJsonFile(unittest.TestCase):
+class TestMethodLoadJsonFile(unittest.TestCase):  # 4/4
     """Method under test: load_json_file
     Number of TestCases: 4
-    Done TestCases: 2
+    Done TestCases: 4
     """
 
     def setUp(self):
@@ -118,7 +123,7 @@ class TestMethodLoadJsonFile(unittest.TestCase):
     def tearDown(self):
         self.temporary_dir.cleanup()
 
-    def test_reads_existing_list_from_file(self):  # done
+    def test_reads_existing_list_from_file(self):
         with self.valid_json_file_path.open("w", encoding="utf-8") as f:
             json.dump(self.valid_file_data, f)
 
@@ -126,7 +131,7 @@ class TestMethodLoadJsonFile(unittest.TestCase):
         test_result = self.load_service.load_json_file()
         self.assertEqual(test_result, self.valid_file_data)
 
-    def test_returns_empty_list_when_json_file_is_empty(self):  # done
+    def test_returns_empty_list_when_json_file_is_empty(self):
         """expected behavior: json_load_file returns an JSON content as an empty list in case file to load is empty"""
         with self.empty_json_file_path.open("w", encoding="utf-8"):
             pass
@@ -135,7 +140,7 @@ class TestMethodLoadJsonFile(unittest.TestCase):
         test_result = self.load_service.load_json_file()
         self.assertEqual(test_result, [])
 
-    def test_raises_error_when_json_file_is_invalid(self):  #
+    def test_raises_error_when_json_file_is_invalid(self):
         """expected behavior: json.JSONDecodeError is caught and exc.FileError is raised in case JSON file is corrupted"""
         self.invalid_json_file_path.write_text(
             '{"book_id": 212121, "enabled": False"', encoding="utf-8"
@@ -147,7 +152,7 @@ class TestMethodLoadJsonFile(unittest.TestCase):
 
         self.assertIn("Cannot read the file", str(cm.exception))
 
-    def test_raises_error_when_json_file_type_is_not_list(self):  #
+    def test_raises_error_when_json_file_type_is_not_list(self):
         """expected behavior: raising exc.FileError when JSON file doesn't consist of list of items and has incorrect data type"""
         with self.invalid_json_file_path.open("w", encoding="utf-8") as f:
             json.dump(self.invalid_file_data, f)
@@ -162,7 +167,18 @@ class TestMethodLoadJsonFile(unittest.TestCase):
         self.assertIn("File should be a list", str(cm.exception))
 
 
-class TestMethodWriteJsonData(unittest.TestCase):  # 4
+class TestMethodWriteJsonData(unittest.TestCase):  # 0/4
+    """Method under test: write_json_file
+    Number of TestCases: 4
+    Done TestCases: 0
+    """
+
+    def setUp(self):
+        self.temporary_dir = tempfile.TemporaryDirectory()
+
+    def tearDown(self):
+        self.temporary_dir.cleanup()
+
     def test_raises_file_error_if_data_is_none(self):
         pass
 
