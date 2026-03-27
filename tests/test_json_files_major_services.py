@@ -89,7 +89,12 @@ class TestMethodFileExistsChecking(unittest.TestCase):  # 4/4
         self.assertEqual(before_content, after_content)
 
 
-class TestMethodLoadJsonFile(unittest.TestCase):  # 1/5
+class TestMethodLoadJsonFile(unittest.TestCase):
+    """Method under test: load_json_file
+    Number of TestCases: 5
+    Done TestCases: 1
+    """
+
     def setUp(self):
         self.temporary_dir = tempfile.TemporaryDirectory()
         self.temporary_dir_path = Path(self.temporary_dir.name)
@@ -112,7 +117,7 @@ class TestMethodLoadJsonFile(unittest.TestCase):  # 1/5
     def tearDown(self):
         self.temporary_dir.cleanup()
 
-    def test_reads_existing_list_from_file(self):
+    def test_reads_existing_list_from_file(self):  # done
         with self.valid_json_file_path.open("w", encoding="utf-8") as f:
             json.dump(self.valid_file_data, f)
 
@@ -121,19 +126,23 @@ class TestMethodLoadJsonFile(unittest.TestCase):  # 1/5
         test_result = self.load_service.load_json_file()
         self.assertEqual(test_result, self.valid_file_data)
 
-    def test_raises_error_when_json_file_is_empty(self):
+    def test_raises_error_when_json_file_is_empty(self):  # in progress
         """expected behavior: JSON decoding fails and exc.FileError is raised"""
-        pass
+        with self.empty_json_file_path.open("r", encoding="utf-8") as f:
+            empty_file = json.load(f)
 
-    def test_raises_error_when_json_file_is_invalid(self):
+        self.load_service.load_json_file()
+        self.assertNotIsInstance(empty_file, list)
+
+    def test_raises_error_when_json_file_is_invalid(self):  #
         """expected behavior: json.JSONDecodeError is caught and exc.FileError is raised"""
         pass
 
-    def test_raises_error_when_file_does_not_exist(self):
+    def test_raises_error_when_file_does_not_exist(self):  #
         """expected behavior: file_exists_checking() fails and exc.FileError is raised"""
         pass
 
-    def test_raises_error_when_json_file_type_is_not_list(self):
+    def test_raises_error_when_json_file_type_is_not_list(self):  #
         """expected behavior: raising exc.FileError when JSON file doesn't consist of list of items."""
         pass
 
