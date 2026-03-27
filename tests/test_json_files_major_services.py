@@ -180,15 +180,19 @@ class TestMethodWriteJsonData(unittest.TestCase):  # 0/4
         self.temporary_dir.cleanup()
 
     def test_raises_file_error_if_data_is_none(self):
+        """expected behavior: Raises exc.FileError in case the data to save in file is missing or it's an empty value"""
         pass
 
     def test_raises_file_error_if_data_is_not_list(self):
+        """expected behavior: Raises exc.FileError in case the data to save in file is not a type of list"""
         pass
 
     def test_writes_valid_list_to_file(self):
+        """expected behavior: Data is correct and is saved in JSON file. Return message with confirmation is displayed"""
         pass
 
     def test_raises_validation_error_for_invalid_record(self):
+        """expected behavior: Raises exc.ValidationError in case the data to save has invalid structure"""
         pass
 
 
