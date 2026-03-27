@@ -113,6 +113,7 @@ class TestMethodLoadJsonFile(unittest.TestCase):
             {"service": "loan", "enabled": True},
             {"user_id": 112233, "enabled": True},
         ]
+        self.invalid_file_data = {"book_id": 212121, "enabled": False}
 
     def tearDown(self):
         self.temporary_dir.cleanup()
@@ -135,8 +136,13 @@ class TestMethodLoadJsonFile(unittest.TestCase):
         self.assertEqual(test_result, [])
 
     def test_raises_error_when_json_file_is_invalid(self):  #
-        """expected behavior: json.JSONDecodeError is caught and exc.FileError is raised"""
-        pass
+        """expected behavior: json.JSONDecodeError is caught and exc.FileError is raised in case JSON file has a wrong structure"""
+        with self.invalid_json_file_path.open("w", encoding="utf-8") as f:
+            json.dump(self.invalid_file_data, f)
+
+        self.load_service.file_path = self.invalid_json_file_path
+        with self.assertRaises(exc.FileError):
+            self.load_service.load_json_file()
 
     def test_raises_error_when_json_file_type_is_not_list(self):  #
         """expected behavior: raising exc.FileError when JSON file doesn't consist of list of items."""
