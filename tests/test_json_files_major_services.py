@@ -127,13 +127,11 @@ class TestMethodLoadJsonFile(unittest.TestCase):
 
     def test_raises_error_when_json_file_is_empty(self):  # in progress
         """expected behavior: JSON decoding fails and exc.FileError is raised"""
-        self.load_service.file_path = self.empty_json_file_path
-
         with self.empty_json_file_path.open("w", encoding="utf-8") as f:
             f.write("")
 
-        self.load_service.load_json_file()
-        self.assertRaises(exc.FileError)
+        self.load_service.file_path = self.empty_json_file_path
+        self.assertRaises(exc.FileError, self.load_service.load_json_file)
 
     def test_raises_error_when_json_file_is_invalid(self):  #
         """expected behavior: json.JSONDecodeError is caught and exc.FileError is raised"""
