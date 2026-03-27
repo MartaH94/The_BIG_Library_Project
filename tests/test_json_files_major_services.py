@@ -7,6 +7,7 @@ ________________________________________________________
 
 TO DO HERE:
 - Create unit tests for all methods in json_files_major_services module. method by method.
+- Update docstrings for all test cases
 
 Test cases should cover behaviors for all methods, including edge cases and error handling.
 
@@ -14,9 +15,8 @@ Test cases should cover behaviors for all methods, including edge cases and erro
 Test classes: 11
 Test cases total: 44
 
+current status: in progress
 
-TO DO:
-Implement all planned tests
 
 """
 
@@ -24,7 +24,6 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
-from unittest import TestCase
 
 import exceptions as exc
 import utils.config as config
