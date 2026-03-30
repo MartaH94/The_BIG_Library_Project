@@ -228,8 +228,11 @@ class TestMethodWriteJsonData(unittest.TestCase):  # 0/4
         self.assertEqual(file_content, self.data_to_write)
 
     def test_raises_validation_error_for_invalid_record(self):
-        """expected behavior: Raises exc.ValidationError in case the data to save has invalid structure"""
-        pass
+        """expected behavior: Raises exc.ValidationError in case the data doesn't match schema"""
+        self.data_to_write = ["service", "loan", "enabled=True"]
+        with self.assertRaises(exc.ValidationError) as cm:
+            self.write_service.write_json_data(self.data_to_write)
+        self.assertIn("Data does not match schema", str(cm.exception))
 
 
 # -------------------------
