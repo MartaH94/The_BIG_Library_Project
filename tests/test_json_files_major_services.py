@@ -209,7 +209,10 @@ class TestMethodWriteJsonData(unittest.TestCase):  # 0/4
 
     def test_raises_file_error_if_data_is_not_list(self):
         """expected behavior: Raises exc.FileError in case the data to save in file is not a type of list"""
-        pass
+        self.data_to_write = {"book_id": 123321, "enabled": True}
+        with self.assertRaises(exc.FileError) as cm:
+            self.write_service.write_json_data(self.data_to_write)
+        self.assertIn("Data is not a list", str(cm.exception))
 
     def test_writes_valid_list_to_file(self):
         """expected behavior: Data is correct and is saved in JSON file. Return message with confirmation is displayed"""
