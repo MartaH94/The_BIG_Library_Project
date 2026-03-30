@@ -205,7 +205,7 @@ class TestMethodWriteJsonData(unittest.TestCase):  # 0/4
         self.data_to_write = None
         with self.assertRaises(exc.FileError) as cm:
             self.write_service.write_json_data(self.data_to_write)
-        self.assertIn("Data to save is an empty value", str(cm.exception))
+        self.assertIn("Cannot save empty data", str(cm.exception))
 
     def test_raises_file_error_if_data_is_not_list(self):
         """expected behavior: Raises exc.FileError in case the data to save in file is not a type of list"""
