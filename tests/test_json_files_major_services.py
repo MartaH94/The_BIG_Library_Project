@@ -112,7 +112,8 @@ class TestMethodLoadJsonFile(unittest.TestCase):  # 4/4
         """ Service under test """
         self.load_service = JsonFilesService(file_path=self.valid_json_file_path)
 
-        """ load_json_file expects a list in valid JSON file """
+        """ Test data
+        load_json_file expects a list in valid JSON file """
         self.valid_file_data = [
             {"service": "loan", "enabled": True},
             {"user_id": 112233, "enabled": True},
@@ -174,6 +175,12 @@ class TestMethodWriteJsonData(unittest.TestCase):  # 0/4
 
     def setUp(self):
         self.temporary_dir = tempfile.TemporaryDirectory()
+        self.temporary_dir_path = Path(self.temporary_dir.name)
+
+        self.valid_json_file_path = self.temporary_dir_path / "valid_file.json"
+
+        """ Service under test """
+        self.write_service = JsonFilesService(file_path=self.valid_json_file_path)
 
     def tearDown(self):
         self.temporary_dir.cleanup()
