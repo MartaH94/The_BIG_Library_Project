@@ -203,6 +203,8 @@ class TestMethodWriteJsonData(unittest.TestCase):  # 0/4
     def test_raises_file_error_if_data_is_none(self):
         """expected behavior: Raises exc.FileError in case the data to save in file is missing or it's an empty value"""
         self.data_to_write = None
+        with self.assertRaises(exc.FileError):
+            self.write_service.write_json_data(self.data_to_write)
 
     def test_raises_file_error_if_data_is_not_list(self):
         """expected behavior: Raises exc.FileError in case the data to save in file is not a type of list"""
