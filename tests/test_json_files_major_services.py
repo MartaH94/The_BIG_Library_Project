@@ -222,6 +222,11 @@ class TestMethodWriteJsonData(unittest.TestCase):  # 0/4
         self.assertEqual(test_result, "Success. Data have been saved in the file.")
         self.assertTrue(self.test_json_file_path.exists())
 
+        with self.test_json_file_path.open("r", encoding="utf-8") as f:
+            file_content = json.load(f)
+
+        self.assertEqual(file_content, self.data_to_write)
+
     def test_raises_validation_error_for_invalid_record(self):
         """expected behavior: Raises exc.ValidationError in case the data to save has invalid structure"""
         pass
