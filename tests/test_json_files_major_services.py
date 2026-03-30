@@ -168,7 +168,7 @@ class TestMethodLoadJsonFile(unittest.TestCase):  # 4/4
 
 
 class TestMethodWriteJsonData(unittest.TestCase):  # 0/4
-    """Method under test: write_json_file
+    """Method under test: write_json_data
     Number of TestCases: 4
     Done TestCases: 0
     """
@@ -177,17 +177,32 @@ class TestMethodWriteJsonData(unittest.TestCase):  # 0/4
         self.temporary_dir = tempfile.TemporaryDirectory()
         self.temporary_dir_path = Path(self.temporary_dir.name)
 
+        """ Path to test file. We need this file to have a file to write data in it.
+        Also preparing test file"""
         self.test_json_file_path = self.temporary_dir_path / "test_file.json"
+        self.test_json_file_path.write_text("[]", encoding="utf-8")
+
+        """ valid data must match schema and validator expectations"""
+        self.schema = {"service": str, "enabled": bool}
+        self.valid_data = [
+            {"service": "loan", "enabled": True},
+            {"user_id": 112233, "enabled": True},
+        ]
+
+        with self.test_json_file_path.open("w", encoding="utf-8") as f:
+            json.dump(self.valid_data, f, ensure_ascii=True, indent=4, sort_keys=True)
 
         """ Service under test """
-        self.write_service = JsonFilesService(file_path=self.test_json_file_path)
+        self.write_service = JsonFilesService(
+            file_path=self.test_json_file_path, schema=self.schema
+        )
 
     def tearDown(self):
         self.temporary_dir.cleanup()
 
     def test_raises_file_error_if_data_is_none(self):
         """expected behavior: Raises exc.FileError in case the data to save in file is missing or it's an empty value"""
-        pass
+        self.data_to_write = None
 
     def test_raises_file_error_if_data_is_not_list(self):
         """expected behavior: Raises exc.FileError in case the data to save in file is not a type of list"""
