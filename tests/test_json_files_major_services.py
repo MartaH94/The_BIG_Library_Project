@@ -177,10 +177,10 @@ class TestMethodWriteJsonData(unittest.TestCase):  # 0/4
         self.temporary_dir = tempfile.TemporaryDirectory()
         self.temporary_dir_path = Path(self.temporary_dir.name)
 
-        self.valid_json_file_path = self.temporary_dir_path / "valid_file.json"
+        self.test_json_file_path = self.temporary_dir_path / "test_file.json"
 
         """ Service under test """
-        self.write_service = JsonFilesService(file_path=self.valid_json_file_path)
+        self.write_service = JsonFilesService(file_path=self.test_json_file_path)
 
     def tearDown(self):
         self.temporary_dir.cleanup()
