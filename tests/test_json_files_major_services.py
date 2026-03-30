@@ -216,7 +216,7 @@ class TestMethodWriteJsonData(unittest.TestCase):  # 0/4
 
     def test_writes_valid_list_to_file(self):
         """expected behavior: Data is correct and is saved in JSON file. Return message with confirmation is displayed"""
-        self.data_to_write = [{"loan_id": 123456, "enabled": True}]
+        self.data_to_write = [{"service": "loan", "enabled": True}]
         test_result = self.write_service.write_json_data(self.data_to_write)
 
         self.assertEqual(test_result, "Success. Data have been saved in the file.")
