@@ -232,7 +232,7 @@ class TestMethodWriteJsonData(unittest.TestCase):  # 0/4
         self.data_to_write = ["service", "loan", "enabled=True"]
         with self.assertRaises(exc.ValidationError) as cm:
             self.write_service.write_json_data(self.data_to_write)
-        self.assertIn("Data does not match schema", str(cm.exception))
+        self.assertIn("Expected data type is dict", str(cm.exception))
 
 
 # -------------------------
