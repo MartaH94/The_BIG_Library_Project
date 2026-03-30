@@ -16,7 +16,7 @@ Test classes: 11
 Test cases total: 44
 
 current status: in progress
-
+Total number of done test cases: 11/44
 
 """
 
@@ -62,6 +62,7 @@ class TestMethodFileExistsChecking(unittest.TestCase):  # 3/3
         self.temporary_dir.cleanup()
 
     def test_creates_file_when_missing(self):
+        """expected behavior: file_exists_checking creates a new file if it doesn't exist and initializes it with an empty list as JSON content"""
         self.json_service = JsonFilesService(file_path=self.path_to_non_existent_file)
         file_to_check = self.path_to_non_existent_file
         self.json_service.file_exists_checking()
@@ -71,6 +72,7 @@ class TestMethodFileExistsChecking(unittest.TestCase):  # 3/3
         self.assertIsInstance(file_content, list)
 
     def test_initializes_list_in_empty_file(self):
+        """expected behavior: file_exists_checking initializes an empty file with an empty list as JSON content"""
         self.json_service = JsonFilesService(file_path=self.path_to_empty_file)
         file_to_check = self.path_to_empty_file
         self.json_service.file_exists_checking()
@@ -80,6 +82,7 @@ class TestMethodFileExistsChecking(unittest.TestCase):  # 3/3
         self.assertEqual(file_content, [])
 
     def test_no_action_when_file_has_content(self):
+        """expected behavior: file_exists_checking does not modify the file if it already has content. The content of the file remains unchanged after the method is called"""
         self.json_service = JsonFilesService(file_path=self.path_to_file_with_content)
         file_to_check = self.path_to_file_with_content
 
@@ -167,10 +170,10 @@ class TestMethodLoadJsonFile(unittest.TestCase):  # 4/4
         self.assertIn("File should be a list", str(cm.exception))
 
 
-class TestMethodWriteJsonData(unittest.TestCase):  # 0/4
+class TestMethodWriteJsonData(unittest.TestCase):  # 4/4
     """Method under test: write_json_data
     Number of TestCases: 4
-    Done TestCases: 0
+    Done TestCases: 4
     """
 
     def setUp(self):
