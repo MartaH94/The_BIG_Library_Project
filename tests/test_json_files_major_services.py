@@ -244,6 +244,18 @@ class TestMethodWriteJsonData(unittest.TestCase):  # 4/4
 
 
 class TestMethodAppendDataToFile(unittest.TestCase):  # 4
+    """Method under test: append_data_to_file
+    Number of TestCases: 4
+    Done TestCases: 0
+    """
+
+    def setUp(self):
+        self.temporary_dir = tempfile.TemporaryDirectory()
+        self.temporary_dir_path = Path(self.temporary_dir.name)
+
+    def tearDown(self):
+        self.temporary_dir.cleanup()
+
     def test_raises_validation_error_if_data_is_none(self):
         pass
 
