@@ -5,13 +5,6 @@ tests.test_json_files_major_service.py
 Test for the file json_files_major_services.py
 ________________________________________________________
 
-TO DO HERE:
-- Create unit tests for all methods in json_files_major_services module. method by method.
-- Update docstrings for all test cases
-
-Test cases should cover behaviors for all methods, including edge cases and error handling.
-
-
 Test classes: 11
 Test cases total: 44
 
@@ -252,6 +245,7 @@ class TestMethodAppendDataToFile(unittest.TestCase):  # 4
     def setUp(self):
         self.temporary_dir = tempfile.TemporaryDirectory()
         self.temporary_dir_path = Path(self.temporary_dir.name)
+        # I am here
 
     def tearDown(self):
         self.temporary_dir.cleanup()
