@@ -257,15 +257,19 @@ class TestMethodAppendDataToFile(unittest.TestCase):  # 4
         self.temporary_dir.cleanup()
 
     def test_raises_validation_error_if_data_is_none(self):
+        """expected behavior: Raises exc.ValidationError in case the data to append in file is missing or it's an empty value"""
         pass
 
     def test_raises_validation_error_if_data_is_not_dict(self):
+        """expected behavior: Raises exc.ValidationError in case the data to append in file is not a type of dict"""
         pass
 
     def test_appends_valid_record_to_file(self):
+        """expected behavior: Data is correct and is appended to JSON file. Return message with confirmation is displayed"""
         pass
 
     def test_raises_validation_error_for_invalid_record(self):
+        """expected behavior: Raises exc.ValidationError in case the data doesn't match schema"""
         pass
 
 
@@ -275,36 +279,70 @@ class TestMethodAppendDataToFile(unittest.TestCase):  # 4
 
 
 class TestMethodValidateAgainstSchema(unittest.TestCase):  # 6
+    """Method under test: validate_against_schema
+    Number of TestCases: 6
+    Done TestCases: 0
+    """
+
+    def setUp(self):
+        self.temporary_dir = tempfile.TemporaryDirectory()
+        self.temporary_dir_path = Path(self.temporary_dir.name)
+
+    def tearDown(self):
+        self.temporary_dir.cleanup()
+
     def test_raises_validation_error_if_data_is_none(self):
+        """expected behavior: Raises exc.ValidationError in case the data to validate is missing or it's an empty value"""
         pass
 
     def test_raises_validation_error_if_schema_is_empty(self):
+        """expected behavior: Raises exc.ValidationError in case the schema to validate against is missing or it's an empty value"""
         pass
 
     def test_raises_validation_error_if_data_is_not_dict(self):
+        """expected behavior: Raises exc.ValidationError in case the data to validate is not a type of dict"""
         pass
 
     def test_raises_validation_error_if_required_key_is_missing(self):
+        """expected behavior: Raises exc.ValidationError in case the data to validate is missing required key(s) defined in schema"""
         pass
 
     def test_raises_validation_error_if_field_type_is_wrong(self):
+        """expected behavior: Raises exc.ValidationError in case the data to validate has wrong data type for field(s) defined in schema"""
         pass
 
     def test_returns_data_if_schema_matches(self):
+        """expected behavior: Returns the data if it matches the schema. No exception is raised."""
         pass
 
 
 class TestMethodValidateFileData(unittest.TestCase):  # 4
+    """Method under test: validate_file_data
+    Number of TestCases: 4
+    Done TestCases: 0
+    """
+
+    def setUp(self):
+        self.temporary_dir = tempfile.TemporaryDirectory()
+        self.temporary_dir_path = Path(self.temporary_dir.name)
+
+    def tearDown(self):
+        self.temporary_dir.cleanup()
+
     def test_raises_validation_error_if_file_is_empty(self):
+        """expected behavior: Raises exc.ValidationError in case the file to validate is empty. The file should contain a list of records to be valid."""
         pass
 
     def test_raises_validation_error_if_record_is_not_dict(self):
+        """expected behavior: Raises exc.ValidationError in case the file to validate contains record(s) that are not of type dict. Each record in the file should be a dict to be valid."""
         pass
 
     def test_raises_validation_error_if_record_does_not_match_schema(self):
+        """expected behavior: Raises exc.ValidationError in case the file to validate contains record(s) that do not match the defined schema. Each record in the file should conform to the schema to be valid."""
         pass
 
     def test_returns_true_if_all_records_are_valid(self):
+        """expected behavior: Returns True if all records in the file are valid according to the defined schema. No exception is raised."""
         pass
 
 
@@ -314,36 +352,80 @@ class TestMethodValidateFileData(unittest.TestCase):  # 4
 
 
 class TestMethodGetOrCreateBackupDir(unittest.TestCase):  # 2
+    """Method under test: get_or_create_backup_dir
+    Number of TestCases: 2
+    Done TestCases: 0
+    """
+
+    def setUp(self):
+        self.temporary_dir = tempfile.TemporaryDirectory()
+        self.temporary_dir_path = Path(self.temporary_dir.name)
+
+    def tearDown(self):
+        self.temporary_dir.cleanup()
 
     def test_creates_backup_directory_if_missing(self):
+        """expected behavior: get_or_create_backup_dir creates a backup directory if it doesn't exist and returns the path to the created directory. The method should ensure that the backup directory is created successfully and is ready for use."""
         pass
 
     def test_returns_existing_backup_directory(self):
+        """expected behavior: get_or_create_backup_dir returns the path to the existing backup directory if it already exists. The method should recognize that the backup directory is already present and return its path without attempting to create a new one."""
         pass
 
 
 class TestMethodBuildBackupFileName(unittest.TestCase):  # 3
+    """Method under test: build_backup_file_name
+    Number of TestCases: 3
+    Done TestCases: 0
+    """
+
+    def setUp(self):
+        self.temporary_dir = tempfile.TemporaryDirectory()
+        self.temporary_dir_path = Path(self.temporary_dir.name)
+
+    def tearDown(self):
+        self.temporary_dir.cleanup()
+
     def test_backup_name_has_correct_name(self):
+        """expected behavior: build_backup_file_name generates a backup file name that includes the alias stem and a timestamp. The generated file name should follow the expected format and contain the relevant information to identify the backup."""
         pass
 
     def test_backup_name_contains_timestamp(self):
+        """expected behavior: build_backup_file_name generates a backup file name that includes a timestamp. The generated file name should contain a timestamp that indicates when the backup was created, allowing for easy identification and organization of backup files."""
         pass
 
     def test_backup_name_has_json_extension(self):
+        """expected behavior: build_backup_file_name generates a backup file name that has a .json extension. The generated file name should end with the .json extension, indicating that it is a JSON file and can be easily recognized as such."""
         pass
 
 
 class TestMethodCreateBackupFile(unittest.TestCase):  # 4
+    """Method under test: create_backup_file
+    Number of TestCases: 4
+    Done TestCases: 0
+    """
+
+    def setUp(self):
+        self.temporary_dir = tempfile.TemporaryDirectory()
+        self.temporary_dir_path = Path(self.temporary_dir.name)
+
+    def tearDown(self):
+        self.temporary_dir.cleanup()
+
     def test_creates_backup_file_and_returns_path(self):
+        """expected behavior: create_backup_file creates a backup file with the correct name and returns the path to the created backup file. The method should successfully create the backup file and provide the correct path for reference."""
         pass
 
     def test_backup_file_contains_same_data_as_source_file(self):
+        """expected behavior: create_backup_file creates a backup file that contains the same data as the source file. The method should ensure that the content of the backup file matches the content of the source file, providing an accurate copy for backup purposes."""
         pass
 
     def test_creates_backup_directory_if_missing(self):
+        """expected behavior: create_backup_file creates a backup directory if it doesn't exist before creating the backup file. The method should ensure that the backup directory is created successfully if it is missing, allowing for proper organization of backup files."""
         pass
 
     def test_backup_file_name_contains_alias_stem_and_timestamp(self):
+        """expected behavior: create_backup_file generates a backup file name that includes the alias stem and a timestamp. The generated file name should follow the expected format and contain the relevant information to identify the backup, including the alias stem and the timestamp."""
         pass
 
 
@@ -353,36 +435,70 @@ class TestMethodCreateBackupFile(unittest.TestCase):  # 4
 
 
 class TestMethodRemoveFromFile(unittest.TestCase):  # 5
+    """Method under test: remove_from_file
+    Number of TestCases: 5
+    Done TestCases: 0
+    """
+
+    def setUp(self):
+        self.temporary_dir = tempfile.TemporaryDirectory()
+        self.temporary_dir_path = Path(self.temporary_dir.name)
+
+    def tearDown(self):
+        self.temporary_dir.cleanup()
+
     def test_raises_validation_error_if_key_name_is_none(self):
+        """expected behavior: Raises exc.ValidationError in case the key name to identify record(s) for removal is missing or it's an empty value. The method should validate the input and ensure that a valid key name is provided for the removal operation."""
         pass
 
     def test_raises_validation_error_if_key_value_is_none(self):
+        """expected behavior: Raises exc.ValidationError in case the key value to identify record(s) for removal is missing or it's an empty value. The method should validate the input and ensure that a valid key value is provided for the removal operation."""
         pass
 
     def test_raises_invalid_field_error_if_key_not_in_schema(self):
+        """expected behavior: Raises exc.InvalidFieldError in case the key name provided for removal is not defined in the schema. The method should validate the key name against the schema and ensure that it is a valid field for identifying records to remove."""
         pass
 
     def test_raises_database_error_if_no_matching_record_found(self):
+        """expected behavior: Raises exc.DatabaseError in case no record matching the provided key name and value is found in the file. The method should search for records based on the provided key and value, and if no matching record is found, it should raise an appropriate error to indicate that the removal operation cannot be performed."""
         pass
 
     def test_removes_matching_records_and_saves_file(self):
+        """expected behavior: Removes all records matching the provided key name and value from the file and saves the updated file. The method should successfully identify and remove the matching records, and then save the changes to the file, ensuring that the file reflects the removal of the specified records."""
         pass
 
 
 class TestMethodUpdateDataInFile(unittest.TestCase):  # 5
+    """Method under test: update_data_in_file
+    Number of TestCases: 5
+    Done TestCases: 0
+    """
+
+    def setUp(self):
+        self.temporary_dir = tempfile.TemporaryDirectory()
+        self.temporary_dir_path = Path(self.temporary_dir.name)
+
+    def tearDown(self):
+        self.temporary_dir.cleanup()
+
     def test_raises_file_error_if_item_is_none(self):
+        """expected behavior: Raises exc.FileError in case the item to update is missing or it's an empty value. The method should validate the input and ensure that a valid item is provided for the update operation."""
         pass
 
     def test_raises_invalid_field_error_if_item_not_in_schema(self):
+        """expected behavior: Raises exc.InvalidFieldError in case the item provided for update contains key(s) that are not defined in the schema. The method should validate the item against the schema and ensure that all fields in the item are valid according to the defined schema."""
         pass
 
     def test_raises_validation_error_if_new_data_is_none(self):
+        """expected behavior: Raises exc.ValidationError in case the new data for update is missing or it's an empty value. The method should validate the input and ensure that valid new data is provided for the update operation."""
         pass
 
     def test_raises_database_error_if_item_not_found_in_records(self):
+        """expected behavior: Raises exc.DatabaseError in case the item provided for update is not found in the existing records in the file. The method should search for the item in the file based on the provided data, and if the item is not found, it should raise an appropriate error to indicate that the update operation cannot be performed."""
         pass
 
     def test_updates_existing_field_and_saves_file(self):
+        """expected behavior: Updates an existing field in the item with new data and saves the updated file. The method should successfully identify the item to update, apply the new data to the existing field, and then save the changes to the file, ensuring that the file reflects the updated information for the specified item."""
         pass
 
 
