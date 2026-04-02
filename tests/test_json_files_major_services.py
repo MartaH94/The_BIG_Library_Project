@@ -293,7 +293,11 @@ class TestMethodAppendDataToFile(unittest.TestCase):  # 4
 
     def test_raises_validation_error_for_invalid_record(self):
         """expected behavior: Raises exc.ValidationError in case the data doesn't match schema"""
-        pass
+        self.data_to_append = {"user_id": 123321, "enabled": True}
+        with self.assertRaises(exc.ValidationError) as cm:
+            self.append_data_service.append_data_to_file(self.data_to_append)
+
+        self.assertIn("Missing required key", str(cm.exception))
 
 
 # -------------------------
