@@ -9,7 +9,7 @@ Test classes: 11
 Test cases total: 44
 
 current status: in progress
-Total number of done test cases: 11/44
+Total number of done test cases: 21/44
 
 """
 
@@ -305,10 +305,10 @@ class TestMethodAppendDataToFile(unittest.TestCase):  # 4/4
 # -------------------------
 
 
-class TestMethodValidateAgainstSchema(unittest.TestCase):  # _/6
+class TestMethodValidateAgainstSchema(unittest.TestCase):  # 6/6
     """Method under test: validate_against_schema
     Number of TestCases: 6
-    Done TestCases: 2
+    Done TestCases: 6
     """
 
     def setUp(self):
@@ -582,4 +582,4 @@ class TestMethodUpdateDataInFile(unittest.TestCase):  # 5
 
 
 if __name__ == "__main__":
-    unittest.main(verbosity=2)
+    unittest.main(verbosity=0)
