@@ -554,7 +554,8 @@ class TestMethodBuildBackupFileName(unittest.TestCase):  # 1/3
 
     def test_backup_name_has_json_extension(self):
         """expected behavior: build_backup_file_name generates a backup file name that has a .json extension. The generated file name should end with the .json extension, indicating that it is a JSON file and can be easily recognized as such."""
-        pass
+        result = self.backup_service.build_backup_file_name()
+        self.assertTrue(result.endswith(".json"))
 
 
 class TestMethodCreateBackupFile(unittest.TestCase):  # 4
