@@ -365,7 +365,14 @@ class TestMethodValidateAgainstSchema(unittest.TestCase):  # _/6
 
     def test_raises_validation_error_if_required_key_is_missing(self):
         """expected behavior: Raises exc.ValidationError in case the data to validate is missing required key(s) defined in schema"""
-        pass
+        self.data_to_validate = {"user_id": 123321, "enabled": True}
+
+        with self.assertRaises(exc.ValidationError) as cm:
+            self.validation_service.validate_against_schema(
+                self.data_to_validate, self.test_schema
+            )
+
+        self.assertIn("Missing key", str(cm.exception))
 
     def test_raises_validation_error_if_field_type_is_wrong(self):
         """expected behavior: Raises exc.ValidationError in case the data to validate has wrong data type for field(s) defined in schema"""
