@@ -506,7 +506,14 @@ class TestMethodGetOrCreateBackupDir(unittest.TestCase):  # 0/2
 
     def test_returns_existing_backup_directory(self):
         """expected behavior: get_or_create_backup_dir returns the path to the existing backup directory if it already exists. The method should recognize that the backup directory is already present and return its path without attempting to create a new one."""
-        pass
+        self.existing_backup_dir = (
+            config.BACKUP_FILES_DIRECTORY / self.test_json_file_path.stem
+        )
+
+        self.existing_backup_dir.mkdir(parents=True, exist_ok=True)
+        result = self.backup_files_service.get_or_create_backup_dir()
+
+        self.assertEqual(result, self.existing_backup_dir)
 
 
 class TestMethodBuildBackupFileName(unittest.TestCase):  # 3
