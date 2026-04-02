@@ -245,7 +245,24 @@ class TestMethodAppendDataToFile(unittest.TestCase):  # 4
     def setUp(self):
         self.temporary_dir = tempfile.TemporaryDirectory()
         self.temporary_dir_path = Path(self.temporary_dir.name)
-        # I am here
+
+        self.test_json_file_path = self.temporary_dir_path / "test_file.json"
+
+        """ valid data must match schema and validator expectations"""
+        self.valid_data = [
+            {"service": "loan", "enabled": True},
+            {"service": "return", "enabled": True},
+        ]
+
+        with self.test_json_file_path.open("w", encoding="utf-8") as f:
+            json.dump(self.valid_data, f, ensure_ascii=True, indent=4, sort_keys=True)
+
+        self.data_to_append = {"service": "reservation", "enabled": False}
+
+        """ Service under test """
+        self.append_data_service = JsonFilesService(
+            file_path=self.test_json_file_path, schema={"service": str, "enabled": bool}
+        )
 
     def tearDown(self):
         self.temporary_dir.cleanup()
