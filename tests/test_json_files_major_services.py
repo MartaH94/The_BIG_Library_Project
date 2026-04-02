@@ -9,7 +9,7 @@ Test classes: 11
 Test cases total: 44
 
 current status: in progress
-Total number of done test cases: 21/44
+Total number of done test cases: 25/44
 
 """
 
@@ -19,10 +19,7 @@ import unittest
 from pathlib import Path
 
 import exceptions as exc
-import utils.config as config
 from database.json_files_major_services import JsonFilesService
-from models.user import User
-from services.authorisation_service import UserAuthorisation
 
 
 # -------------------------
@@ -479,7 +476,7 @@ class TestMethodValidateFileData(unittest.TestCase):  # 4/4
 # -------------------------
 
 
-class TestMethodGetOrCreateBackupDir(unittest.TestCase):  # 2
+class TestMethodGetOrCreateBackupDir(unittest.TestCase):  # 0/2
     """Method under test: get_or_create_backup_dir
     Number of TestCases: 2
     Done TestCases: 0
