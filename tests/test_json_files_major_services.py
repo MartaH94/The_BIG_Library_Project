@@ -20,6 +20,8 @@ from datetime import datetime
 from pathlib import Path
 from unittest.mock import patch
 
+""" from unittest.mock import patch - imports a testing utility that lets you temporarily replace objects (like functions, classes, or directory paths) during tests"""
+
 import exceptions as exc
 import utils.config as config
 from database.json_files_major_services import JsonFilesService
@@ -571,7 +573,7 @@ class TestMethodCreateBackupFile(unittest.TestCase):  # 0/4
 
         self.test_backup_root_directory = self.temporary_dir_path / "backups"
 
-        """ Patching the backup directory path in config to use the temporary directory for testing """
+        """ Temporarily changing the backup working directory path in config to use the temporary directory for testing """
         self.backup_directory_patch = patch(
             "utils.config.BACKUP_FILES_DIRECTORY", self.test_backup_root_directory
         )
@@ -599,7 +601,7 @@ class TestMethodCreateBackupFile(unittest.TestCase):  # 0/4
 
     def test_creates_backup_file_and_returns_path(self):
         """expected behavior: create_backup_file creates a backup file with the correct name and returns the path to the created backup file. The method should successfully create the backup file and provide the correct path for reference."""
-        pass
+        pass  # I am here
 
     def test_backup_file_contains_same_data_as_source_file(self):
         """expected behavior: create_backup_file creates a backup file that contains the same data as the source file. The method should ensure that the content of the backup file matches the content of the source file, providing an accurate copy for backup purposes."""
