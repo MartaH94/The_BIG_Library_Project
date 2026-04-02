@@ -305,10 +305,10 @@ class TestMethodAppendDataToFile(unittest.TestCase):  # 4/4
 # -------------------------
 
 
-class TestMethodValidateAgainstSchema(unittest.TestCase):  # 6
+class TestMethodValidateAgainstSchema(unittest.TestCase):  # _/6
     """Method under test: validate_against_schema
     Number of TestCases: 6
-    Done TestCases: 0
+    Done TestCases: 2
     """
 
     def setUp(self):
@@ -354,7 +354,14 @@ class TestMethodValidateAgainstSchema(unittest.TestCase):  # 6
 
     def test_raises_validation_error_if_data_is_not_dict(self):
         """expected behavior: Raises exc.ValidationError in case the data to validate is not a type of dict"""
-        pass
+        self.data_to_validate = ["service", "return", False]
+
+        with self.assertRaises(exc.ValidationError) as cm:
+            self.validation_service.validate_against_schema(
+                self.data_to_validate, self.test_schema
+            )
+
+        self.assertIn("Provided data has wrong type.", str(cm.exception))
 
     def test_raises_validation_error_if_required_key_is_missing(self):
         """expected behavior: Raises exc.ValidationError in case the data to validate is missing required key(s) defined in schema"""
