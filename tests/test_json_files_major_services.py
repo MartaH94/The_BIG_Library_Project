@@ -16,6 +16,7 @@ Total number of done test cases: 25/44
 import json
 import tempfile
 import unittest
+from datetime import datetime
 from pathlib import Path
 
 import exceptions as exc
@@ -535,7 +536,13 @@ class TestMethodBuildBackupFileName(unittest.TestCase):  # 3
 
     def test_backup_name_has_correct_name(self):
         """expected behavior: build_backup_file_name generates a backup file name that includes the alias stem and a timestamp. The generated file name should follow the expected format and contain the relevant information to identify the backup."""
-        pass
+        alias = config.PROJECT_ALIAS
+        name = self.test_json_file_path.stem
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+
+        self.expected_backup_file_name = f"{alias}_{name}_{timestamp}.json"
+        result = self.backup_service.build_backup_file_name()
+        self.assertIn(self.expected_backup_file_name, result)
 
     def test_backup_name_contains_timestamp(self):
         """expected behavior: build_backup_file_name generates a backup file name that includes a timestamp. The generated file name should contain a timestamp that indicates when the backup was created, allowing for easy identification and organization of backup files."""
