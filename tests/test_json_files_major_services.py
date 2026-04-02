@@ -285,7 +285,11 @@ class TestMethodAppendDataToFile(unittest.TestCase):  # 4
 
     def test_appends_valid_record_to_file(self):
         """expected behavior: Data is correct and is appended to JSON file. Return message with confirmation is displayed"""
-        pass
+        self.append_data_service.append_data_to_file(self.data_to_append)
+        with self.test_json_file_path.open("r", encoding="utf-8") as f:
+            file_content = json.load(f)
+
+        self.assertIn(self.data_to_append, file_content)
 
     def test_raises_validation_error_for_invalid_record(self):
         """expected behavior: Raises exc.ValidationError in case the data doesn't match schema"""
