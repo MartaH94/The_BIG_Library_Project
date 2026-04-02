@@ -428,7 +428,19 @@ class TestMethodValidateFileData(unittest.TestCase):  # _/4
 
     def test_raises_validation_error_if_record_is_not_dict(self):
         """expected behavior: Raises exc.ValidationError in case the file to validate contains record(s) that are not of type dict. Each record in the file should be a dict to be valid."""
-        pass
+        self.test_file = self.test_json_file_path
+
+        self.test_file_data = ["service", "enabled", True]
+
+        with self.test_file.open("w", encoding="utf-8") as f:
+            json.dump(
+                self.test_file_data, f, ensure_ascii=True, indent=4, sort_keys=True
+            )
+
+        with self.assertRaises(exc.ValidationError) as cm:
+            self.validation_service.validate_file_data()
+
+        self.assertIn("not a dictionary.", str(cm.exception))
 
     def test_raises_validation_error_if_record_does_not_match_schema(self):
         """expected behavior: Raises exc.ValidationError in case the file to validate contains record(s) that do not match the defined schema. Each record in the file should conform to the schema to be valid."""
