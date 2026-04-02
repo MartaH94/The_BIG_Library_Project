@@ -517,10 +517,10 @@ class TestMethodGetOrCreateBackupDir(unittest.TestCase):  # 2/2
         self.assertEqual(result, self.existing_backup_dir)
 
 
-class TestMethodBuildBackupFileName(unittest.TestCase):  # 3
+class TestMethodBuildBackupFileName(unittest.TestCase):  # 1/3
     """Method under test: build_backup_file_name
     Number of TestCases: 3
-    Done TestCases: 0
+    Done TestCases: 1
     """
 
     def setUp(self):
@@ -546,7 +546,11 @@ class TestMethodBuildBackupFileName(unittest.TestCase):  # 3
 
     def test_backup_name_contains_timestamp(self):
         """expected behavior: build_backup_file_name generates a backup file name that includes a timestamp. The generated file name should contain a timestamp that indicates when the backup was created, allowing for easy identification and organization of backup files."""
-        pass
+        timestamp_before = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        result = self.backup_service.build_backup_file_name()
+        timestamp_after = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+
+        self.assertTrue(timestamp_before in result or timestamp_after in result)
 
     def test_backup_name_has_json_extension(self):
         """expected behavior: build_backup_file_name generates a backup file name that has a .json extension. The generated file name should end with the .json extension, indicating that it is a JSON file and can be easily recognized as such."""
