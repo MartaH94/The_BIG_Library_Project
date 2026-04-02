@@ -395,10 +395,10 @@ class TestMethodValidateAgainstSchema(unittest.TestCase):  # 6/6
         self.assertEqual(result, self.data_to_validate)
 
 
-class TestMethodValidateFileData(unittest.TestCase):  # _/4
+class TestMethodValidateFileData(unittest.TestCase):  # 4/4
     """Method under test: validate_file_data
     Number of TestCases: 4
-    Done TestCases: 0
+    Done TestCases: 4
     """
 
     def setUp(self):
@@ -460,7 +460,18 @@ class TestMethodValidateFileData(unittest.TestCase):  # _/4
 
     def test_returns_true_if_all_records_are_valid(self):
         """expected behavior: Returns True if all records in the file are valid according to the defined schema. No exception is raised."""
-        pass
+        self.test_file = self.test_json_file_path
+
+        self.test_file_data = [{"service": "loan", "enabled": True}]
+
+        with self.test_file.open("w", encoding="utf-8") as f:
+            json.dump(
+                self.test_file_data, f, ensure_ascii=True, indent=4, sort_keys=True
+            )
+
+        result = self.validation_service.validate_file_data()
+
+        self.assertTrue(result)
 
 
 # -------------------------
