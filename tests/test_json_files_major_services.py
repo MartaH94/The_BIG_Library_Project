@@ -376,7 +376,14 @@ class TestMethodValidateAgainstSchema(unittest.TestCase):  # _/6
 
     def test_raises_validation_error_if_field_type_is_wrong(self):
         """expected behavior: Raises exc.ValidationError in case the data to validate has wrong data type for field(s) defined in schema"""
-        pass
+        self.data_to_validate = {"service": 123455, "enabled": "True"}
+
+        with self.assertRaises(exc.ValidationError) as cm:
+            self.validation_service.validate_against_schema(
+                self.data_to_validate, self.test_schema
+            )
+
+        self.assertIn("Wrong type of data.", str(cm.exception))
 
     def test_returns_data_if_schema_matches(self):
         """expected behavior: Returns the data if it matches the schema. No exception is raised."""
