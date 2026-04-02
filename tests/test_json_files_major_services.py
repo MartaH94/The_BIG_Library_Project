@@ -18,6 +18,7 @@ import tempfile
 import unittest
 from datetime import datetime
 from pathlib import Path
+from unittest.mock import patch
 
 import exceptions as exc
 import utils.config as config
@@ -567,6 +568,20 @@ class TestMethodCreateBackupFile(unittest.TestCase):  # 0/4
     def setUp(self):
         self.temporary_dir = tempfile.TemporaryDirectory()
         self.temporary_dir_path = Path(self.temporary_dir.name)
+
+        self.test_json_file_path = self.temporary_dir_path / "test_file.json"
+        self.test_file_data = [{"service": "loan", "enabled": True}]
+
+        with self.test_json_file_path.open("w", encoding="utf-8") as f:
+            json.dump(
+                self.test_file_data, f, ensure_ascii=False, indent=4, sort_keys=True
+            )
+
+        self.test_schema = {"service": str, "enabled": bool}
+
+        self.create_backup_service = JsonFilesService(
+            self.test_json_file_path, schema=self.test_schema
+        )
 
     def tearDown(self):
         self.temporary_dir.cleanup()
