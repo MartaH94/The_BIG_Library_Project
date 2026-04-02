@@ -444,7 +444,19 @@ class TestMethodValidateFileData(unittest.TestCase):  # _/4
 
     def test_raises_validation_error_if_record_does_not_match_schema(self):
         """expected behavior: Raises exc.ValidationError in case the file to validate contains record(s) that do not match the defined schema. Each record in the file should conform to the schema to be valid."""
-        pass
+        self.test_file = self.test_json_file_path
+
+        self.test_file_data = [{"service": 123456, "enabled": "True"}]
+
+        with self.test_file.open("w", encoding="utf-8") as f:
+            json.dump(
+                self.test_file_data, f, ensure_ascii=True, indent=4, sort_keys=True
+            )
+
+        with self.assertRaises(exc.ValidationError) as cm:
+            self.validation_service.validate_file_data()
+
+        self.assertIn("Wrong type of data", str(cm.exception))
 
     def test_returns_true_if_all_records_are_valid(self):
         """expected behavior: Returns True if all records in the file are valid according to the defined schema. No exception is raised."""
