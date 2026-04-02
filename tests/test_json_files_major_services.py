@@ -19,6 +19,7 @@ import unittest
 from pathlib import Path
 
 import exceptions as exc
+import utils.config as config
 from database.json_files_major_services import JsonFilesService
 
 
@@ -494,7 +495,14 @@ class TestMethodGetOrCreateBackupDir(unittest.TestCase):  # 0/2
 
     def test_creates_backup_directory_if_missing(self):
         """expected behavior: get_or_create_backup_dir creates a backup directory if it doesn't exist and returns the path to the created directory. The method should ensure that the backup directory is created successfully and is ready for use."""
-        pass
+        self.expected_backup_dir = (
+            config.BACKUP_FILES_DIRECTORY / self.test_json_file_path.stem
+        )
+
+        result = self.backup_files_service.get_or_create_backup_dir()
+
+        self.assertTrue(self.expected_backup_dir.exists())
+        self.assertEqual(result, self.expected_backup_dir)
 
     def test_returns_existing_backup_directory(self):
         """expected behavior: get_or_create_backup_dir returns the path to the existing backup directory if it already exists. The method should recognize that the backup directory is already present and return its path without attempting to create a new one."""
