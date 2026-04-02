@@ -342,7 +342,13 @@ class TestMethodValidateAgainstSchema(unittest.TestCase):  # 6
 
     def test_raises_validation_error_if_schema_is_empty(self):
         """expected behavior: Raises exc.ValidationError in case the schema to validate against is missing or it's an empty value"""
-        pass
+        self.data_to_validate = ""
+        with self.assertRaises(exc.ValidationError) as cm:
+            self.validation_service.validate_against_schema(
+                self.data_to_validate, self.test_schema
+            )
+
+        self.assertIn("Data to validate is missing", str(cm.exception))
 
     def test_raises_validation_error_if_data_is_not_dict(self):
         """expected behavior: Raises exc.ValidationError in case the data to validate is not a type of dict"""
