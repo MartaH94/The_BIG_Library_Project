@@ -269,7 +269,11 @@ class TestMethodAppendDataToFile(unittest.TestCase):  # 4
 
     def test_raises_validation_error_if_data_is_none(self):
         """expected behavior: Raises exc.ValidationError in case the data to append in file is missing or it's an empty value"""
-        pass
+        self.data_to_append = None
+        with self.assertRaises(exc.ValidationError) as cm:
+            self.append_data_service.append_data_to_file(self.data_to_append)
+
+        self.assertIn("Cannot append empty data", str(cm.exception))
 
     def test_raises_validation_error_if_data_is_not_dict(self):
         """expected behavior: Raises exc.ValidationError in case the data to append in file is not a type of dict"""
