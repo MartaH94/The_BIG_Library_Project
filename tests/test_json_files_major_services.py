@@ -395,7 +395,7 @@ class TestMethodValidateAgainstSchema(unittest.TestCase):  # 6/6
         self.assertEqual(result, self.data_to_validate)
 
 
-class TestMethodValidateFileData(unittest.TestCase):  # 4
+class TestMethodValidateFileData(unittest.TestCase):  # _/4
     """Method under test: validate_file_data
     Number of TestCases: 4
     Done TestCases: 0
@@ -418,7 +418,13 @@ class TestMethodValidateFileData(unittest.TestCase):  # 4
 
     def test_raises_validation_error_if_file_is_empty(self):
         """expected behavior: Raises exc.ValidationError in case the file to validate is empty. The file should contain a list of records to be valid."""
-        pass
+        self.test_file = self.test_json_file_path
+        self.test_file.write_text("", encoding="utf-8")
+
+        with self.assertRaises(exc.ValidationError) as cm:
+            self.validation_service.validate_file_data()
+
+        self.assertIn("Cannot validate fields in an empty file", str(cm.exception))
 
     def test_raises_validation_error_if_record_is_not_dict(self):
         """expected behavior: Raises exc.ValidationError in case the file to validate contains record(s) that are not of type dict. Each record in the file should be a dict to be valid."""
