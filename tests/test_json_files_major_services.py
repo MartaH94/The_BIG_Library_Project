@@ -387,7 +387,12 @@ class TestMethodValidateAgainstSchema(unittest.TestCase):  # _/6
 
     def test_returns_data_if_schema_matches(self):
         """expected behavior: Returns the data if it matches the schema. No exception is raised."""
-        pass
+        self.data_to_validate = {"service": "reserve", "enabled": True}
+        result = self.validation_service.validate_against_schema(
+            self.data_to_validate, self.test_schema
+        )
+
+        self.assertEqual(result, self.data_to_validate)
 
 
 class TestMethodValidateFileData(unittest.TestCase):  # 4
