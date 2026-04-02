@@ -485,6 +485,9 @@ class TestMethodGetOrCreateBackupDir(unittest.TestCase):  # 0/2
     def setUp(self):
         self.temporary_dir = tempfile.TemporaryDirectory()
         self.temporary_dir_path = Path(self.temporary_dir.name)
+        self.test_json_file_path = self.temporary_dir_path / "test_file.json"
+
+        self.backup_files_service = JsonFilesService(file_path=self.test_json_file_path)
 
     def tearDown(self):
         self.temporary_dir.cleanup()
