@@ -405,6 +405,14 @@ class TestMethodValidateFileData(unittest.TestCase):  # 4
         self.temporary_dir = tempfile.TemporaryDirectory()
         self.temporary_dir_path = Path(self.temporary_dir.name)
 
+        self.test_json_file_path = self.temporary_dir_path / "test_file.json"
+
+        self.test_schema = {"service": str, "enabled": bool}
+
+        self.validation_service = JsonFilesService(
+            file_path=self.test_json_file_path, schema=self.test_schema
+        )
+
     def tearDown(self):
         self.temporary_dir.cleanup()
 
