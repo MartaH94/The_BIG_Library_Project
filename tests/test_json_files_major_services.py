@@ -569,6 +569,15 @@ class TestMethodCreateBackupFile(unittest.TestCase):  # 0/4
         self.temporary_dir = tempfile.TemporaryDirectory()
         self.temporary_dir_path = Path(self.temporary_dir.name)
 
+        self.test_backup_root_directory = self.temporary_dir_path / "backups"
+
+        """ Patching the backup directory path in config to use the temporary directory for testing """
+        self.backup_directory_patch = patch(
+            "utils.config.BACKUP_FILES_DIRECTORY", self.test_backup_root_directory
+        )
+        self.backup_directory_patch.start()
+
+        """ Preparing test file with valid data to create backup from the file. The file must exist and have valid data to create backup successfully."""
         self.test_json_file_path = self.temporary_dir_path / "test_file.json"
         self.test_file_data = [{"service": "loan", "enabled": True}]
 
@@ -579,11 +588,13 @@ class TestMethodCreateBackupFile(unittest.TestCase):  # 0/4
 
         self.test_schema = {"service": str, "enabled": bool}
 
+        """ service under test"""
         self.create_backup_service = JsonFilesService(
             self.test_json_file_path, schema=self.test_schema
         )
 
     def tearDown(self):
+        self.backup_directory_patch.stop()
         self.temporary_dir.cleanup()
 
     def test_creates_backup_file_and_returns_path(self):
