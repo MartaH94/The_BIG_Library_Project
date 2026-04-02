@@ -517,10 +517,10 @@ class TestMethodGetOrCreateBackupDir(unittest.TestCase):  # 2/2
         self.assertEqual(result, self.existing_backup_dir)
 
 
-class TestMethodBuildBackupFileName(unittest.TestCase):  # 1/3
+class TestMethodBuildBackupFileName(unittest.TestCase):  # 3/3
     """Method under test: build_backup_file_name
     Number of TestCases: 3
-    Done TestCases: 1
+    Done TestCases: 3
     """
 
     def setUp(self):
@@ -558,7 +558,7 @@ class TestMethodBuildBackupFileName(unittest.TestCase):  # 1/3
         self.assertTrue(result.endswith(".json"))
 
 
-class TestMethodCreateBackupFile(unittest.TestCase):  # 4
+class TestMethodCreateBackupFile(unittest.TestCase):  # 0/4
     """Method under test: create_backup_file
     Number of TestCases: 4
     Done TestCases: 0
@@ -593,7 +593,7 @@ class TestMethodCreateBackupFile(unittest.TestCase):  # 4
 # -------------------------
 
 
-class TestMethodRemoveFromFile(unittest.TestCase):  # 5
+class TestMethodRemoveFromFile(unittest.TestCase):  # 0/5
     """Method under test: remove_from_file
     Number of TestCases: 5
     Done TestCases: 0
@@ -627,7 +627,7 @@ class TestMethodRemoveFromFile(unittest.TestCase):  # 5
         pass
 
 
-class TestMethodUpdateDataInFile(unittest.TestCase):  # 5
+class TestMethodUpdateDataInFile(unittest.TestCase):  # 0/5
     """Method under test: update_data_in_file
     Number of TestCases: 5
     Done TestCases: 0
