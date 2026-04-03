@@ -824,7 +824,20 @@ class TestMethodUpdateDataInFile(unittest.TestCase):  # 0/5
 
     def test_raises_database_error_if_item_not_found_in_records(self):
         """expected behavior: Raises exc.DatabaseError in case the item provided for update is not found in the existing records in the file. The method should search for the item in the file based on the provided data, and if the item is not found, it should raise an appropriate error to indicate that the update operation cannot be performed."""
-        pass
+        self.test_schema = {
+            "service": str,
+            "enabled": bool,
+            "status": str,
+        }
+        self.test_item_to_update = "status"
+        self.new_value = "active"
+
+        update_service = JsonFilesService(self.test_json_file_path, self.test_schema)
+
+        with self.assertRaises(exc.DatabaseError) as cm:
+            update_service.update_data_in_file(self.test_item_to_update, self.new_value)
+
+        self.assertIn("No matching element", str(cm.exception))
 
     def test_updates_existing_field_and_saves_file(self):
         """expected behavior: Updates an existing field in the item with new data and saves the updated file. The method should successfully identify the item to update, apply the new data to the existing field, and then save the changes to the file, ensuring that the file reflects the updated information for the specified item."""
