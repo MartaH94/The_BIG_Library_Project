@@ -726,7 +726,15 @@ class TestMethodRemoveFromFile(unittest.TestCase):  # 0/5
 
     def test_raises_database_error_if_no_matching_record_found(self):
         """expected behavior: Raises exc.DatabaseError in case no record matching the provided key name and value is found in the file. The method should search for records based on the provided key and value, and if no matching record is found, it should raise an appropriate error to indicate that the removal operation cannot be performed."""
-        pass
+        self.test_key_name = "service"
+        self.test_key_value = "The Iliad"
+
+        with self.assertRaises(exc.DatabaseError) as cm:
+            self.remove_service.remove_from_file(
+                self.test_key_name, self.test_key_value
+            )
+
+        self.assertIn("No matching elements to key", str(cm.exception))
 
     def test_removes_matching_records_and_saves_file(self):
         """expected behavior: Removes all records matching the provided key name and value from the file and saves the updated file. The method should successfully identify and remove the matching records, and then save the changes to the file, ensuring that the file reflects the removal of the specified records."""
