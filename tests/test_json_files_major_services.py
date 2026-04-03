@@ -668,6 +668,22 @@ class TestMethodRemoveFromFile(unittest.TestCase):  # 0/5
         self.temporary_dir = tempfile.TemporaryDirectory()
         self.temporary_dir_path = Path(self.temporary_dir.name)
 
+        self.test_json_file_path = self.temporary_dir_path / "test_file.json"
+
+        self.test_file_data = [
+            {"service": "loan", "enabled": True},
+            {"service": "return", "enabled": False},
+        ]
+
+        with self.test_json_file_path.open("w", encoding="utf-8") as f:
+            json.dump(self.test_file_data, f, ensure_ascii=False, indent=4)
+
+        self.test_schema = {"service": str, "enabled": bool}
+
+        self.remove_service = JsonFilesService(
+            self.test_json_file_path, schema=self.test_schema
+        )
+
     def tearDown(self):
         self.temporary_dir.cleanup()
 
