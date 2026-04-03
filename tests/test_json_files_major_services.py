@@ -714,7 +714,15 @@ class TestMethodRemoveFromFile(unittest.TestCase):  # 0/5
 
     def test_raises_invalid_field_error_if_key_not_in_schema(self):
         """expected behavior: Raises exc.InvalidFieldError in case the key name provided for removal is not defined in the schema. The method should validate the key name against the schema and ensure that it is a valid field for identifying records to remove."""
-        pass
+        self.test_key_name = "book_title"
+        self.test_key_value = "The Iliad"
+
+        with self.assertRaises(exc.InvalidFieldError) as cm:
+            self.remove_service.remove_from_file(
+                self.test_key_name, self.test_key_value
+            )
+
+        self.assertIn("is not present in file schema", str(cm.exception))
 
     def test_raises_database_error_if_no_matching_record_found(self):
         """expected behavior: Raises exc.DatabaseError in case no record matching the provided key name and value is found in the file. The method should search for records based on the provided key and value, and if no matching record is found, it should raise an appropriate error to indicate that the removal operation cannot be performed."""
