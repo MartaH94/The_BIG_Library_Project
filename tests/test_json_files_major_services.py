@@ -8,7 +8,7 @@ ________________________________________________________
 Test classes: 11
 Test cases total: 44
 
-current status: in progress
+current status: DONE! :)
 Total number of done test cases: 44/44
 
 """
@@ -30,7 +30,7 @@ from database.json_files_major_services import JsonFilesService
 # -------------------------
 # File I/O helpers | Test cases: to do: 11
 # -------------------------
-class TestMethodFileExistsChecking(unittest.TestCase):  # 3/3
+class TestJsonFileServiceFileExistsChecking(unittest.TestCase):  # 3/3
     """Method under test: file_exists_checking
     Number of TestCases: 4
     Done TestCases: 4
@@ -91,7 +91,7 @@ class TestMethodFileExistsChecking(unittest.TestCase):  # 3/3
         self.assertEqual(before_content, after_content)
 
 
-class TestMethodLoadJsonFile(unittest.TestCase):  # 4/4
+class TestJsonFileServiceLoadJsonFile(unittest.TestCase):  # 4/4
     """Method under test: load_json_file
     Number of TestCases: 4
     Done TestCases: 4
@@ -165,7 +165,7 @@ class TestMethodLoadJsonFile(unittest.TestCase):  # 4/4
         self.assertIn("File should be a list", str(cm.exception))
 
 
-class TestMethodWriteJsonData(unittest.TestCase):  # 4/4
+class TestJsonFileServiceWriteJsonData(unittest.TestCase):  # 4/4
     """Method under test: write_json_data
     Number of TestCases: 4
     Done TestCases: 4
@@ -238,7 +238,7 @@ class TestMethodWriteJsonData(unittest.TestCase):  # 4/4
 # -------------------------
 
 
-class TestMethodAppendDataToFile(unittest.TestCase):  # 4/4
+class TestJsonFileServiceAppendDataToFile(unittest.TestCase):  # 4/4
     """Method under test: append_data_to_file
     Number of TestCases: 4
     Done TestCases: 4
@@ -307,7 +307,7 @@ class TestMethodAppendDataToFile(unittest.TestCase):  # 4/4
 # -------------------------
 
 
-class TestMethodValidateAgainstSchema(unittest.TestCase):  # 6/6
+class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/6
     """Method under test: validate_against_schema
     Number of TestCases: 6
     Done TestCases: 6
@@ -397,7 +397,7 @@ class TestMethodValidateAgainstSchema(unittest.TestCase):  # 6/6
         self.assertEqual(result, self.data_to_validate)
 
 
-class TestMethodValidateFileData(unittest.TestCase):  # 4/4
+class TestJsonFileServiceValidateFileData(unittest.TestCase):  # 4/4
     """Method under test: validate_file_data
     Number of TestCases: 4
     Done TestCases: 4
@@ -481,7 +481,7 @@ class TestMethodValidateFileData(unittest.TestCase):  # 4/4
 # -------------------------
 
 
-class TestMethodGetOrCreateBackupDir(unittest.TestCase):  # 2/2
+class TestJsonFileServiceGetOrCreateBackupDir(unittest.TestCase):  # 2/2
     """Method under test: get_or_create_backup_dir
     Number of TestCases: 2
     Done TestCases: 2
@@ -520,7 +520,7 @@ class TestMethodGetOrCreateBackupDir(unittest.TestCase):  # 2/2
         self.assertEqual(result, self.existing_backup_dir)
 
 
-class TestMethodBuildBackupFileName(unittest.TestCase):  # 3/3
+class TestJsonFileServiceBuildBackupFileName(unittest.TestCase):  # 3/3
     """Method under test: build_backup_file_name
     Number of TestCases: 3
     Done TestCases: 3
@@ -561,7 +561,7 @@ class TestMethodBuildBackupFileName(unittest.TestCase):  # 3/3
         self.assertTrue(result.endswith(".json"))
 
 
-class TestMethodCreateBackupFile(unittest.TestCase):  # 4/4
+class TestJsonFileServiceCreateBackupFile(unittest.TestCase):  # 4/4
     """Method under test: create_backup_file
     Number of TestCases: 4
     Done TestCases: 4
@@ -658,7 +658,7 @@ class TestMethodCreateBackupFile(unittest.TestCase):  # 4/4
 # -------------------------
 
 
-class TestMethodRemoveFromFile(unittest.TestCase):  # 5/5
+class TestJsonFileServiceRemoveFromFile(unittest.TestCase):  # 5/5
     """Method under test: remove_from_file
     Number of TestCases: 5
     Done TestCases: 5
@@ -754,7 +754,7 @@ class TestMethodRemoveFromFile(unittest.TestCase):  # 5/5
         self.assertNotIn({"service": "login", "enabled": True}, updated_file_content)
 
 
-class TestMethodUpdateDataInFile(unittest.TestCase):  # 5/5
+class TestJsonFileServiceUpdateDataInFile(unittest.TestCase):  # 5/5
     """Method under test: update_data_in_file
     Number of TestCases: 5
     Done TestCases: 5
