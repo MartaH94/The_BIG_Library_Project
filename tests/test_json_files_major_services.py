@@ -658,10 +658,10 @@ class TestMethodCreateBackupFile(unittest.TestCase):  # 4/4
 # -------------------------
 
 
-class TestMethodRemoveFromFile(unittest.TestCase):  # 0/5
+class TestMethodRemoveFromFile(unittest.TestCase):  # 5/5
     """Method under test: remove_from_file
     Number of TestCases: 5
-    Done TestCases: 0
+    Done TestCases: 5
     """
 
     def setUp(self):
@@ -763,6 +763,23 @@ class TestMethodUpdateDataInFile(unittest.TestCase):  # 0/5
     def setUp(self):
         self.temporary_dir = tempfile.TemporaryDirectory()
         self.temporary_dir_path = Path(self.temporary_dir.name)
+
+        self.test_json_file_path = self.temporary_dir_path / "test_file.json"
+
+        self.test_file_data = [
+            {"service": "loan", "enabled": True},
+            {"service": "return", "enabled": False},
+            {"service": "login", "enabled": True},
+        ]
+
+        with self.test_json_file_path.open("w", encoding="utf-8") as f:
+            json.dump(self.test_file_data, f, ensure_ascii=False, indent=4)
+
+        self.test_schema = {"service": str, "enabled": bool}
+
+        self.update_service = JsonFilesService(
+            self.test_json_file_path, schema=self.test_schema
+        )
 
     def tearDown(self):
         self.temporary_dir.cleanup()
