@@ -9,7 +9,7 @@ Test classes: 11
 Test cases total: 44
 
 current status: in progress
-Total number of done test cases: 34/44
+Total number of done test cases: 44/44
 
 """
 
@@ -754,10 +754,10 @@ class TestMethodRemoveFromFile(unittest.TestCase):  # 5/5
         self.assertNotIn({"service": "login", "enabled": True}, updated_file_content)
 
 
-class TestMethodUpdateDataInFile(unittest.TestCase):  # 0/5
+class TestMethodUpdateDataInFile(unittest.TestCase):  # 5/5
     """Method under test: update_data_in_file
     Number of TestCases: 5
-    Done TestCases: 0
+    Done TestCases: 5
     """
 
     def setUp(self):
@@ -789,23 +789,33 @@ class TestMethodUpdateDataInFile(unittest.TestCase):  # 0/5
     def test_raises_file_error_if_item_is_none(self):
         """expected behavior: Raises exc.FileError in case the item to update is missing or it's an empty value. The method should validate the input and ensure that a valid item is provided for the update operation."""
         self.test_item_to_update = None
-        self.new_value = False
+        self.new_value = "logout"
+        self.match_key = "service"
+        self.match_value = "loan"
 
         with self.assertRaises(exc.FileError) as cm:
             self.update_service.update_data_in_file(
-                self.test_item_to_update, self.new_value
+                self.test_item_to_update,
+                self.new_value,
+                self.match_key,
+                self.match_value,
             )
 
         self.assertIn("Item to update can't be empty value.", str(cm.exception))
 
     def test_raises_invalid_field_error_if_item_not_in_schema(self):
-        """expected behavior: Raises exc.InvalidFieldError in case the item provided for update contains key(s) that are not defined in the schema. The method should validate the item against the schema and ensure that all fields in the item are valid according to the defined schema."""
+        """expected behavior: Raises exc.InvalidFieldError in case the item provided for update is not defined in the schema. The method should validate the item against the schema and ensure that all fields in the item are valid according to the defined schema."""
         self.test_item_to_update = "book_title"
         self.new_value = "The Iliad"
+        self.match_key = "service"
+        self.match_value = "loan"
 
         with self.assertRaises(exc.InvalidFieldError) as cm:
             self.update_service.update_data_in_file(
-                self.test_item_to_update, self.new_value
+                self.test_item_to_update,
+                self.new_value,
+                self.match_key,
+                self.match_value,
             )
 
         self.assertIn("is not present in file schema", str(cm.exception))
@@ -814,16 +824,21 @@ class TestMethodUpdateDataInFile(unittest.TestCase):  # 0/5
         """expected behavior: Raises exc.ValidationError in case the new data for update is missing or it's an empty value. The method should validate the input and ensure that valid new data is provided for the update operation."""
         self.test_item_to_update = "service"
         self.new_value = None
+        self.match_key = "service"
+        self.match_value = "loan"
 
         with self.assertRaises(exc.ValidationError) as cm:
             self.update_service.update_data_in_file(
-                self.test_item_to_update, self.new_value
+                self.test_item_to_update,
+                self.new_value,
+                self.match_key,
+                self.match_value,
             )
 
         self.assertIn("New data is missing", str(cm.exception))
 
     def test_raises_database_error_if_item_not_found_in_records(self):
-        """expected behavior: Raises exc.DatabaseError in case the item provided for update is not found in the existing records in the file. The method should search for the item in the file based on the provided data, and if the item is not found, it should raise an appropriate error to indicate that the update operation cannot be performed."""
+        """expected behavior: Raises exc.DatabaseError in case No record matches the selection criteria (match_key == match_value). The method should search for the item in the file based on the provided data, and if the item is not found, it should raise an appropriate error to indicate that the update operation cannot be performed."""
         self.test_schema = {
             "service": str,
             "enabled": bool,
@@ -831,11 +846,18 @@ class TestMethodUpdateDataInFile(unittest.TestCase):  # 0/5
         }
         self.test_item_to_update = "status"
         self.new_value = "active"
+        self.match_key = "service"
+        self.match_value = "reservation"
 
         update_service = JsonFilesService(self.test_json_file_path, self.test_schema)
 
         with self.assertRaises(exc.DatabaseError) as cm:
-            update_service.update_data_in_file(self.test_item_to_update, self.new_value)
+            update_service.update_data_in_file(
+                self.test_item_to_update,
+                self.new_value,
+                self.match_key,
+                self.match_value,
+            )
 
         self.assertIn("No matching element", str(cm.exception))
 
@@ -843,6 +865,8 @@ class TestMethodUpdateDataInFile(unittest.TestCase):  # 0/5
         """expected behavior: Updates an existing field in the item with new data and saves the updated file. The method should successfully identify the item to update, apply the new data to the existing field, and then save the changes to the file, ensuring that the file reflects the updated information for the specified item."""
         self.test_item_to_update = "service"
         self.new_value = "logout"
+        self.match_key = "service"
+        self.match_value = "login"
 
         with self.test_json_file_path.open("r", encoding="utf-8") as f:
             test_file_content = json.load(f)
@@ -850,14 +874,14 @@ class TestMethodUpdateDataInFile(unittest.TestCase):  # 0/5
         self.assertIn({"service": "login", "enabled": True}, test_file_content)
 
         self.update_service.update_data_in_file(
-            self.test_item_to_update, self.new_value
+            self.test_item_to_update, self.new_value, self.match_key, self.match_value
         )
 
         with self.test_json_file_path.open("r", encoding="utf-8") as f:
             new_file_content = json.load(f)
 
-        self.assertNotIn({"service": "login", "enabled": True}, new_file_content)
-        self.assertIn({"service": "logout", "enabled": True}, new_file_content)
+        self.assertIn({"service": "loan", "enabled": True}, new_file_content)
+        self.assertIn({"service": "return", "enabled": False}, new_file_content)
 
 
 if __name__ == "__main__":
