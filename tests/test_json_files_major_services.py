@@ -738,7 +738,20 @@ class TestMethodRemoveFromFile(unittest.TestCase):  # 0/5
 
     def test_removes_matching_records_and_saves_file(self):
         """expected behavior: Removes all records matching the provided key name and value from the file and saves the updated file. The method should successfully identify and remove the matching records, and then save the changes to the file, ensuring that the file reflects the removal of the specified records."""
-        pass
+        self.test_key_name = "service"
+        self.test_key_value = "login"
+
+        with self.test_json_file_path.open("r", encoding="utf-8") as f:
+            test_file_content = json.load(f)
+
+        self.assertIn({"service": "login", "enabled": True}, test_file_content)
+
+        self.remove_service.remove_from_file(self.test_key_name, self.test_key_value)
+
+        with self.test_json_file_path.open("r", encoding="utf-8") as f:
+            updated_file_content = json.load(f)
+
+        self.assertNotIn({"service": "login", "enabled": True}, updated_file_content)
 
 
 class TestMethodUpdateDataInFile(unittest.TestCase):  # 0/5
