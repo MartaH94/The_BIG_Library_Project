@@ -631,6 +631,13 @@ class TestMethodCreateBackupFile(unittest.TestCase):  # 0/4
             config.BACKUP_FILES_DIRECTORY / self.test_json_file_path.stem
         )
 
+        self.assertFalse(self.expected_backup_directory_path.exists())
+
+        self.test_backup_file_path = self.create_backup_service.create_backup_file()
+
+        self.assertTrue(self.expected_backup_directory_path.exists())
+        self.assertTrue(self.expected_backup_directory_path.is_dir())
+
         self.assertEqual(
             self.test_backup_file_path.parent, self.expected_backup_directory_path
         )
