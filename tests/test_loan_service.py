@@ -1,1 +1,0 @@
-# file for unit tests: loan service and loan handling
