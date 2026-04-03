@@ -673,6 +673,7 @@ class TestMethodRemoveFromFile(unittest.TestCase):  # 0/5
         self.test_file_data = [
             {"service": "loan", "enabled": True},
             {"service": "return", "enabled": False},
+            {"service": "login", "enabled": True},
         ]
 
         with self.test_json_file_path.open("w", encoding="utf-8") as f:
@@ -689,7 +690,15 @@ class TestMethodRemoveFromFile(unittest.TestCase):  # 0/5
 
     def test_raises_validation_error_if_key_name_is_none(self):
         """expected behavior: Raises exc.ValidationError in case the key name to identify record(s) for removal is missing or it's an empty value. The method should validate the input and ensure that a valid key name is provided for the removal operation."""
-        pass
+        self.test_key_name = None
+        self.test_key_value = "return"
+
+        with self.assertRaises(exc.ValidationError) as cm:
+            self.remove_service.remove_from_file(
+                self.test_key_name, self.test_key_value
+            )
+
+        self.assertIn("Key name is missing", str(cm.exception))
 
     def test_raises_validation_error_if_key_value_is_none(self):
         """expected behavior: Raises exc.ValidationError in case the key value to identify record(s) for removal is missing or it's an empty value. The method should validate the input and ensure that a valid key value is provided for the removal operation."""
