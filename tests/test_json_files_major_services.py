@@ -812,7 +812,15 @@ class TestMethodUpdateDataInFile(unittest.TestCase):  # 0/5
 
     def test_raises_validation_error_if_new_data_is_none(self):
         """expected behavior: Raises exc.ValidationError in case the new data for update is missing or it's an empty value. The method should validate the input and ensure that valid new data is provided for the update operation."""
-        pass
+        self.test_item_to_update = "service"
+        self.new_value = None
+
+        with self.assertRaises(exc.ValidationError) as cm:
+            self.update_service.update_data_in_file(
+                self.test_item_to_update, self.new_value
+            )
+
+        self.assertIn("New data is missing", str(cm.exception))
 
     def test_raises_database_error_if_item_not_found_in_records(self):
         """expected behavior: Raises exc.DatabaseError in case the item provided for update is not found in the existing records in the file. The method should search for the item in the file based on the provided data, and if the item is not found, it should raise an appropriate error to indicate that the update operation cannot be performed."""
