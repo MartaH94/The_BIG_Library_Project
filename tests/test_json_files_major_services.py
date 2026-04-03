@@ -9,7 +9,7 @@ Test classes: 11
 Test cases total: 44
 
 current status: in progress
-Total number of done test cases: 25/44
+Total number of done test cases: 34/44
 
 """
 
@@ -561,10 +561,10 @@ class TestMethodBuildBackupFileName(unittest.TestCase):  # 3/3
         self.assertTrue(result.endswith(".json"))
 
 
-class TestMethodCreateBackupFile(unittest.TestCase):  # 0/4
+class TestMethodCreateBackupFile(unittest.TestCase):  # 4/4
     """Method under test: create_backup_file
     Number of TestCases: 4
-    Done TestCases: 0
+    Done TestCases: 4
     """
 
     def setUp(self):
@@ -645,7 +645,12 @@ class TestMethodCreateBackupFile(unittest.TestCase):  # 0/4
     def test_backup_file_name_contains_alias_stem_and_timestamp(self):
         """expected behavior: create_backup_file generates a backup file name that includes the alias stem and a timestamp. The generated file name should follow the expected format and contain the relevant information to identify the backup, including the alias stem and the timestamp."""
         self.test_backup_file_path = self.create_backup_service.create_backup_file()
+        self.backup_file_name = self.test_backup_file_path.name
+
         self.assertTrue(self.test_backup_file_path.name.endswith(".json"))
+        self.assertIn(config.PROJECT_ALIAS, self.backup_file_name)
+
+        self.assertIn(self.test_json_file_path.stem, self.backup_file_name)
 
 
 # -------------------------
