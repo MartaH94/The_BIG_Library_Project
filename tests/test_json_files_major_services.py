@@ -601,16 +601,32 @@ class TestMethodCreateBackupFile(unittest.TestCase):  # 0/4
 
     def test_creates_backup_file_and_returns_path(self):
         """expected behavior: create_backup_file creates a backup file with the correct name and returns the path to the created backup file. The method should successfully create the backup file and provide the correct path for reference."""
+
         self.test_backup_file_path = self.create_backup_service.create_backup_file()
+        """ calling method under the test and storing the returned value"""
 
         self.assertIsInstance(self.test_backup_file_path, Path)
+        """ confirming that the method create_backup_file returns a Path"""
 
         self.assertTrue(self.test_backup_file_path.exists())
+        """ veryfing the the returned path actually exists in the file system"""
 
         self.assertTrue(self.test_backup_file_path.is_file())
+        """ confirming that the returned path is a file, not a directory"""
 
         self.assertTrue(self.test_json_file_path.exists())
+        """ confirming that the source file was not removed or overwritten during the backup file creation process"""
 
+    def test_backup_file_contains_same_data_as_source_file(self):
+        """expected behavior: create_backup_file creates a backup file that contains the same data as the source file. The method should ensure that the content of the backup file matches the content of the source file, providing an accurate copy for backup purposes."""
+        self.test_backup_file_path = self.create_backup_service.create_backup_file()
+        with self.test_backup_file_path.open("r", encoding="utf-8") as f:
+            backup_data = json.load(f)
+
+        self.assertEqual(backup_data, self.test_file_data)
+
+    def test_creates_backup_directory_if_missing(self):
+        """expected behavior: create_backup_file creates a backup directory if it doesn't exist before creating the backup file. The method should ensure that the backup directory is created successfully if it is missing, allowing for proper organization of backup files."""
         self.expected_backup_directory_path = (
             config.BACKUP_FILES_DIRECTORY / self.test_json_file_path.stem
         )
@@ -619,24 +635,10 @@ class TestMethodCreateBackupFile(unittest.TestCase):  # 0/4
             self.test_backup_file_path.parent, self.expected_backup_directory_path
         )
 
-        self.assertTrue(self.test_backup_file_path.name.endswith(".json"))
-
-        with self.test_backup_file_path.open("r", encoding="utf-8") as f:
-            backup_data = json.load(f)
-
-        self.assertEqual(backup_data, self.test_file_data)
-
-    def test_backup_file_contains_same_data_as_source_file(self):
-        """expected behavior: create_backup_file creates a backup file that contains the same data as the source file. The method should ensure that the content of the backup file matches the content of the source file, providing an accurate copy for backup purposes."""
-        pass
-
-    def test_creates_backup_directory_if_missing(self):
-        """expected behavior: create_backup_file creates a backup directory if it doesn't exist before creating the backup file. The method should ensure that the backup directory is created successfully if it is missing, allowing for proper organization of backup files."""
-        pass
-
     def test_backup_file_name_contains_alias_stem_and_timestamp(self):
         """expected behavior: create_backup_file generates a backup file name that includes the alias stem and a timestamp. The generated file name should follow the expected format and contain the relevant information to identify the backup, including the alias stem and the timestamp."""
-        pass
+        self.test_backup_file_path = self.create_backup_service.create_backup_file()
+        self.assertTrue(self.test_backup_file_path.name.endswith(".json"))
 
 
 # -------------------------
