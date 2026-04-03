@@ -841,7 +841,23 @@ class TestMethodUpdateDataInFile(unittest.TestCase):  # 0/5
 
     def test_updates_existing_field_and_saves_file(self):
         """expected behavior: Updates an existing field in the item with new data and saves the updated file. The method should successfully identify the item to update, apply the new data to the existing field, and then save the changes to the file, ensuring that the file reflects the updated information for the specified item."""
-        pass
+        self.test_item_to_update = "service"
+        self.new_value = "logout"
+
+        with self.test_json_file_path.open("r", encoding="utf-8") as f:
+            test_file_content = json.load(f)
+
+        self.assertIn({"service": "login", "enabled": True}, test_file_content)
+
+        self.update_service.update_data_in_file(
+            self.test_item_to_update, self.new_value
+        )
+
+        with self.test_json_file_path.open("r", encoding="utf-8") as f:
+            new_file_content = json.load(f)
+
+        self.assertNotIn({"service": "login", "enabled": True}, new_file_content)
+        self.assertIn({"service": "logout", "enabled": True}, new_file_content)
 
 
 if __name__ == "__main__":
