@@ -702,7 +702,15 @@ class TestMethodRemoveFromFile(unittest.TestCase):  # 0/5
 
     def test_raises_validation_error_if_key_value_is_none(self):
         """expected behavior: Raises exc.ValidationError in case the key value to identify record(s) for removal is missing or it's an empty value. The method should validate the input and ensure that a valid key value is provided for the removal operation."""
-        pass
+        self.test_key_name = "service"
+        self.test_key_value = None
+
+        with self.assertRaises(exc.ValidationError) as cm:
+            self.remove_service.remove_from_file(
+                self.test_key_name, self.test_key_value
+            )
+
+        self.assertIn("Key value is missing", str(cm.exception))
 
     def test_raises_invalid_field_error_if_key_not_in_schema(self):
         """expected behavior: Raises exc.InvalidFieldError in case the key name provided for removal is not defined in the schema. The method should validate the key name against the schema and ensure that it is a valid field for identifying records to remove."""
