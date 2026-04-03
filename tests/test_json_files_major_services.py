@@ -773,7 +773,9 @@ class TestMethodUpdateDataInFile(unittest.TestCase):  # 0/5
         ]
 
         with self.test_json_file_path.open("w", encoding="utf-8") as f:
-            json.dump(self.test_file_data, f, ensure_ascii=False, indent=4)
+            json.dump(
+                self.test_file_data, f, ensure_ascii=False, indent=4, sort_keys=True
+            )
 
         self.test_schema = {"service": str, "enabled": bool}
 
@@ -786,7 +788,15 @@ class TestMethodUpdateDataInFile(unittest.TestCase):  # 0/5
 
     def test_raises_file_error_if_item_is_none(self):
         """expected behavior: Raises exc.FileError in case the item to update is missing or it's an empty value. The method should validate the input and ensure that a valid item is provided for the update operation."""
-        pass
+        self.test_item_to_update = None
+        self.new_value = False
+
+        with self.assertRaises(exc.FileError) as cm:
+            self.update_service.update_data_in_file(
+                self.test_item_to_update, self.new_value
+            )
+
+        self.assertIn("Item to update can't be empty value.", str(cm.exception))
 
     def test_raises_invalid_field_error_if_item_not_in_schema(self):
         """expected behavior: Raises exc.InvalidFieldError in case the item provided for update contains key(s) that are not defined in the schema. The method should validate the item against the schema and ensure that all fields in the item are valid according to the defined schema."""
