@@ -800,7 +800,15 @@ class TestMethodUpdateDataInFile(unittest.TestCase):  # 0/5
 
     def test_raises_invalid_field_error_if_item_not_in_schema(self):
         """expected behavior: Raises exc.InvalidFieldError in case the item provided for update contains key(s) that are not defined in the schema. The method should validate the item against the schema and ensure that all fields in the item are valid according to the defined schema."""
-        pass
+        self.test_item_to_update = "book_title"
+        self.new_value = "The Iliad"
+
+        with self.assertRaises(exc.InvalidFieldError) as cm:
+            self.update_service.update_data_in_file(
+                self.test_item_to_update, self.new_value
+            )
+
+        self.assertIn("is not present in file schema", str(cm.exception))
 
     def test_raises_validation_error_if_new_data_is_none(self):
         """expected behavior: Raises exc.ValidationError in case the new data for update is missing or it's an empty value. The method should validate the input and ensure that valid new data is provided for the update operation."""
