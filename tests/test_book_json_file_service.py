@@ -24,6 +24,11 @@ from database.json_files_major_services import JsonFilesService
 
 
 class TestBookJsonFileServiceGetBookData(unittest.TestCase):  # 0/3
+    """Method under test: get_book_data
+    Number of TestCases: 3
+    Done TestCases: 2
+    """
+
     def setUp(self):
         self.temporary_dir = tempfile.TemporaryDirectory()
         self.temporary_dir_path = Path(self.temporary_dir.name)
