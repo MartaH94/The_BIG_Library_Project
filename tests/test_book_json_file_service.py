@@ -6,10 +6,10 @@ Test for the file book_json_file_service.py
 ________________________________________________________
 
 Test classes: 5
-Test cases total: 19
+Test cases total: 18
 
 current status: in progress
-Total number of done test cases:
+Total number of done test cases: 3
 
 """
 
@@ -23,10 +23,10 @@ from database.book_json_file_service import BookJsonFileService
 from database.json_files_major_services import JsonFilesService
 
 
-class TestBookJsonFileServiceGetBookData(unittest.TestCase):  # 0/3
+class TestBookJsonFileServiceGetBookData(unittest.TestCase):  # 3/3
     """Method under test: get_book_data
     Number of TestCases: 3
-    Done TestCases: 2
+    Done TestCases: 3
     """
 
     def setUp(self):
@@ -73,7 +73,10 @@ class TestBookJsonFileServiceGetBookData(unittest.TestCase):  # 0/3
 
     def test_raises_book_not_found_error_when_book_id_not_found(self):
         """expected behavior: raises BookNotFoundError when book_id is not found in the database"""
-        pass
+        with self.assertRaises(exc.BookNotFoundError) as cm:
+            self.book_service.get_book_data(1006)
+
+        self.assertIn("not exists in database", str(cm.exception))
 
 
 class TestBookJsonFileServiceAddBookData(unittest.TestCase):  # 0/5
@@ -154,3 +157,7 @@ class TestBookJsonFileServiceDeleteBookById(unittest.TestCase):  # 0/3
 
     def test_removes_book_and_writes_json_when_book_id_exists(self):
         pass
+
+
+if __name__ == "__main__":
+    unittest.main(verbosity=0)
