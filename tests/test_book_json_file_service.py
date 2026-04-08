@@ -5,10 +5,10 @@ tests.test_book_json_file_service.py
 Test for the file book_json_file_service.py
 ________________________________________________________
 
-Test classes:
-Test cases total:
+Test classes: 5
+Test cases total: 19
 
-current status: not started
+current status: in progress
 Total number of done test cases:
 
 """
@@ -21,7 +21,7 @@ import exceptions as exc
 from database.book_json_file_service import BookJsonFileService
 
 
-class TestBookJsonFileServiceGetBookData(unittest.TestCase):
+class TestBookJsonFileServiceGetBookData(unittest.TestCase):  # 0/3
     def setUp(self):
         self.temporary_dir = tempfile.TemporaryDirectory()
 
@@ -38,7 +38,7 @@ class TestBookJsonFileServiceGetBookData(unittest.TestCase):
         pass
 
 
-class TestBookJsonFileServiceAddBookData(unittest.TestCase):
+class TestBookJsonFileServiceAddBookData(unittest.TestCase):  # 0/5
     def setUp(self):
         self.temporary_dir = tempfile.TemporaryDirectory()
 
@@ -61,7 +61,7 @@ class TestBookJsonFileServiceAddBookData(unittest.TestCase):
         pass
 
 
-class TestBookJsonFileServiceGetAllBooksList(unittest.TestCase):
+class TestBookJsonFileServiceGetAllBooksList(unittest.TestCase):  # 0/2
     def setUp(self):
         self.temporary_dir = tempfile.TemporaryDirectory()
 
@@ -75,7 +75,7 @@ class TestBookJsonFileServiceGetAllBooksList(unittest.TestCase):
         pass
 
 
-class TestBookJsonFileServiceUpdateBookData(unittest.TestCase):
+class TestBookJsonFileServiceUpdateBookData(unittest.TestCase):  # 0/6
     def setUp(self):
         self.temporary_dir = tempfile.TemporaryDirectory()
 
@@ -101,7 +101,7 @@ class TestBookJsonFileServiceUpdateBookData(unittest.TestCase):
         pass
 
 
-class TestBookJsonFileServiceDeleteBookById(unittest.TestCase):
+class TestBookJsonFileServiceDeleteBookById(unittest.TestCase):  # 0/3
     def setUp(self):
         self.temporary_dir = tempfile.TemporaryDirectory()
 
