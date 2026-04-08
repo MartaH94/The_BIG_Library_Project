@@ -62,7 +62,9 @@ class TestBookJsonFileServiceGetBookData(unittest.TestCase):  # 0/3
 
     def test_returns_book_when_book_id_exists(self):
         """expected behavior: returns book data when book_id exists in the database"""
-        pass
+        expected_book_data = self.valid_book_list[0]
+        test_result = self.book_service.get_book_data(1001)
+        self.assertEqual(test_result, expected_book_data)
 
     def test_raises_book_not_found_error_when_book_id_not_found(self):
         """expected behavior: raises BookNotFoundError when book_id is not found in the database"""
