@@ -102,19 +102,12 @@ class LoanJsonFileService:
         Returns:
             all_loans_list (list): List of all loan records.
         """
-        current_data = self.json_service.load_json_file()
-        all_loans_list = []
-        loan_found = False
+        all_loans_list = self.json_service.load_json_file()
 
-        for loan in current_data:
-            if loan["loan_id"]:
-                all_loans_list.append(loan)
-                loan_found = True
-            else:
-                raise exc.LoanNotFoundError(f"Loan with ID: {loan_id} not found.")
-
-        if not loan_found:
-            raise exc.LoanNotFoundError(f"Loan with ID: {loan_id} not found.")
+        if not isinstance(all_loans_list, list):
+            raise exc.DataTypeError(
+                "Loans database file structure is invalid. Expected type is list of dictionaries"
+            )
 
         return all_loans_list
 
