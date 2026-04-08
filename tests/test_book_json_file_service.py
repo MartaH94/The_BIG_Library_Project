@@ -80,8 +80,22 @@ class TestBookJsonFileServiceGetBookData(unittest.TestCase):  # 3/3
 
 
 class TestBookJsonFileServiceAddBookData(unittest.TestCase):  # 0/5
+    """Method under test: add_book_data
+    Number of TestCases: 5
+    Done TestCases:
+    """
+
     def setUp(self):
         self.temporary_dir = tempfile.TemporaryDirectory()
+        self.temporary_dir_path = Path(self.temporary_dir.name)
+        self.test_json_file_path = self.temporary_dir_path / "test_file.json"
+        self.test_json_file_path.write_text("[]", encoding="utf-8")
+
+        self.major_json_service = JsonFilesService(file_path=self.test_json_file_path)
+
+        self.book_service = BookJsonFileService(
+            self.major_json_service, file_path=self.test_json_file_path
+        )
 
     def tearDown(self):
         self.temporary_dir.cleanup()
@@ -96,6 +110,7 @@ class TestBookJsonFileServiceAddBookData(unittest.TestCase):  # 0/5
         pass
 
     def tets_raises_book_validation_error_when_schema_validation_fails(self):
+        invalid_book_data = {}
         pass
 
     def test_writes_json_and_returns_success_message_when_data_is_valid(self):
