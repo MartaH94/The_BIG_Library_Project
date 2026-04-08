@@ -21,21 +21,38 @@ import exceptions as exc
 from database.book_json_file_service import BookJsonFileService
 
 
-class TestBookServiceGetBookData(unittest.TestCase):
-    pass
+class TestBookJsonFileServiceGetBookData(unittest.TestCase):
+    def setUp(self):
+        pass
 
 
-class TestBookServiceAddBookData(unittest.TestCase):
-    pass
+class TestBookJsonFileServiceAddBookData(unittest.TestCase):
+    def setUp(self):
+        self.temporary_dir = tempfile.TemporaryDirectory()
+
+    def tearDown(self):
+        self.temporary_dir.cleanup()
 
 
-class TestBookServiceGetAllBooksList(unittest.TestCase):
-    pass
+class TestBookJsonFileServiceGetAllBooksList(unittest.TestCase):
+    def setUp(self):
+        self.temporary_dir = tempfile.TemporaryDirectory()
+
+    def tearDown(self):
+        self.temporary_dir.cleanup()
 
 
-class TestBookServiceUpdateBookData(unittest.TestCase):
-    pass
+class TestBookJsonFileServiceUpdateBookData(unittest.TestCase):
+    def setUp(self):
+        self.temporary_dir = tempfile.TemporaryDirectory()
+
+    def tearDown(self):
+        self.temporary_dir.cleanup()
 
 
-class TestBookServiceDeleteBookById(unittest.TestCase):
-    pass
+class TestBookJsonFileServiceDeleteBookById(unittest.TestCase):
+    def setUp(self):
+        self.temporary_dir = tempfile.TemporaryDirectory()
+
+    def tearDown(self):
+        self.temporary_dir.cleanup()
