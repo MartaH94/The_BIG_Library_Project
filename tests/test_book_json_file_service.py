@@ -11,6 +11,10 @@ Test cases total: 18
 current status: in progress
 Total number of done test cases: 3
 
+
+IMPORTANT:
+book_schema (database_schemes.py) requires rebuilding to Json schema style to prepare required fields. Otherwise all fields must be filles during adding book data.
+Verify test cases after that changes once they are implemented.
 """
 
 import json

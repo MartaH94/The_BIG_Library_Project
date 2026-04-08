@@ -11,6 +11,10 @@ Test cases total: 20
 current status: not started
 Total number of done test cases:
 
+IMPORTANT:
+loan_schema (database_schemes.py) requires rebuilding to Json schema style to prepare required fields. Otherwise all fields must be filles during adding book data.
+
+verify test cases after implementation of that changes.
 """
 
 import json

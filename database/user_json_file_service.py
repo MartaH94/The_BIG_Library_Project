@@ -11,6 +11,10 @@ This module provides a thin service layer for managing user records stored in a 
 file. It offers simple helpers to load, add, query, update, and delete users while
 leveraging a lower-level JSON file service for I/O, validation, and persistence.
 
+IMPORTANT:
+user_schema (database_schemes.py) requires rebuilding to Json schema style to prepare required fields. Otherwise all fields must be filles during adding book data.
+Verify code of that services after that the changes are implemented.
+
 """
 
 import database.database_schemes as schema
@@ -47,7 +51,8 @@ class UsersJsonFileService:
 
         if user_id is None:
             raise exc.ValidationError(
-                "User ID is missing or it's an empty value. Getting user data not possible.")
+                "User ID is missing or it's an empty value. Getting user data not possible."
+            )
 
         for user in current_data:
             if user["id"] == user_id:
@@ -79,15 +84,16 @@ class UsersJsonFileService:
                 "User data type is incorrect. User data must be a dict type."
             )
 
-        user_id = user_data["id"]
+        user_id = user_data["user_id"]
 
         for user in current_data:
-            if user["id"] == user_id:
+            if user["user_id"] == user_id:
                 raise exc.UserError(
                     f"User with ID: {user_id} already exists in the database. User ID must be unique value."
                 )
         validated_user_data = self.json_service.validate_against_schema(
-            user_data, schema.user_schema)
+            user_data, schema.user_schema
+        )
 
         if not validated_user_data:
             raise exc.UserValidationError(
@@ -114,11 +120,9 @@ class UsersJsonFileService:
                 all_users.append(user)
                 user_found = True
             else:
-                raise exc.UserNotFoundError(
-                    "User not found in database.")
+                raise exc.UserNotFoundError("User not found in database.")
             if not user_found:
-                raise exc.UserNotFoundError(
-                    "User not found in database.")
+                raise exc.UserNotFoundError("User not found in database.")
 
         return all_users
 
@@ -135,22 +139,22 @@ class UsersJsonFileService:
         user_found = False
 
         if user_id is None:
-            raise exc.ValidationError(
-                "User ID is missing or it's an empty value.")
+            raise exc.ValidationError("User ID is missing or it's an empty value.")
 
         if field is None:
-            raise exc.ValidationError(
-                "Field value is missing or it's an empty value.")
+            raise exc.ValidationError("Field value is missing or it's an empty value.")
 
         if new_value is None:
             raise exc.ValidationError(
-                "New value to update data is missing or it's an empty value.")
+                "New value to update data is missing or it's an empty value."
+            )
 
         for user in current_data:
             if user.get("user_id") == user_id:
                 if field not in user:
                     raise exc.ValidationError(
-                        f"The field '{field}' is missing in this user entry.")
+                        f"The field '{field}' is missing in this user entry."
+                    )
 
             user[field] = new_value
             user_found = True
@@ -158,13 +162,14 @@ class UsersJsonFileService:
 
         if not user_found:
             raise exc.UserNotFoundError(
-                f"User with ID: {user_id} not found in database.")
+                f"User with ID: {user_id} not found in database."
+            )
 
         self.json_service.write_json_data(current_data)
         return f"For user with ID: {user_id}, data updated successfully."
 
     def delete_user_by_id(self, user_id):
-        """ Delete a user record by its ID.
+        """Delete a user record by its ID.
         Args:
             user_id (int): ID of the user to delete.
         Returns:
@@ -174,8 +179,7 @@ class UsersJsonFileService:
         user_deleted = False
 
         if user_id is None:
-            raise exc.ValidationError(
-                "User ID is missing ir it's an empty value.")
+            raise exc.ValidationError("User ID is missing ir it's an empty value.")
 
         for user in current_data:
             if user["id"] == user_id:
