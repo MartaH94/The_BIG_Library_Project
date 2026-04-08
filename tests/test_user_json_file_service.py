@@ -29,7 +29,11 @@ class TestUserServiceGetUserData(unittest.TestCase):
     Done TestCases:
     """
 
-    pass
+    def setUp(self):
+        self.temporary_dir = tempfile.TemporaryDirectory()
+
+    def tearDown(self):
+        self.temporary_dir.cleanup()
 
 
 class TestUserServiceAddUserData(unittest.TestCase):
@@ -38,7 +42,11 @@ class TestUserServiceAddUserData(unittest.TestCase):
     Done TestCases:
     """
 
-    pass
+    def setUp(self):
+        self.temporary_dir = tempfile.TemporaryDirectory()
+
+    def tearDown(self):
+        self.temporary_dir.cleanup()
 
 
 class TestUserServiceGetAllUsersList(unittest.TestCase):
@@ -47,7 +55,11 @@ class TestUserServiceGetAllUsersList(unittest.TestCase):
     Done TestCases:
     """
 
-    pass
+    def setUp(self):
+        self.temporary_dir = tempfile.TemporaryDirectory()
+
+    def tearDown(self):
+        self.temporary_dir.cleanup()
 
 
 class TestUserServiceUpdateUserData(unittest.TestCase):
@@ -56,7 +68,11 @@ class TestUserServiceUpdateUserData(unittest.TestCase):
     Done TestCases:
     """
 
-    pass
+    def setUp(self):
+        self.temporary_dir = tempfile.TemporaryDirectory()
+
+    def tearDown(self):
+        self.temporary_dir.cleanup()
 
 
 class TestUserServiceDeleteUserById(unittest.TestCase):
@@ -65,4 +81,8 @@ class TestUserServiceDeleteUserById(unittest.TestCase):
     Done TestCases:
     """
 
-    pass
+    def setUp(self):
+        self.temporary_dir = tempfile.TemporaryDirectory()
+
+    def tearDown(self):
+        self.temporary_dir.cleanup()
