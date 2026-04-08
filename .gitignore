@@ -113,3 +113,5 @@ services/__pycache__/__init__.cpython-313.pyc
 utils/__pycache__/__init__.cpython-313.pyc
 desktop.ini
 tests/test_book_json_file_service - old file.py
+database/__pycache__/book_json_file_service.cpython-313.pyc
+tests/__pycache__/test_book_json_file_service.cpython-313.pyc
