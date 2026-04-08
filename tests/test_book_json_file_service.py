@@ -109,7 +109,12 @@ class TestBookJsonFileServiceAddBookData(unittest.TestCase):  # 0/5
 
     def test_raises_data_type_error_when_book_data_is_not_dict(self):
         """expected behavior: raises DataTypeError when book data is not a dict type"""
-        pass
+        data_to_add = [1005, "William Shakespeare", "Macbeth", 1606]
+
+        with self.assertRaises(exc.DataTypeError) as cm:
+            self.book_service.add_book_data(data_to_add)
+
+        self.assertIn("Book data type is incorrect.", str(cm.exception))
 
     def test_raises_book_error_when_book_id_already_exists(self):
         """expected behavior: raises BookError when book_id already exists in the database"""
