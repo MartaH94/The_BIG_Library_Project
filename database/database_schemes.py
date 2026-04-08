@@ -3,6 +3,10 @@ Each schema is represented as a dictionary where keys are field names and values
 
 Each schema is just a dict of key → Python type
 
+
+IMPORTANT TO DO:
+Schemas here require rebuilding to Json schema style to present required fields. Once schemas are rebuilt, validate_against_schema method from json_files_major_services.py also requires rebuilding to match that approach.
+
 """
 
 from datetime import date, datetime
@@ -26,21 +30,27 @@ user_schema = {
         "email": str,
         "phone_number": int,
         "password_hash": str,
-    }
+    },
 }
 
+
 book_schema = {
-    "book_id": int,
-    "title": str,
-    "author": str,
-    "isbn": str,
-    "publication_year": int,
-    "category": str,
-    "language": str,
-    "book_status": str,
-    "borrower_id": int,
-    "due_date": date,
+    "type": "object",
+    "properties": {
+        "book_id": {"type": "integer"},
+        "title": {"type": "string"},
+        "publication_year": {"type": "integer"},
+        "author": {"type": "string"},
+        "isbn": {"type": "string"},
+        "category": {"type": "string"},
+        "language": {"type": "string"},
+        "book_status": {"type": "string"},
+        "borrower_id": {"type": "integer"},
+        "due_date": {"type": "string", "format": "date"},
+    },
+    "required": ["book_id", "title", "publication_year"],
 }
+
 
 loan_schema = {
     "loan_id": int,

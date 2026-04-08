@@ -16,6 +16,9 @@ This module provides a high-level interface for working with JSON files, includi
 
 It is designed to keep file operations consistent, safe, and schema-compliant across the system.
 
+IMPORTANT TO DO:
+validate_against_schema method needs to be rebuilt once all database schemes are rebuilted in Json schema style.
+
 """
 
 import json

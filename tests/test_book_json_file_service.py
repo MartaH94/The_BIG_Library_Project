@@ -117,7 +117,9 @@ class TestBookJsonFileServiceAddBookData(unittest.TestCase):  # 0/5
         self.assertIn("Book data type is incorrect.", str(cm.exception))
 
     def test_raises_book_error_when_book_id_already_exists(self):
-        """expected behavior: raises BookError when book_id already exists in the database"""
+        """expected behavior: raises BookError when book_id already exists in the database
+        book_schema (database_schemes.py) requires rebuilding to Json schema style to prepare required fields. Otherwise all fields must be filles during adding book data.
+        """
         pass
 
     def tets_raises_book_validation_error_when_schema_validation_fails(self):

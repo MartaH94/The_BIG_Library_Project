@@ -11,6 +11,10 @@ Test cases total: 44
 current status: DONE! :)
 Total number of done test cases: 44/44
 
+
+IMPORTANT TO DO:
+tests for validate_against_schema need rebuilding due to rebuilding validate_against_schema method using JSON-schema style in database_schemas
+
 """
 
 import json
