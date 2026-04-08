@@ -97,7 +97,7 @@ class LoanJsonFileService:
         self.json_service.write_json_data(current_data)
         return f"Added new loan to data base with ID: {loan_id}."
 
-    def get_all_loans_list(self, loan_id):
+    def get_all_loans_list(self):
         """Retrieve all loan records from the database.
         Returns:
             all_loans_list (list): List of all loan records.
