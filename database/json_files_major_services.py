@@ -16,12 +16,16 @@ This module provides a high-level interface for working with JSON files, includi
 
 It is designed to keep file operations consistent, safe, and schema-compliant across the system.
 
+IMPORTANT TO DO:
+validate_against_schema method needs to be rebuilt once all database schemes are rebuilted in Json schema style.
+
 """
 
 import json
 from datetime import datetime
 from pathlib import Path
 
+import database.database_schemes as schemas
 import exceptions as exc
 import utils.config as config
 
@@ -33,7 +37,7 @@ class JsonFilesService:
         schema (dict): Schema used to validate the JSON file structure and field types.
     """
 
-    def __init__(self, file_path: Path, schema: dict):
+    def __init__(self, file_path: Path, schema: dict | None = None):
         self.file_path = file_path
         self.schema = schema
 
@@ -92,11 +96,9 @@ class JsonFilesService:
             exc.ValidationError: If data does not match the schema.
         """
         if data is None:
-            raise exc.FileError(
-                "Data is empty. Cannot save empty data to the file.")
+            raise exc.FileError("Data is empty. Cannot save empty data to the file.")
         if not isinstance(data, list):
-            raise exc.FileError(
-                "Data is not a list. Cannot save data to the file.")
+            raise exc.FileError("Data is not a list. Cannot save data to the file.")
 
         for record in data:
             self.validate_against_schema(record, self.schema)
@@ -124,17 +126,14 @@ class JsonFilesService:
         """
         current_data = self.load_json_file()
         if data_to_append is None:
-            raise exc.ValidationError(
-                "New data is missig or it's an empty value."
-            )
+            raise exc.ValidationError("New data is missig or it's an empty value.")
 
         if not isinstance(data_to_append, dict):
             raise exc.ValidationError(
                 "Incorrect type of data to append. Cannot add data to database, expected type of data is dict."
             )
 
-        validated_record = self.validate_against_schema(
-            data_to_append, self.schema)
+        validated_record = self.validate_against_schema(data_to_append, self.schema)
         current_data.append(validated_record)
         self.write_json_data(current_data)
         return f"Success. Data had been added and saved to file: {self.file_path.name}"
@@ -158,7 +157,8 @@ class JsonFilesService:
         """
         if data is None:
             raise exc.ValidationError(
-                "Data to validate is missing or it's an empty value.")
+                "Data to validate is missing or it's an empty value."
+            )
 
         if not schema:
             raise exc.ValidationError(
@@ -206,8 +206,7 @@ class JsonFilesService:
             )
         for index, item in enumerate(file_content):
             if not isinstance(item, dict):
-                raise exc.ValidationError(
-                    f"The record {index+1} is not a dictionary.")
+                raise exc.ValidationError(f"The record {index+1} is not a dictionary.")
             self.validate_against_schema(item, self.schema)
         return True
 
@@ -231,7 +230,7 @@ class JsonFilesService:
         """Build a timestamped backup filename based on project alias and file name.
 
         Returns:
-            str: Backup filename.
+            str: Backup filename. Example: "library_copy_users_2024-06-01_12-00-00.json"
         """
         alias = config.PROJECT_ALIAS
         name = self.file_path.stem
@@ -253,8 +252,7 @@ class JsonFilesService:
         data = self.load_json_file()
 
         with backup_path.open("w", encoding="utf-8") as f_backup:
-            json.dump(data, f_backup, ensure_ascii=False,
-                      indent=4, sort_keys=True)
+            json.dump(data, f_backup, ensure_ascii=False, indent=4, sort_keys=True)
         return backup_path
 
     # -------------------------
@@ -278,12 +276,10 @@ class JsonFilesService:
         records_to_delete_counter = 0
 
         if key_name is None:
-            raise exc.ValidationError(
-                "Key name is missing or it's an empty value.")
+            raise exc.ValidationError("Key name is missing or it's an empty value.")
 
         if key_value is None:
-            raise exc.ValidationError(
-                "Key value is missing or it's an empty value.")
+            raise exc.ValidationError("Key value is missing or it's an empty value.")
 
         if not key_name in self.schema:
             raise exc.InvalidFieldError(
@@ -310,14 +306,14 @@ class JsonFilesService:
         self.write_json_data(file_content)
         return f"Success. Data from the file deleted for record: {key_name}"
 
-    def update_data_in_file(self, item, new_data):
+    def update_data_in_file(self, item, new_data, match_key, match_value):
         """Update a field in all records where it exists.
-
-        TO DO: Implement recursive existence checks (for supporting nested keys)
 
         Args:
             item (str): Field name to update.
             new_data (str): New value for the field.
+            match_key (str) : Name of the field used to find the record to update.
+            match_value : Value used to select one record to update
 
         Raises:
             exc.FileError: If the new value is empty.
@@ -335,20 +331,22 @@ class JsonFilesService:
             )
 
         if new_data is None:
-            raise exc.ValidationError(
-                "New data is missing or it's an empty value.")
+            raise exc.ValidationError("New data is missing or it's an empty value.")
 
         for record in file_content:
             if not isinstance(record, dict):
                 raise exc.ValidationError(
                     "Incorrect type of record data. Expected type is dict."
                 )
-            elif item in record:
+            elif record.get(match_key) == match_value:
                 record[item] = new_data
                 updated += 1
+                break
 
         if updated == 0:
-            raise exc.DatabaseError(f"No matching element to {item}.")
+            raise exc.DatabaseError(
+                f"No matching element to where {match_key} == {match_value}."
+            )
 
         self.write_json_data(file_content)
 

@@ -88,4 +88,34 @@ documents/.obsidian/app.json
 documents/.obsidian/appearance.json
 documents/.obsidian/core-plugins.json
 .gitignore
-documents/.obsidian/workspace.json
+documents/My Awesome Library Project/.obsidian/app.json
+documents/My Awesome Library Project/.obsidian/app.json
+documents/My Awesome Library Project/.obsidian/appearance.json
+documents/My Awesome Library Project/.obsidian/workspace.json
+documents/My Awesome Library Project/.obsidian/app.json
+documents/My Awesome Library Project/.obsidian/core-plugins.json
+documents/My Awesome Library Project/.obsidian/appearance.json
+documents/My Awesome Library Project/.obsidian/workspace.json
+documents/My Awesome Library Project/.obsidian/core-plugins.json
+documents/My Awesome Library Project/.obsidian/appearance.json
+documents/My Awesome Library Project/.obsidian/app.json
+.vscode/settings.json
+__pycache__/exceptions.cpython-313.pyc
+.gitignore
+.gitignore
+database/__pycache__/json_files_major_services.cpython-313.pyc
+utils/__pycache__/config.cpython-313.pyc
+.gitignore
+tests/__pycache__/test_json_files_major_services.cpython-313.pyc
+services/__pycache__/authorisation_service.cpython-313.pyc
+models/__pycache__/user.cpython-313.pyc
+database/__pycache__/database_schemes.cpython-313.pyc
+database/__pycache__/__init__.cpython-313.pyc
+.gitignore
+models/__pycache__/__init__.cpython-313.pyc
+services/__pycache__/__init__.cpython-313.pyc
+utils/__pycache__/__init__.cpython-313.pyc
+desktop.ini
+tests/test_book_json_file_service - old file.py
+database/__pycache__/book_json_file_service.cpython-313.pyc
+tests/__pycache__/test_book_json_file_service.cpython-313.pyc
