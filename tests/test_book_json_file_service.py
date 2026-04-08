@@ -5,172 +5,189 @@ tests.test_book_json_file_service.py
 Test for the file book_json_file_service.py
 ________________________________________________________
 
-Test classes:
-Test cases total:
+Test classes: 5
+Test cases total: 18
 
-current status: not started
-Total number of done test cases:
+current status: in progress
+Total number of done test cases: 3
 
 """
 
+import json
+import tempfile
 import unittest
+from pathlib import Path
 
 import exceptions as exc
-from models.book import Book
-from models.user import User
-from services.authorisation_service import UserAuthorisation
-from services.book_service import BookService
+from database.book_json_file_service import BookJsonFileService
+from database.json_files_major_services import JsonFilesService
 
 
-class TestBookService(unittest.TestCase):
+class TestBookJsonFileServiceGetBookData(unittest.TestCase):  # 3/3
+    """Method under test: get_book_data
+    Number of TestCases: 3
+    Done TestCases: 3
+    """
 
     def setUp(self):
-        self.admin_user = User(user_id="Marta", email="test@test.com", role="admin")
-        self.reader_user = User(user_id="John", email="john@test.com", role="reader")
+        self.temporary_dir = tempfile.TemporaryDirectory()
+        self.temporary_dir_path = Path(self.temporary_dir.name)
+        self.test_json_file_path = self.temporary_dir_path / "test_file.json"
 
-        self.admin_authorisation = UserAuthorisation()
-        self.admin_authorisation.login(self.admin_user)
+        self.valid_book_list = [
+            {"book_id": 1001, "author": "Stephen King", "title": "It", "year": 1986},
+            {"book_id": 1002, "author": "Frank Herbert", "title": "Dune", "year": 1965},
+            {"book_id": 1003, "author": "Jane Austen", "title": "Emma", "year": 1815},
+            {
+                "book_id": 1004,
+                "author": "Peter Benchley",
+                "title": "Jaws",
+                "year": 1974,
+            },
+        ]
 
-        self.reader_authorisation = UserAuthorisation()
-        self.reader_authorisation.login(self.reader_user)
+        with self.test_json_file_path.open("w", encoding="utf-8") as f:
+            json.dump(self.valid_book_list, f)
 
-        self.admin_service = BookService(self.admin_authorisation)
-        self.reader_service = BookService(self.reader_authorisation)
+        self.major_json_service = JsonFilesService(file_path=self.test_json_file_path)
 
-        self.book_service = BookService(self.admin_authorisation)
-        self.book_service.books = []
-        self.book_service.books.append(
-            Book(
-                author="J.K. Rowling",
-                title="Harry Potter and the Philosopher's Stone",
-                year=1997,
-            )
-        )
-        self.book_service.books.append(
-            Book(author="George Orwell", title="1984", year=1949)
-        )
-        self.book_service.books.append(
-            Book(author="J.R.R. Tolkien", title="The Hobbit", year=1937)
-        )
-        self.book_service.books.append(
-            Book(author="F. Scott Fitzgerald", title="The Great Gatsby", year=1925)
+        self.book_service = BookJsonFileService(
+            self.major_json_service, file_path=self.test_json_file_path
         )
 
-        self.book = Book(author="Sample Author", title="Sample Title 2020", year=2020)
+    def tearDown(self):
+        self.temporary_dir.cleanup()
 
-        self.admin_service.books = self.book_service.books.copy()
-        self.reader_service.books = self.book_service.books.copy()
+    def test_raises_validation_error_when_book_id_is_none(self):
+        """expected behavior: raises ValidationError when book_id is None"""
+        with self.assertRaises(exc.ValidationError) as cm:
+            self.book_service.get_book_data(None)
 
-    # [TESTS FOR: ADDING BOOK]
-    def test_add_book(self):
-        # print("\n[TEST CASE FOR: ADDING BOOK] test_add_book: Adding new book.")
-        book_to_add = self.book_service.books[0]
-        self.admin_service.add_book(book_to_add)
-        self.assertIn(book_to_add, self.admin_service.books)
-        # print(f"[PASS] test_add_book: Book '{book_to_add.title}' added succesfully.")
+        self.assertIn("Book ID is missing", str(cm.exception))
 
-    def test_add_book_without_author_or_title(self):
-        print(
-            "\n[TEST CASE FOR: ADDING BOOK] add book with empty data (author or title): Adding book with empty author or title... "
-        )
-        self.assertRaises(
-            exc.InvalidBookDataError,
-            self.admin_service.add_book,
-            Book(author=None, title=None, year=2020),
-        )
-        print(
-            f"[PASS] test add book with empty data (author or title): Exception {exc.InvalidBookDataError} raised properly."
-        )
+    def test_returns_book_when_book_id_exists(self):
+        """expected behavior: returns book data when book_id exists in the database"""
+        expected_book_data = self.valid_book_list[0]
+        test_result = self.book_service.get_book_data(1001)
+        self.assertEqual(test_result, expected_book_data)
 
-    # [TESTS FOR: EDIT BOOK]
-    def test_user_has_no_permission_to_edit_book(self):
-        print(
-            "\nTEST CASE FOR: EDIT BOOK] user_has_no_permission_to_edit_book: User role is 'reader', trying to edit book..."
-        )
-        book_to_edit = self.book_service.books[1]
-        self.assertRaises(
-            exc.PermissionError,
-            self.reader_service.edit_book,
-            book_to_edit,
-            title="New Title",
-        )
-        print(
-            f"[PASS] test_user_has_no_permission_to_edit_book: Exception {exc.PermissionError} raised properly."
-        )
+    def test_raises_book_not_found_error_when_book_id_not_found(self):
+        """expected behavior: raises BookNotFoundError when book_id is not found in the database"""
+        with self.assertRaises(exc.BookNotFoundError) as cm:
+            self.book_service.get_book_data(1006)
 
-    def test_edit_books_title(self):
-        print(
-            "\n[TEST CASE FOR: EDIT BOOK] test_edit_books_title: Adding book and editing its title."
-        )
-        book_to_edit = self.book_service.books[1]
-        self.admin_service.edit_book(book_to_edit, title="Title Edited")
-        self.assertEqual(book_to_edit.title, "Title Edited")
-        print(
-            f"[PASS] test_edit_book_title: Book title changed to '{book_to_edit.title}' successfully."
+        self.assertIn("not exists in database", str(cm.exception))
+
+
+class TestBookJsonFileServiceAddBookData(unittest.TestCase):  # 0/5
+    """Method under test: add_book_data
+    Number of TestCases: 5
+    Done TestCases:
+    """
+
+    def setUp(self):
+        self.temporary_dir = tempfile.TemporaryDirectory()
+        self.temporary_dir_path = Path(self.temporary_dir.name)
+        self.test_json_file_path = self.temporary_dir_path / "test_file.json"
+        self.test_json_file_path.write_text("[]", encoding="utf-8")
+
+        self.major_json_service = JsonFilesService(file_path=self.test_json_file_path)
+
+        self.book_service = BookJsonFileService(
+            self.major_json_service, file_path=self.test_json_file_path
         )
 
-    def test_edit_books_author(self):
-        print("\n[TEST CASE FOR: EDIT BOOK] edit_books_author: Editing books author.")
-        book_to_edit = self.book_service.books[1]
-        self.admin_service.edit_book(book_to_edit, author="Edited Author")
-        self.assertEqual(book_to_edit.author, "Edited Author")
-        print(
-            f"[PASS] test_edit_book_author: Book author changed to '{book_to_edit.author}' successfully."
-        )
+    def tearDown(self):
+        self.temporary_dir.cleanup()
 
-    def test_edit_books_year(self):
-        print(
-            "\n[TEST CASE FOR: EDIT BOOK: test_edit_book_year: Edition of the book year]"
-        )
+    def test_raises_validation_error_when_book_data_is_missing(self):
+        """expected behavior: raises ValidationError when book data is missing or it's an empty value"""
+        with self.assertRaises(exc.ValidationError) as cm:
+            self.book_service.add_book_data(None)
 
-    def test_edit_book_not_found(self):
-        print(
-            "\n[TEST CASE FOR: EDIT BOOK] edit_book_not_found: Trying to edit book which is not present in the library."
-        )
-        self.book = Book(author="Adam Mickiewicz", title="Pan Tadeusz", year=1834)
-        self.assertRaises(
-            exc.BookNotFoundError,
-            self.admin_service.edit_book,
-            self.book,
-            title="New Title",
-        )
-        print(
-            f"[PASS] test_edit_book_not_found: Exception {exc.BookNotFoundError} raised properly."
-        )
+        self.assertIn("Book data to save is missing.", str(cm.exception))
 
-    # [TESTS FOR: DELETE A BOOK]
-    def test_delete_book(self):
-        print(
-            "\n[TEST CASE FOR: DELETE A BOOK] delete_book: Deleting the book from the library"
-        )
-        book_to_delete = self.book_service.books[2]
-        self.admin_service.delete_book(book_to_delete)
-        print(
-            f"[PASS] test_delete_book: Book '{book_to_delete.title}' by {book_to_delete.author} deleted from the library."
-        )
+    def test_raises_data_type_error_when_book_data_is_not_dict(self):
+        """expected behavior: raises DataTypeError when book data is not a dict type"""
+        data_to_add = [1005, "William Shakespeare", "Macbeth", 1606]
 
-    # [TESTS FOR: SEARCH A BOOK]
-    def test_search_by_keyword(self):
-        print(
-            "\n[TEST CASE FOR: SEARCH A BOOK] search_by_keyword: Search book by title, author or year"
-        )
-        book_to_find = self.book_service.books[0]
-        search_phrase = self.reader_service.search_books(searched_term="Harry")
-        self.assertIsInstance(search_phrase, list)
-        self.assertIn(book_to_find, search_phrase)
-        print(
-            f"[PASS] The book {book_to_find.title} by {book_to_find.author} has been found."
-        )
+        with self.assertRaises(exc.DataTypeError) as cm:
+            self.book_service.add_book_data(data_to_add)
 
-    def test_no_search_results(self):
-        print(
-            "\n[TEST CASE FOR: SEARCH A BOOK] no_search_result: No result for searching phrase while user's searching."
-        )
-        search_phrase = self.reader_service.search_books(searched_term="Whatever")
-        self.assertIsInstance(search_phrase, list)
-        self.assertEqual(len(search_phrase), 0)
-        print("[PASS] No book found, returning an empty list.")
+        self.assertIn("Book data type is incorrect.", str(cm.exception))
+
+    def test_raises_book_error_when_book_id_already_exists(self):
+        """expected behavior: raises BookError when book_id already exists in the database
+        book_schema (database_schemes.py) requires rebuilding to Json schema style to prepare required fields. Otherwise all fields must be filles during adding book data.
+        """
+        pass
+
+    def tets_raises_book_validation_error_when_schema_validation_fails(self):
+        """expected behavior: raises BookValidationError when book data doesn't match database file schema"""
+        invalid_book_data = {}
+        pass
+
+    def test_writes_json_and_returns_success_message_when_data_is_valid(self):
+        """expected behavior: writes new book data to json file and returns success message when book data is valid"""
+        pass
+
+
+class TestBookJsonFileServiceGetAllBooksList(unittest.TestCase):  # 0/2
+    def setUp(self):
+        self.temporary_dir = tempfile.TemporaryDirectory()
+
+    def tearDown(self):
+        self.temporary_dir.cleanup()
+
+    def test_returns_all_books_when_database_is_not_empty(self):
+        pass
+
+    def test_raises_book_not_found_error_when_database_is_empty(self):
+        pass
+
+
+class TestBookJsonFileServiceUpdateBookData(unittest.TestCase):  # 0/6
+    def setUp(self):
+        self.temporary_dir = tempfile.TemporaryDirectory()
+
+    def tearDown(self):
+        self.temporary_dir.cleanup()
+
+    def test_raises_validation_error_when_book_id_is_none(self):
+        pass
+
+    def test_raises_validation_error_when_field_is_none(self):
+        pass
+
+    def test_raises_validation_error_when_new_value_is_none(self):
+        pass
+
+    def test_raises_validation_error_when_field_not_in_book(self):
+        pass
+
+    def test_raises_book_not_found_error_when_book_id_not_found(self):
+        pass
+
+    def test_updates_book_and_writes_json_when_data_is_valid(self):
+        pass
+
+
+class TestBookJsonFileServiceDeleteBookById(unittest.TestCase):  # 0/3
+    def setUp(self):
+        self.temporary_dir = tempfile.TemporaryDirectory()
+
+    def tearDown(self):
+        self.temporary_dir.cleanup()
+
+    def test_raises_validation_error_when_book_id_is_none(self):
+        pass
+
+    def test_raises_book_error_when_book_id_not_found(self):
+        pass
+
+    def test_removes_book_and_writes_json_when_book_id_exists(self):
+        pass
 
 
 if __name__ == "__main__":
-    unittest.main(verbosity=2)
+    unittest.main(verbosity=0)
