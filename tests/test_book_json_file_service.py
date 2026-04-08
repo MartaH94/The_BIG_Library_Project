@@ -101,19 +101,24 @@ class TestBookJsonFileServiceAddBookData(unittest.TestCase):  # 0/5
         self.temporary_dir.cleanup()
 
     def test_raises_validation_error_when_book_data_is_missing(self):
+        """expected behavior: raises ValidationError when book data is missing or it's an empty value"""
         pass
 
     def test_raises_data_type_error_when_book_data_is_not_dict(self):
+        """expected behavior: raises DataTypeError when book data is not a dict type"""
         pass
 
     def test_raises_book_error_when_book_id_already_exists(self):
+        """expected behavior: raises BookError when book_id already exists in the database"""
         pass
 
     def tets_raises_book_validation_error_when_schema_validation_fails(self):
+        """expected behavior: raises BookValidationError when book data doesn't match database file schema"""
         invalid_book_data = {}
         pass
 
     def test_writes_json_and_returns_success_message_when_data_is_valid(self):
+        """expected behavior: writes new book data to json file and returns success message when book data is valid"""
         pass
 
 
