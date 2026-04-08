@@ -55,7 +55,10 @@ class TestBookJsonFileServiceGetBookData(unittest.TestCase):  # 0/3
 
     def test_raises_validation_error_when_book_id_is_none(self):
         """expected behavior: raises ValidationError when book_id is None"""
-        pass
+        with self.assertRaises(exc.ValidationError) as cm:
+            self.book_service.get_book_data(None)
+
+        self.assertIn("Book ID is missing", str(cm.exception))
 
     def test_returns_book_when_book_id_exists(self):
         """expected behavior: returns book data when book_id exists in the database"""
