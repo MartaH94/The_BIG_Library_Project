@@ -102,7 +102,10 @@ class TestBookJsonFileServiceAddBookData(unittest.TestCase):  # 0/5
 
     def test_raises_validation_error_when_book_data_is_missing(self):
         """expected behavior: raises ValidationError when book data is missing or it's an empty value"""
-        pass
+        with self.assertRaises(exc.ValidationError) as cm:
+            self.book_service.add_book_data(None)
+
+        self.assertIn("Book data to save is missing.", str(cm.exception))
 
     def test_raises_data_type_error_when_book_data_is_not_dict(self):
         """expected behavior: raises DataTypeError when book data is not a dict type"""
