@@ -1,70 +1,70 @@
 """This module defines the database schemas for the library management system.
 Each schema is represented as a dictionary where keys are field names and values are their expected data types.
 
-Each schema is just a dict of key → Python type
-
-
-IMPORTANT TO DO:
-Schemas here require rebuilding to Json schema style to present required fields. Once schemas are rebuilt, validate_against_schema method from json_files_major_services.py also requires rebuilding to match that approach.
 
 """
 
-from datetime import date, datetime
-
 from models.user import valid_roles
 
-""" date - if you need only the date, e.g.: date of book return (YYYY-MM-DD)
-    datetime - if you need an hour too. """
-
-# In validation implement file format convertion frm text file to type date / datetime
-# and checking corectness of file's format
-
-
 user_schema = {
-    "user_id": int,
-    "role": str(valid_roles),
-    "is_active": bool,
-    "last_login": datetime,
-    "user_profile": {
-        "user_name": str,
-        "email": str,
-        "phone_number": int,
-        "password_hash": str,
+    "fields": {
+        "user_id": int,
+        "role": (
+            "one_of",
+            valid_roles,
+        ),  # role must be one of the valid roles defined in the system
+        "is_active": bool,
+        "last_login": "datetime",  # string representation of datetime
+        "user_profile": {
+            "fields": {
+                "user_name": str,
+                "email": str,
+                "phone_number": int,
+                "password_hash": str,
+            },
+            "required": ["user_name", "email"],
+        },
     },
+    "required": ["user_id", "role", "user_profile"],
 }
 
 
 book_schema = {
-    "type": "object",
-    "properties": {
-        "book_id": {"type": "integer"},
-        "title": {"type": "string"},
-        "publication_year": {"type": "integer"},
-        "author": {"type": "string"},
-        "isbn": {"type": "string"},
-        "category": {"type": "string"},
-        "language": {"type": "string"},
-        "book_status": {"type": "string"},
-        "borrower_id": {"type": "integer"},
-        "due_date": {"type": "string", "format": "date"},
+    "fields": {
+        "book_id": int,
+        "title": str,
+        "publication_year": int,
+        "author": str,
+        "isbn": str,
+        "category": str,
+        "language": str,
+        "book_status": str,
+        "borrower_id": (
+            int,
+            type(None),
+        ),  # borrower_id can be an integer (user_id) or None if the book is not currently loaned out
+        "due_date": "date",  # stored as string
     },
     "required": ["book_id", "title", "publication_year"],
 }
 
 
 loan_schema = {
-    "loan_id": int,
-    "user_id": int,
-    "book_id": int,
-    "loan_date": date,
-    "return_date": date,
+    "fields": {
+        "loan_id": int,
+        "user_id": int,
+        "book_id": int,
+        "loan_date": "date",
+        "return_date": ("date", None),
+    },
+    "required": ["loan_id", "user_id", "book_id", "loan_date"],
 }
 
 reservation_schema = {
     "reservation_id": int,
     "user_id": int,
     "book_id": int,
-    "reservation_date": date,
+    "reservation_date": "date",
 }
 
-backup_schema = {"file_name": str, "backup_date": date}
+backup_schema = {"file_name": str, "backup_date": "datetime"}
