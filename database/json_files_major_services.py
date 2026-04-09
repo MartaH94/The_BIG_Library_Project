@@ -22,6 +22,16 @@ validate_against_schema method needs to be rebuilt once all database schemes are
 schemas in(database_schemes.py) requires rebuilding to Json schema style to prepare required fields. Otherwise all fields must be filles during adding book data.
 Verify code of services which use schemas and implement required changes.
 
+
+Planned steps:
+1. Adjust validate_against_schema
+    - required vs optional
+    - nested objects
+
+2. Ensure update logic validates merged records
+3. Enforce additionalProperties
+4. Light date/date-time format checking
+
 """
 
 import json
