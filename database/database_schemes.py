@@ -55,7 +55,7 @@ loan_schema = {
         "user_id": int,
         "book_id": int,
         "loan_date": "date",
-        "return_date": ("date", None),
+        "return_date": ("date", type(None)),
     },
     "required": ["loan_id", "user_id", "book_id", "loan_date"],
 }
