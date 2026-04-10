@@ -2,6 +2,7 @@
 Each schema is represented as a dictionary where keys are field names and values are their expected data types.
 
 
+"date" fields must be strings in YYYY-MM-DD format
 """
 
 from models.user import valid_roles
@@ -14,7 +15,7 @@ user_schema = {
             valid_roles,
         ),  # role must be one of the valid roles defined in the system
         "is_active": bool,
-        "last_login": "datetime",  # string representation of datetime
+        "last_login": "date",  # string representation of date
         "user_profile": {
             "fields": {
                 "user_name": str,
@@ -61,10 +62,16 @@ loan_schema = {
 }
 
 reservation_schema = {
-    "reservation_id": int,
-    "user_id": int,
-    "book_id": int,
-    "reservation_date": "date",
+    "fields": {
+        "reservation_id": int,
+        "user_id": int,
+        "book_id": int,
+        "reservation_date": "date",
+    },
+    "required": ["reservation_id", "user_id", "book_id", "reservation_date"],
 }
 
-backup_schema = {"file_name": str, "backup_date": "datetime"}
+backup_schema = {
+    "fields": {"file_name": str, "backup_date": "datetime"},
+    "required": ["file_name", "backup_date"],
+}
