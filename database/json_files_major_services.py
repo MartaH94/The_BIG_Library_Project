@@ -22,6 +22,7 @@ validate_against_schema method needs to be rebuilt once all database schemes are
 schemas in(database_schemes.py) requires rebuilding to Json schema style to prepare required fields. Otherwise all fields must be filles during adding book data.
 Verify code of services which use schemas and implement required changes.
 
+I am here
 
 Planned steps:
 1. Adjust validate_against_schema
@@ -168,14 +169,20 @@ class JsonFilesService:
         Raises:
             exc.ValidationError: If given data is None, schema is empty or data has wrong type.
         """
-        if data is None:
-            raise exc.ValidationError(
-                "Data to validate is missing or it's an empty value."
-            )
 
         if not schema:
             raise exc.ValidationError(
                 "Given schema is empty. Cannot validate against empty schema."
+            )
+
+        if data is None:
+            """In some cases None value is acceptable in some optional fields."""
+            if schema is type(None):
+                return data
+            if isinstance(schema, tuple) and type(None) in schema:
+                return data
+            raise exc.ValidationError(
+                "Data to validate is missing or it's an empty value."
             )
 
         if isinstance(schema, dict):
@@ -184,11 +191,21 @@ class JsonFilesService:
                     "Provided data has wrong type. Expected data type is dict."
                 )
 
-            for key, subschema in schema.items():
-                if key not in data:
-                    raise exc.ValidationError(f"Missing key {key}")
-                self.validate_against_schema(data[key], subschema)
-            return data
+            if "fields" in schema:
+                fields = schema.get("fields", {})
+                required = schema.get("required", [])
+
+                for key in required:
+                    if key not in data:
+                        raise exc.ValidationError(f"Required key is missing: {key}")
+
+                for key, subschema in fields.items():
+                    if key in data:
+                        self.validate_against_schema(data[key], subschema)
+                return data
+            raise exc.ValidationError(
+                "Format of the schema is invalid. Expected schema is a dict with 'fields' and 'required' keys."
+            )
 
         if isinstance(schema, type):
             if not isinstance(data, schema):
