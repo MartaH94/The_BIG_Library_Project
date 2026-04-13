@@ -296,6 +296,10 @@ class JsonFilesService:
             raise exc.ValidationError(
                 f"File {self.file_path.name} is empty. Cannot validate fields in an empty file."
             )
+
+        if not isinstance(file_content, list):
+            raise exc.ValidationError("File must contain a list of records")
+
         for index, item in enumerate(file_content):
             if not isinstance(item, dict):
                 raise exc.ValidationError(f"The record {index+1} is not a dictionary.")
