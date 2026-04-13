@@ -15,24 +15,6 @@ This module provides a high-level interface for working with JSON files, includi
 - and generating timestamped backups.
 
 It is designed to keep file operations consistent, safe, and schema-compliant across the system.
-
-IMPORTANT TO DO:
-validate_against_schema method needs to be rebuilt once all database schemes are rebuilted in Json schema style.
-
-schemas in(database_schemes.py) requires rebuilding to Json schema style to prepare required fields. Otherwise all fields must be filles during adding book data.
-Verify code of services which use schemas and implement required changes.
-
-I am here
-
-Planned steps:
-1. Adjust validate_against_schema
-    - required vs optional
-    - nested objects
-
-2. Ensure update logic validates merged records
-3. Enforce additionalProperties
-4. Light date/date-time format checking
-
 """
 
 import json
