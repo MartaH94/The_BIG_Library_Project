@@ -233,6 +233,21 @@ class JsonFilesService:
                 f"Format of the schema is invalid {error_location}. Expected schema is a dict with 'fields' and 'required' keys."
             )
 
+        if isinstance(schema, str):
+            if schema == "date":
+                if not isinstance(data, str):
+                    raise exc.ValidationError(
+                        f"Inavlid type of date {error_location}. Expected date format is a string: YYYY-MM-DD"
+                    )
+
+                try:
+                    datetime.strptime(data, "%Y-%m-%d")
+                except ValueError:
+                    raise exc.ValidationError(
+                        f"Invalid date format {error_location}. Expected format is YYYY-MM-DD"
+                    )
+            return data
+
         if isinstance(schema, type):
             if not isinstance(data, schema):
                 raise exc.ValidationError(
