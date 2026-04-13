@@ -246,7 +246,26 @@ class JsonFilesService:
                     raise exc.ValidationError(
                         f"Invalid date format {error_location}. Expected format is YYYY-MM-DD"
                     )
-            return data
+                return data
+
+            if schema == "datetime":
+                if not isinstance(data, str):
+                    raise exc.ValidationError(
+                        f"Invalid type for datetime {error_location}. Expected type is datetime string."
+                    )
+
+                try:
+                    datetime.fromisoformat(data)
+                except ValueError:
+                    raise exc.ValidationError(
+                        f"Invalid datetime format {error_location}. Expected ISO format"
+                    )
+
+                return data
+
+            raise exc.ValidationError(
+                f"Unsupported string schema {error_location}: {schema}"
+            )
 
         if isinstance(schema, type):
             if not isinstance(data, schema):
