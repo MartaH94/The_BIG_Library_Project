@@ -241,6 +241,8 @@ class JsonFilesService:
             else:
                 return data
 
+        raise exc.ValidationError(f"Unsupported schema type {error_location}: {schema}")
+
     def validate_file_data(self):
         """Validate all records loaded  from JSON file against the service schema.
 
