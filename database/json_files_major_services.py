@@ -156,7 +156,7 @@ class JsonFilesService:
     # Core validation
     # -------------------------
 
-    def validate_against_schema(self, data, schema):
+    def validate_against_schema(self, data, schema, path=""):
         """Recursively validate value types against a given schema.
 
         Args:
@@ -170,9 +170,11 @@ class JsonFilesService:
             exc.ValidationError: If given data is None, schema is empty or data has wrong type.
         """
 
+        error_location = f"at '{path}'" if path else ""
+
         if not schema:
             raise exc.ValidationError(
-                "Given schema is empty. Cannot validate against empty schema."
+                f"Given schema is empty. Cannot validate against empty schema {error_location}"
             )
 
         if data is None:
@@ -182,7 +184,7 @@ class JsonFilesService:
             if isinstance(schema, tuple) and type(None) in schema:
                 return data
             raise exc.ValidationError(
-                "Data to validate is missing or it's an empty value."
+                f"Data to validate is missing or it's an empty value {error_location}"
             )
 
         if isinstance(schema, tuple):
@@ -190,25 +192,25 @@ class JsonFilesService:
                 valid_values = schema[1]
                 if data not in valid_values:
                     raise exc.ValidationError(
-                        "Provided value of the field is not valid."
+                        f"Provided value of the field is not valid {error_location}"
                     )
                 return data
 
-            if schema and schema[0] != "one_of":
+            if schema[0] != "one_of":
                 for option in schema:
                     try:
-                        self.validate_against_schema(data, option)
+                        self.validate_against_schema(data, option, path)
                         return data
                     except exc.ValidationError:
                         continue
                 raise exc.ValidationError(
-                    "Provided value does not match any of the options in the schema."
+                    f"Provided value does not match any of the options in the schema {error_location}"
                 )
 
         if isinstance(schema, dict):
             if not isinstance(data, dict):
                 raise exc.ValidationError(
-                    "Provided data has wrong type. Expected data type is dict."
+                    f"Provided data has wrong type. Expected data type is dict {error_location}"
                 )
 
             if "fields" in schema:
@@ -216,21 +218,25 @@ class JsonFilesService:
                 required = schema.get("required", [])
 
                 for key in required:
+                    missing_path = f"{path}.{key}" if path else key
                     if key not in data:
-                        raise exc.ValidationError(f"Required key is missing: {key}")
+                        raise exc.ValidationError(
+                            f"Required key is missing: {missing_path}"
+                        )
 
                 for key, subschema in fields.items():
+                    child_path = f"{path}.{key}" if path else key
                     if key in data:
-                        self.validate_against_schema(data[key], subschema)
+                        self.validate_against_schema(data[key], subschema, child_path)
                 return data
             raise exc.ValidationError(
-                "Format of the schema is invalid. Expected schema is a dict with 'fields' and 'required' keys."
+                f"Format of the schema is invalid {error_location}. Expected schema is a dict with 'fields' and 'required' keys."
             )
 
         if isinstance(schema, type):
             if not isinstance(data, schema):
                 raise exc.ValidationError(
-                    f"Wrong type of data. Expected {schema.__name__}, got {type(data).__name__}."
+                    f"Wrong type of data {error_location}. Expected {schema.__name__}, got {type(data).__name__}."
                 )
             else:
                 return data
