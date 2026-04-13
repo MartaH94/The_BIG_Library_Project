@@ -13,7 +13,9 @@ Total number of done test cases: 44/44
 
 
 IMPORTANT TO DO:
-tests for validate_against_schema need rebuilding due to rebuilding validate_against_schema method using JSON-schema style in database_schemas
+Prepare new test cases for methods:
+- validate_against_schema
+- validate_file_data
 
 """
 
@@ -324,7 +326,7 @@ class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/6
         """ file_path is not used by validate_against_schema method, but it's required to create an instance of JsonFilesService, so we need to prepare it"""
         self.test_json_file_path = self.temporary_dir_path / "test_file.json"
 
-        self.test_schema = {"service": str, "enabled": bool}
+        self.test_schema = {"fields": {"service": str}, "required": ["service"]}
 
         """ service under test """
         self.validation_service = JsonFilesService(
@@ -342,9 +344,7 @@ class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/6
                 self.data_to_validate, self.test_schema
             )
 
-        self.assertIn(
-            "Data to validate is missing or it's an empty value.", str(cm.exception)
-        )
+        self.assertIn("Data to validate is missing", str(cm.exception))
 
     def test_raises_validation_error_if_schema_is_empty(self):
         """expected behavior: Raises exc.ValidationError in case the schema to validate against is missing or it's an empty value"""
@@ -356,7 +356,7 @@ class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/6
                 self.data_to_validate, self.test_schema
             )
 
-        self.assertIn("Cannot validate against empty schema.", str(cm.exception))
+        self.assertIn("Cannot validate against empty schema", str(cm.exception))
 
     def test_raises_validation_error_if_data_is_not_dict(self):
         """expected behavior: Raises exc.ValidationError in case the data to validate is not a type of dict"""
