@@ -176,7 +176,7 @@ class JsonFilesService:
             )
 
         if data is None:
-            """In some cases None value is acceptable in some optional fields."""
+            # In some cases None value is acceptable in some optional fields.
             if schema is type(None):
                 return data
             if isinstance(schema, tuple) and type(None) in schema:
@@ -184,6 +184,26 @@ class JsonFilesService:
             raise exc.ValidationError(
                 "Data to validate is missing or it's an empty value."
             )
+
+        if isinstance(schema, tuple):
+            if schema and schema[0] == "one_of":
+                valid_values = schema[1]
+                if data not in valid_values:
+                    raise exc.ValidationError(
+                        "Provided value of the field is not valid."
+                    )
+                return data
+
+            if schema and schema[0] != "one_of":
+                for option in schema:
+                    try:
+                        self.validate_against_schema(data, option)
+                        return data
+                    except exc.ValidationError:
+                        continue
+                raise exc.ValidationError(
+                    "Provided value does not match any of the options in the schema."
+                )
 
         if isinstance(schema, dict):
             if not isinstance(data, dict):
