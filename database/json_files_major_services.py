@@ -299,7 +299,14 @@ class JsonFilesService:
         for index, item in enumerate(file_content):
             if not isinstance(item, dict):
                 raise exc.ValidationError(f"The record {index+1} is not a dictionary.")
-            self.validate_against_schema(item, self.schema)
+
+            try:
+                self.validate_against_schema(item, self.schema)
+            except exc.ValidationError as e:
+                raise exc.ValidationError(
+                    f"Validation failed for record {index + 1}: {e}"
+                )
+
         return True
 
     # -------------------------
