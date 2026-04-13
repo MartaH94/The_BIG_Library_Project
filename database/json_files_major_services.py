@@ -196,7 +196,7 @@ class JsonFilesService:
                     )
                 return data
 
-            if schema[0] != "one_of":
+            elif schema and schema[0] != "one_of":
                 for option in schema:
                     try:
                         self.validate_against_schema(data, option, path)
@@ -237,7 +237,7 @@ class JsonFilesService:
             if schema == "date":
                 if not isinstance(data, str):
                     raise exc.ValidationError(
-                        f"Inavlid type of date {error_location}. Expected date format is a string: YYYY-MM-DD"
+                        f"Invalid type of date {error_location}. Expected date format is a string: YYYY-MM-DD"
                     )
 
                 try:
