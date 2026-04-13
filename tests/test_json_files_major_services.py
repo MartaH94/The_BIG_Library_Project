@@ -351,12 +351,12 @@ class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/6
 
     def test_raises_validation_error_if_schema_is_empty(self):
         """expected behavior: Raises exc.ValidationError in case the schema to validate against is missing or it's an empty value"""
-        self.data_to_validate = {"service": "loan", "enabled": True}
-        self.test_schema = ""
+        data_to_validate = {"service": "loan", "enabled": True}
+        empty_test_schema = ""
 
         with self.assertRaises(exc.ValidationError) as cm:
             self.validation_service.validate_against_schema(
-                self.data_to_validate, self.test_schema
+                data_to_validate, empty_test_schema
             )
 
         self.assertIn("Cannot validate against empty schema", str(cm.exception))
@@ -370,11 +370,12 @@ class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/6
                 self.data_to_validate, self.test_schema
             )
 
-        self.assertIn("Provided data has wrong type.", str(cm.exception))
+        self.assertIn("Provided data has wrong type", str(cm.exception))
 
     def test_raises_validation_error_if_required_key_is_missing(self):
         """expected behavior: Raises exc.ValidationError in case the data to validate is missing required key(s) defined in schema"""
         self.data_to_validate = {"user_id": 123321, "enabled": True}
+        # "user_id" is the missing key in the schema
 
         with self.assertRaises(exc.ValidationError) as cm:
             self.validation_service.validate_against_schema(
