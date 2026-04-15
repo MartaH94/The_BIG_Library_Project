@@ -313,10 +313,12 @@ class TestJsonFileServiceAppendDataToFile(unittest.TestCase):  # 4/4
 # -------------------------
 
 
-class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/6
+class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/19
     """Method under test: validate_against_schema
-    Number of TestCases: 6
+    Number of TestCases: 19
     Done TestCases: 6
+
+    TO DO: This method requires new test cases.
     """
 
     def setUp(self):
@@ -339,6 +341,28 @@ class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/6
     def tearDown(self):
         self.temporary_dir.cleanup()
 
+    # ---------------------------------------------------------------------------
+    # Guard clauses / early validation
+    # - Validate presence of schema
+    # - Validate presence of data
+    # - Allow None values only when explicitly permitted by schema
+    # ---------------------------------------------------------------------------
+
+    def test_raises_validation_error_if_schema_is_empty(self):
+        """expected behavior: Raises exc.ValidationError in case the schema to validate against is missing or it's an empty value"""
+        data_to_validate = {"service": "loan", "enabled": True}
+        empty_test_schema = {}
+
+        with self.assertRaises(exc.ValidationError) as cm:
+            self.validation_service.validate_against_schema(
+                data_to_validate, empty_test_schema
+            )
+
+        self.assertIn("Cannot validate against empty schema", str(cm.exception))
+
+    def test_returns_none_if_data_is_none_and_schema_allows_none(self):
+        pass
+
     def test_raises_validation_error_if_data_is_none(self):
         """expected behavior: Raises exc.ValidationError in case the data to validate is missing or it's an empty value"""
         self.data_to_validate = None
@@ -349,17 +373,13 @@ class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/6
 
         self.assertIn("Data to validate is missing", str(cm.exception))
 
-    def test_raises_validation_error_if_schema_is_empty(self):
-        """expected behavior: Raises exc.ValidationError in case the schema to validate against is missing or it's an empty value"""
-        data_to_validate = {"service": "loan", "enabled": True}
-        empty_test_schema = ""
-
-        with self.assertRaises(exc.ValidationError) as cm:
-            self.validation_service.validate_against_schema(
-                data_to_validate, empty_test_schema
-            )
-
-        self.assertIn("Cannot validate against empty schema", str(cm.exception))
+    # ---------------------------------------------------------------------------
+    # Dict-based schema validation (main schema type)
+    # - Data must be a dictionary
+    # - Required keys must be present
+    # - Field values must match declared field types
+    # - Schema dict structure itself must be valid
+    # ---------------------------------------------------------------------------
 
     def test_raises_validation_error_if_data_is_not_dict(self):
         """expected behavior: Raises exc.ValidationError in case the data to validate is not a type of dict"""
@@ -403,6 +423,66 @@ class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/6
         )
 
         self.assertEqual(result, self.data_to_validate)
+
+    def test_raises_validation_error_if_schema_dict_missing_fields_key(self):
+        pass
+
+    # ---------------------------------------------------------------------------
+    # Tuple-based schema validation
+    # - "one_of" schema: value must be in allowed set
+    # - Alternative schemas: value must match at least one option
+    # ---------------------------------------------------------------------------
+
+    def test_validates_one_of_schema_accepts_and_rejects_values(self):
+        pass
+
+    def test_returns_data_if_tuple_schema_matches_any_option(self):
+        pass
+
+    def test_raises_validation_error_if_tuple_schema_matches_no_option(self):
+        pass
+
+    # ---------------------------------------------------------------------------
+    # String-based schema validation: "date"
+    # - Value must be a string
+    # - Value must follow YYYY-MM-DD format
+    # ---------------------------------------------------------------------------
+
+    def test_raises_validation_error_if_schema_date_and_data_is_not_string(self):
+        pass
+
+    def test_raises_validation_error_if_schema_date_and_format_is_invalid(self):
+        pass
+
+    def test_returns_data_if_schema_date_and_format_is_valid(self):
+        pass
+
+    # ---------------------------------------------------------------------------
+    # String-based schema validation: "datetime"
+    # - Value must be a string
+    # - Value must follow ISO datetime format
+    # ---------------------------------------------------------------------------
+
+    def test_raises_validation_error_if_schema_datetime_and_data_is_not_string(self):
+        pass
+
+    def test_raises_validation_error_if_schema_datetime_and_format_is_invalid(self):
+        pass
+
+    def test_returns_data_if_schema_datetime_and_format_is_valid(self):
+        pass
+
+    # ---------------------------------------------------------------------------
+    # Unsupported schema definitions
+    # - Unsupported string schema
+    # - Unsupported schema type
+    # ---------------------------------------------------------------------------
+
+    def test_raises_validation_error_if_schema_is_unsupported_string(self):
+        pass
+
+    def test_raises_validation_error_if_schema_type_is_unsupported(self):
+        pass
 
 
 class TestJsonFileServiceValidateFileData(unittest.TestCase):  # 4/4
