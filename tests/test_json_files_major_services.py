@@ -317,8 +317,6 @@ class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/19
     """Method under test: validate_against_schema
     Number of TestCases: 19
     Done TestCases: 6
-
-    TO DO: This method requires new test cases.
     """
 
     def setUp(self):
@@ -361,6 +359,7 @@ class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/19
         self.assertIn("Cannot validate against empty schema", str(cm.exception))
 
     def test_returns_none_if_data_is_none_and_schema_allows_none(self):
+        """expected behavior: Returns None if the data to validate is None and the schema allows None values for the field. It means that the field is optional and can be empty."""
         pass
 
     def test_raises_validation_error_if_data_is_none(self):
@@ -425,6 +424,7 @@ class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/19
         self.assertEqual(result, self.data_to_validate)
 
     def test_raises_validation_error_if_schema_dict_missing_fields_key(self):
+        """expected behavior: Raises exc.ValidationError in case the expected key for required fields is missing in the schema."""
         pass
 
     # ---------------------------------------------------------------------------
@@ -433,13 +433,20 @@ class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/19
     # - Alternative schemas: value must match at least one option
     # ---------------------------------------------------------------------------
 
-    def test_validates_one_of_schema_accepts_and_rejects_values(self):
+    def test_returns_data_if_one_of_schema_value_is_allowed(self):
+        """expected behavior:  Data is returned in case the value matches to "one_of" the values allowed by the schema."""
+        pass
+
+    def test_raises_validation_error_if_one_of_schema_value_is_not_allowed(self):
+        """expected behavior: raises exc.ValidationEror in case the value does not match to "one_of" the values allowed by the schema."""
         pass
 
     def test_returns_data_if_tuple_schema_matches_any_option(self):
+        """expected behavior: Data is returned in case the value matches to at least one of the options defined in tuple schema."""
         pass
 
     def test_raises_validation_error_if_tuple_schema_matches_no_option(self):
+        """expected behavior: raises exc.ValidationEror in case the value does not match to any of the options defined in tuple schema."""
         pass
 
     # ---------------------------------------------------------------------------
@@ -449,12 +456,15 @@ class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/19
     # ---------------------------------------------------------------------------
 
     def test_raises_validation_error_if_schema_date_and_data_is_not_string(self):
+        """expected behavior: Raises exc.ValidationError in case the date data is not a string value."""
         pass
 
     def test_raises_validation_error_if_schema_date_and_format_is_invalid(self):
+        """expected behavior: Raises exc.ValidationError in case the date data does not follow the expected YYYY-MM-DD format."""
         pass
 
     def test_returns_data_if_schema_date_and_format_is_valid(self):
+        """expected behavior: Returns the data in case the date data is a string value and follows the expected format."""
         pass
 
     # ---------------------------------------------------------------------------
@@ -464,12 +474,15 @@ class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/19
     # ---------------------------------------------------------------------------
 
     def test_raises_validation_error_if_schema_datetime_and_data_is_not_string(self):
+        """expected behavior: Raises exc.ValidationError in case the datetime data is not a string value."""
         pass
 
     def test_raises_validation_error_if_schema_datetime_and_format_is_invalid(self):
+        """expected behavior: Raises exc.ValidationError in case the datetime data does not follow the expected ISO datetime format."""
         pass
 
     def test_returns_data_if_schema_datetime_and_format_is_valid(self):
+        """expected behavior: Returns the data in case the datetime data is a string value and follows the expected ISO datetime format."""
         pass
 
     # ---------------------------------------------------------------------------
@@ -479,9 +492,11 @@ class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/19
     # ---------------------------------------------------------------------------
 
     def test_raises_validation_error_if_schema_is_unsupported_string(self):
+        """expected behavior: Raises exc.ValidationError in case that defined schema is unsupported string other than "date" or "datetime"."""
         pass
 
     def test_raises_validation_error_if_schema_type_is_unsupported(self):
+        """expected behavior: Raises exc.ValidationError in case that defined schema is unsupported type other than dict, tuple, or string."""
         pass
 
 
