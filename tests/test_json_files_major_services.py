@@ -6,16 +6,39 @@ Test for the file json_files_major_services.py
 ________________________________________________________
 
 Test classes: 11
-Test cases total: 44
-
-current status: DONE! :)
-Total number of done test cases: 44/44
+Test cases total: 58
+current status: in progress
 
 
-IMPORTANT TO DO:
-Prepare new test cases for methods:
-- validate_against_schema
-- validate_file_data
+--- IMPORTANT TO DO ---
+
+TEST CASES TO REPAIR:
+- TestJsonFileServiceAppendDataToFile.test_appends_valid_record_to_file
+- TestJsonFileServiceAppendDataToFile.test_raises_validation_error_for_invalid_record
+- TestJsonFileServiceRemoveFromFile.test_removes_matching_records_and_saves_file
+- TestJsonFileServiceUpdateDataInFile.test_updates_existing_field_and_saves_file
+- TestJsonFileServiceValidateAgainstSchema.test_returns_none_if_data_is_none_and_schema_allows_none
+- TestJsonFileServiceValidateFileData.test_raises_validation_error_if_record_does_not_match_schema
+- TestJsonFileServiceValidateFileData.test_returns_true_if_all_records_are_valid
+- TestJsonFileServiceWriteJsonData.test_writes_valid_list_to_file
+
+TEST CASES TO IMPLEMENT in test class: TestJsonFileServiceValidateAgainstSchema:
+- test_raises_validation_error_if_schema_dict_missing_fields_key
+- test_returns_data_if_one_of_schema_value_is_allowed
+- test_raises_validation_error_if_one_of_schema_value_is_not_allowed
+- test_returns_data_if_tuple_schema_matches_any_option
+- test_raises_validation_error_if_tuple_schema_matches_no_option
+- test_raises_validation_error_if_schema_date_and_data_is_not_string
+- test_raises_validation_error_if_schema_date_and_format_is_invalid
+- test_returns_data_if_schema_date_and_format_is_valid
+- test_raises_validation_error_if_schema_datetime_and_data_is_not_string
+- test_raises_validation_error_if_schema_datetime_and_format_is_invalid
+- test_returns_data_if_schema_datetime_and_format_is_valid
+- test_raises_validation_error_if_schema_is_unsupported_string
+- test_raises_validation_error_if_schema_type_is_unsupported
+
+Also:
+review existing test cases if they test correctly the logic of json_file_major_services, since the database schemas is rebuilt
 
 """
 
@@ -34,7 +57,7 @@ from database.json_files_major_services import JsonFilesService
 
 
 # -------------------------
-# File I/O helpers | Test cases: to do: 11
+# File I/O helpers | Test cases: 11
 # -------------------------
 class TestJsonFileServiceFileExistsChecking(unittest.TestCase):  # 3/3
     """Method under test: file_exists_checking
@@ -240,14 +263,20 @@ class TestJsonFileServiceWriteJsonData(unittest.TestCase):  # 4/4
 
 
 # -------------------------
-# CRUD operations | Test cases: to do: 4
+# CRUD operations | Test cases: 4
 # -------------------------
 
 
-class TestJsonFileServiceAppendDataToFile(unittest.TestCase):  # 4/4
+class TestJsonFileServiceAppendDataToFile(
+    unittest.TestCase
+):  # 4/4 - 2 test cases with error, required repairing
     """Method under test: append_data_to_file
     Number of TestCases: 4
     Done TestCases: 4
+
+    Test cases with errors:
+    - test_appends_valid_record_to_file
+    - test_raises_validation_error_for_invalid_record
     """
 
     def setUp(self):
@@ -291,7 +320,7 @@ class TestJsonFileServiceAppendDataToFile(unittest.TestCase):  # 4/4
 
         self.assertIn("Incorrect type of data to append", str(cm.exception))
 
-    def test_appends_valid_record_to_file(self):
+    def test_appends_valid_record_to_file(self):  # tc to repair
         """expected behavior: Data is correct and is appended to JSON file. Return message with confirmation is displayed"""
         self.append_data_service.append_data_to_file(self.data_to_append)
         with self.test_json_file_path.open("r", encoding="utf-8") as f:
@@ -299,7 +328,7 @@ class TestJsonFileServiceAppendDataToFile(unittest.TestCase):  # 4/4
 
         self.assertIn(self.data_to_append, file_content)
 
-    def test_raises_validation_error_for_invalid_record(self):
+    def test_raises_validation_error_for_invalid_record(self):  # tc to repair
         """expected behavior: Raises exc.ValidationError in case the data doesn't match schema"""
         self.data_to_append = {"user_id": 123321, "enabled": True}
         with self.assertRaises(exc.ValidationError) as cm:
@@ -309,13 +338,13 @@ class TestJsonFileServiceAppendDataToFile(unittest.TestCase):  # 4/4
 
 
 # -------------------------
-# Core validation | Test cases: to do: 10
+# Core validation | Test cases: 24
 # -------------------------
 
 
-class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/19
+class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/20
     """Method under test: validate_against_schema
-    Number of TestCases: 19
+    Number of TestCases: 20
     Done TestCases: 6
     """
 
@@ -508,10 +537,16 @@ class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/19
         pass
 
 
-class TestJsonFileServiceValidateFileData(unittest.TestCase):  # 4/4
+class TestJsonFileServiceValidateFileData(
+    unittest.TestCase
+):  # 4/4 - 2 test cases to repair
     """Method under test: validate_file_data
     Number of TestCases: 4
     Done TestCases: 4
+
+    Test cases with errors:
+    - test_raises_validation_error_if_record_does_not_match_schema
+    - test_returns_true_if_all_records_are_valid
     """
 
     def setUp(self):
@@ -555,7 +590,9 @@ class TestJsonFileServiceValidateFileData(unittest.TestCase):  # 4/4
 
         self.assertIn("not a dictionary.", str(cm.exception))
 
-    def test_raises_validation_error_if_record_does_not_match_schema(self):
+    def test_raises_validation_error_if_record_does_not_match_schema(
+        self,
+    ):  # tc to repair
         """expected behavior: Raises exc.ValidationError in case the file to validate contains record(s) that do not match the defined schema. Each record in the file should conform to the schema to be valid."""
         self.test_file = self.test_json_file_path
 
@@ -571,7 +608,7 @@ class TestJsonFileServiceValidateFileData(unittest.TestCase):  # 4/4
 
         self.assertIn("Wrong type of data", str(cm.exception))
 
-    def test_returns_true_if_all_records_are_valid(self):
+    def test_returns_true_if_all_records_are_valid(self):  # tc to repair
         """expected behavior: Returns True if all records in the file are valid according to the defined schema. No exception is raised."""
         self.test_file = self.test_json_file_path
 
@@ -588,7 +625,7 @@ class TestJsonFileServiceValidateFileData(unittest.TestCase):  # 4/4
 
 
 # -------------------------
-# Backup helpers | Test cases: to do: 9
+# Backup helpers | Test cases: 9
 # -------------------------
 
 
@@ -765,14 +802,19 @@ class TestJsonFileServiceCreateBackupFile(unittest.TestCase):  # 4/4
 
 
 # -------------------------
-# Remove/Update operations | Test cases: to do: 10
+# Remove/Update operations | Test cases: 10
 # -------------------------
 
 
-class TestJsonFileServiceRemoveFromFile(unittest.TestCase):  # 5/5
+class TestJsonFileServiceRemoveFromFile(
+    unittest.TestCase
+):  # 5/5 - 1 Test case to repair
     """Method under test: remove_from_file
     Number of TestCases: 5
     Done TestCases: 5
+
+    Test case with errors:
+    - test_removes_matching_records_and_saves_file
     """
 
     def setUp(self):
@@ -847,7 +889,7 @@ class TestJsonFileServiceRemoveFromFile(unittest.TestCase):  # 5/5
 
         self.assertIn("No matching elements to key", str(cm.exception))
 
-    def test_removes_matching_records_and_saves_file(self):
+    def test_removes_matching_records_and_saves_file(self):  # tc to repair
         """expected behavior: Removes all records matching the provided key name and value from the file and saves the updated file. The method should successfully identify and remove the matching records, and then save the changes to the file, ensuring that the file reflects the removal of the specified records."""
         self.test_key_name = "service"
         self.test_key_value = "login"
@@ -865,10 +907,15 @@ class TestJsonFileServiceRemoveFromFile(unittest.TestCase):  # 5/5
         self.assertNotIn({"service": "login", "enabled": True}, updated_file_content)
 
 
-class TestJsonFileServiceUpdateDataInFile(unittest.TestCase):  # 5/5
+class TestJsonFileServiceUpdateDataInFile(
+    unittest.TestCase
+):  # 5/5 - 1 Test case to repair
     """Method under test: update_data_in_file
     Number of TestCases: 5
     Done TestCases: 5
+
+    Test case with errors:
+    - test_updates_existing_field_and_saves_file
     """
 
     def setUp(self):
@@ -972,7 +1019,7 @@ class TestJsonFileServiceUpdateDataInFile(unittest.TestCase):  # 5/5
 
         self.assertIn("No matching element", str(cm.exception))
 
-    def test_updates_existing_field_and_saves_file(self):
+    def test_updates_existing_field_and_saves_file(self):  # tc to repair
         """expected behavior: Updates an existing field in the item with new data and saves the updated file. The method should successfully identify the item to update, apply the new data to the existing field, and then save the changes to the file, ensuring that the file reflects the updated information for the specified item."""
         self.test_item_to_update = "service"
         self.new_value = "logout"
