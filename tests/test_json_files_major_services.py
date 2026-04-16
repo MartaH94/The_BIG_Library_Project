@@ -360,7 +360,15 @@ class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/19
 
     def test_returns_none_if_data_is_none_and_schema_allows_none(self):
         """expected behavior: Returns None if the data to validate is None and the schema allows None values for the field. It means that the field is optional and can be empty."""
-        pass
+        data_to_validate = None
+        test_schema_allowing_none = {
+            "fields": {"service": (str, type(None))},
+            "required": "service",
+        }
+        test_result = self.validation_service.validate_against_schema(
+            data_to_validate, test_schema_allowing_none
+        )
+        self.assertIsNone(test_result)
 
     def test_raises_validation_error_if_data_is_none(self):
         """expected behavior: Raises exc.ValidationError in case the data to validate is missing or it's an empty value"""
