@@ -12,18 +12,9 @@ current status: in progress
 
 --- IMPORTANT TO DO ---
 
-- verify setups in test classes
-- fix test schemas to match new database_schemes
-
 TEST CASES TO REPAIR:
-done - TestJsonFileServiceAppendDataToFile.test_appends_valid_record_to_file
-done - TestJsonFileServiceAppendDataToFile.test_raises_validation_error_for_invalid_record
-- TestJsonFileServiceRemoveFromFile.test_removes_matching_records_and_saves_file
-- TestJsonFileServiceUpdateDataInFile.test_updates_existing_field_and_saves_file
 - TestJsonFileServiceValidateAgainstSchema.test_returns_none_if_data_is_none_and_schema_allows_none
-- TestJsonFileServiceValidateFileData.test_raises_validation_error_if_record_does_not_match_schema
-- TestJsonFileServiceValidateFileData.test_returns_true_if_all_records_are_valid
-- TestJsonFileServiceWriteJsonData.test_writes_valid_list_to_file
+
 
 TEST CASES TO IMPLEMENT in test class: TestJsonFileServiceValidateAgainstSchema:
 - test_raises_validation_error_if_schema_dict_missing_fields_key
@@ -39,9 +30,6 @@ TEST CASES TO IMPLEMENT in test class: TestJsonFileServiceValidateAgainstSchema:
 - test_returns_data_if_schema_datetime_and_format_is_valid
 - test_raises_validation_error_if_schema_is_unsupported_string
 - test_raises_validation_error_if_schema_type_is_unsupported
-
-Also:
-review existing test cases if they test correctly the logic of json_file_major_services, since the database schemas is rebuilt
 
 """
 
@@ -213,7 +201,12 @@ class TestJsonFileServiceWriteJsonData(unittest.TestCase):  # 4/4
         self.test_json_file_path.write_text("[]", encoding="utf-8")
 
         """ valid data must match schema and validator expectations"""
-        self.schema = {"service": str, "enabled": bool}
+        self.test_schema = {
+            "service": str,
+            "enabled": bool,
+            "fields": {"service": str, "enabled": bool},
+            "required": ["service", "enabled"],
+        }
         self.valid_data = [
             {"service": "loan", "enabled": True},
             {"user_id": 112233, "enabled": True},
@@ -224,7 +217,7 @@ class TestJsonFileServiceWriteJsonData(unittest.TestCase):  # 4/4
 
         """ Service under test """
         self.write_service = JsonFilesService(
-            file_path=self.test_json_file_path, schema=self.schema
+            file_path=self.test_json_file_path, schema=self.test_schema
         )
 
     def tearDown(self):
@@ -561,7 +554,12 @@ class TestJsonFileServiceValidateFileData(
 
         self.test_json_file_path = self.temporary_dir_path / "test_file.json"
 
-        self.test_schema = {"service": str, "enabled": bool}
+        self.test_schema = {
+            "service": str,
+            "enabled": bool,
+            "fields": {"service": str, "enabled": bool},
+            "required": ["service", "enabled"],
+        }
 
         self.validation_service = JsonFilesService(
             file_path=self.test_json_file_path, schema=self.test_schema
@@ -816,9 +814,6 @@ class TestJsonFileServiceRemoveFromFile(unittest.TestCase):  # 5/5
     """Method under test: remove_from_file
     Number of TestCases: 5
     Done TestCases: 5
-
-    Test case with errors:
-    - test_removes_matching_records_and_saves_file
     """
 
     def setUp(self):
@@ -836,7 +831,12 @@ class TestJsonFileServiceRemoveFromFile(unittest.TestCase):  # 5/5
         with self.test_json_file_path.open("w", encoding="utf-8") as f:
             json.dump(self.test_file_data, f, ensure_ascii=False, indent=4)
 
-        self.test_schema = {"service": str, "enabled": bool}
+        self.test_schema = {
+            "service": str,
+            "enabled": bool,
+            "fields": {"service": str, "enabled": bool},
+            "required": ["service", "enabled"],
+        }
 
         self.remove_service = JsonFilesService(
             self.test_json_file_path, schema=self.test_schema
@@ -911,9 +911,7 @@ class TestJsonFileServiceRemoveFromFile(unittest.TestCase):  # 5/5
         self.assertNotIn({"service": "login", "enabled": True}, updated_file_content)
 
 
-class TestJsonFileServiceUpdateDataInFile(
-    unittest.TestCase
-):  # 5/5 - 1 Test case to repair
+class TestJsonFileServiceUpdateDataInFile(unittest.TestCase):
     """Method under test: update_data_in_file
     Number of TestCases: 5
     Done TestCases: 5
@@ -939,7 +937,12 @@ class TestJsonFileServiceUpdateDataInFile(
                 self.test_file_data, f, ensure_ascii=False, indent=4, sort_keys=True
             )
 
-        self.test_schema = {"service": str, "enabled": bool}
+        self.test_schema = {
+            "service": str,
+            "enabled": bool,
+            "fields": {"service": str, "enabled": bool},
+            "required": ["service", "enabled"],
+        }
 
         self.update_service = JsonFilesService(
             self.test_json_file_path, schema=self.test_schema
