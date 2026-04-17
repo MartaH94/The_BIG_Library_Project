@@ -520,7 +520,17 @@ class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/20
 
     def test_returns_data_if_tuple_schema_matches_any_option(self):
         """expected behavior: Data is returned in case the value matches to at least one of the options defined in tuple schema."""
-        pass
+        test_schema_with_tuple_options = {
+            "fields": {"service": ("one_of", ["loan", "return", "reservation"])},
+            "required": ["service"],
+        }
+        data_to_validate = {"service": "return"}
+
+        test_result = self.validation_service.validate_against_schema(
+            data_to_validate, test_schema_with_tuple_options
+        )
+
+        self.assertEqual(test_result, data_to_validate)
 
     def test_raises_validation_error_if_tuple_schema_matches_no_option(self):
         """expected behavior: raises exc.ValidationEror in case the value does not match to any of the options defined in tuple schema."""
