@@ -384,7 +384,7 @@ class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/20
         self.assertIn("Cannot validate against empty schema", str(cm.exception))
 
     def test_returns_none_if_data_is_none_and_schema_allows_none(self):
-        """expected behavior: Returns None if the data to validate is None and the schema allows None values for the field. It means that the field is optional and can be empty."""
+        """expected behavior: Returns None in case the data to validate is None and None value is allowed by the schema."""
         data_to_validate = None
         test_schema_allowing_none = type(None)
         test_result = self.validation_service.validate_against_schema(
@@ -393,7 +393,7 @@ class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/20
         self.assertIsNone(test_result)
 
     def test_returns_data_if_optional_field_value_is_none(self):
-        """expected behavior:"""
+        """expected behavior: Returns data with None value for optional field if the schema allows None values for that field. It means that the field is optional and can be empty."""
         data_to_validate = {"service": None}
         test_schema_with_none_field = {
             "fields": {"service": (str, type(None))},
@@ -406,7 +406,7 @@ class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/20
         self.assertEqual(test_result, data_to_validate)
 
     def test_raises_validation_error_if_data_is_none(self):
-        """expected behavior: Raises exc.ValidationError in case the data to validate is missing or it's an empty value"""
+        """expected behavior: Raises exc.ValidationError in case the data to validate is missing or it's an empty value."""
         self.data_to_validate = None
         with self.assertRaises(exc.ValidationError) as cm:
             self.validation_service.validate_against_schema(
@@ -468,7 +468,17 @@ class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/20
 
     def test_raises_validation_error_if_schema_dict_missing_fields_key(self):
         """expected behavior: Raises exc.ValidationError in case the expected key for required fields is missing in the schema."""
-        pass
+        test_schema_without_fields_key = {"required": ["service", "enabled"]}
+        data_to_validate = {"service": "loan", "enabled": True}
+        with self.assertRaises(exc.ValidationError) as cm:
+            self.validation_service.validate_against_schema(
+                data_to_validate, test_schema_without_fields_key
+            )
+
+        self.assertIn(
+            "Format of the schema is invalid",
+            str(cm.exception),
+        )
 
     # ---------------------------------------------------------------------------
     # Tuple-based schema validation
