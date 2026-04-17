@@ -348,7 +348,7 @@ class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/20
         self.temporary_dir = tempfile.TemporaryDirectory()
         self.temporary_dir_path = Path(self.temporary_dir.name)
 
-        """ file_path is not used by validate_against_schema method, but it's required to create an instance of JsonFilesService, so we need to prepare it"""
+        # file_path is not used by validate_against_schema method, but it's required to create an instance of JsonFilesService, so we need to prepare it
         self.test_json_file_path = self.temporary_dir_path / "test_file.json"
 
         self.test_schema = {
@@ -384,19 +384,26 @@ class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/20
         self.assertIn("Cannot validate against empty schema", str(cm.exception))
 
     def test_returns_none_if_data_is_none_and_schema_allows_none(self):
-        """expected behavior: Returns None if the data to validate is None and the schema allows None values for the field. It means that the field is optional and can be empty.
-
-        this test fails
-        """
+        """expected behavior: Returns None if the data to validate is None and the schema allows None values for the field. It means that the field is optional and can be empty."""
         data_to_validate = None
-        test_schema_allowing_none = {
-            "fields": {"service": (str, type(None))},
-            "required": "service",
-        }
+        test_schema_allowing_none = type(None)
         test_result = self.validation_service.validate_against_schema(
             data_to_validate, test_schema_allowing_none
         )
         self.assertIsNone(test_result)
+
+    def test_returns_data_if_optional_field_value_is_none(self):
+        """expected behavior:"""
+        data_to_validate = {"service": None}
+        test_schema_with_none_field = {
+            "fields": {"service": (str, type(None))},
+            "required": ["service"],
+        }
+        test_result = self.validation_service.validate_against_schema(
+            data_to_validate, test_schema_with_none_field
+        )
+
+        self.assertEqual(test_result, data_to_validate)
 
     def test_raises_validation_error_if_data_is_none(self):
         """expected behavior: Raises exc.ValidationError in case the data to validate is missing or it's an empty value"""
@@ -536,9 +543,7 @@ class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/20
         pass
 
 
-class TestJsonFileServiceValidateFileData(
-    unittest.TestCase
-):  # 4/4 - 2 test cases to repair
+class TestJsonFileServiceValidateFileData(unittest.TestCase):
     """Method under test: validate_file_data
     Number of TestCases: 4
     Done TestCases: 4
