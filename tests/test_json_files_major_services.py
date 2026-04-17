@@ -16,8 +16,8 @@ current status: in progress
 - fix test schemas to match new database_schemes
 
 TEST CASES TO REPAIR:
-- TestJsonFileServiceAppendDataToFile.test_appends_valid_record_to_file
-- TestJsonFileServiceAppendDataToFile.test_raises_validation_error_for_invalid_record
+done - TestJsonFileServiceAppendDataToFile.test_appends_valid_record_to_file
+done - TestJsonFileServiceAppendDataToFile.test_raises_validation_error_for_invalid_record
 - TestJsonFileServiceRemoveFromFile.test_removes_matching_records_and_saves_file
 - TestJsonFileServiceUpdateDataInFile.test_updates_existing_field_and_saves_file
 - TestJsonFileServiceValidateAgainstSchema.test_returns_none_if_data_is_none_and_schema_allows_none
@@ -270,15 +270,10 @@ class TestJsonFileServiceWriteJsonData(unittest.TestCase):  # 4/4
 # -------------------------
 
 
-class TestJsonFileServiceAppendDataToFile(
-    unittest.TestCase
-):  # 4/4 - 2 test cases with error, required repairing
+class TestJsonFileServiceAppendDataToFile(unittest.TestCase):  # 4/4
     """Method under test: append_data_to_file
     Number of TestCases: 4
     Done TestCases: 4
-
-    Test cases with errors:
-    - test_raises_validation_error_for_invalid_record
     """
 
     def setUp(self):
@@ -817,9 +812,7 @@ class TestJsonFileServiceCreateBackupFile(unittest.TestCase):  # 4/4
 # -------------------------
 
 
-class TestJsonFileServiceRemoveFromFile(
-    unittest.TestCase
-):  # 5/5 - 1 Test case to repair
+class TestJsonFileServiceRemoveFromFile(unittest.TestCase):  # 5/5
     """Method under test: remove_from_file
     Number of TestCases: 5
     Done TestCases: 5
