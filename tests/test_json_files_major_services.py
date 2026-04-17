@@ -336,13 +336,13 @@ class TestJsonFileServiceAppendDataToFile(
 
         self.assertIn(self.data_to_append, file_content)
 
-    def test_raises_validation_error_for_invalid_record(self):  # tc to repair
+    def test_raises_validation_error_for_invalid_record(self):
         """expected behavior: Raises exc.ValidationError in case the data doesn't match schema"""
         self.data_to_append = {"user_id": 123321, "enabled": True}
         with self.assertRaises(exc.ValidationError) as cm:
             self.append_data_service.append_data_to_file(self.data_to_append)
 
-        self.assertIn("Missing key", str(cm.exception))
+        self.assertIn("Required key is missing", str(cm.exception))
 
 
 # -------------------------
