@@ -12,6 +12,9 @@ current status: in progress
 
 --- IMPORTANT TO DO ---
 
+- verify setups in test classes
+- fix test schemas to match new database_schemes
+
 TEST CASES TO REPAIR:
 - TestJsonFileServiceAppendDataToFile.test_appends_valid_record_to_file
 - TestJsonFileServiceAppendDataToFile.test_raises_validation_error_for_invalid_record
@@ -275,7 +278,6 @@ class TestJsonFileServiceAppendDataToFile(
     Done TestCases: 4
 
     Test cases with errors:
-    - test_appends_valid_record_to_file
     - test_raises_validation_error_for_invalid_record
     """
 
@@ -285,7 +287,13 @@ class TestJsonFileServiceAppendDataToFile(
 
         self.test_json_file_path = self.temporary_dir_path / "test_file.json"
 
-        """ valid data must match schema and validator expectations"""
+        # Schema format expected by validate_against_schema method.
+        self.test_schema = {
+            "fields": {"service": str, "enabled": bool},
+            "required": ["service", "enabled"],
+        }
+
+        # File must contain a JSON list because append_data_to_file method calls .append()
         self.valid_data = [
             {"service": "loan", "enabled": True},
             {"service": "return", "enabled": True},
@@ -298,7 +306,7 @@ class TestJsonFileServiceAppendDataToFile(
 
         """ Service under test """
         self.append_data_service = JsonFilesService(
-            file_path=self.test_json_file_path, schema={"service": str, "enabled": bool}
+            file_path=self.test_json_file_path, schema=self.test_schema
         )
 
     def tearDown(self):
@@ -320,7 +328,7 @@ class TestJsonFileServiceAppendDataToFile(
 
         self.assertIn("Incorrect type of data to append", str(cm.exception))
 
-    def test_appends_valid_record_to_file(self):  # tc to repair
+    def test_appends_valid_record_to_file(self):
         """expected behavior: Data is correct and is appended to JSON file. Return message with confirmation is displayed"""
         self.append_data_service.append_data_to_file(self.data_to_append)
         with self.test_json_file_path.open("r", encoding="utf-8") as f:
@@ -388,7 +396,10 @@ class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/20
         self.assertIn("Cannot validate against empty schema", str(cm.exception))
 
     def test_returns_none_if_data_is_none_and_schema_allows_none(self):
-        """expected behavior: Returns None if the data to validate is None and the schema allows None values for the field. It means that the field is optional and can be empty."""
+        """expected behavior: Returns None if the data to validate is None and the schema allows None values for the field. It means that the field is optional and can be empty.
+
+        this test fails
+        """
         data_to_validate = None
         test_schema_allowing_none = {
             "fields": {"service": (str, type(None))},
