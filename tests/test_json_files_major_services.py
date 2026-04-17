@@ -488,7 +488,17 @@ class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/20
 
     def test_returns_data_if_one_of_schema_value_is_allowed(self):
         """expected behavior:  Data is returned in case the value matches to "one_of" the values allowed by the schema."""
-        pass
+        test_schema_with_one_of = {
+            "fields": {"service": ("one_of", ["loan", "return", "reservation"])},
+            "required": ["service"],
+        }
+        data_to_validate = {"service": "loan"}
+
+        test_result = self.validation_service.validate_against_schema(
+            data_to_validate, test_schema_with_one_of
+        )
+
+        self.assertEqual(test_result, data_to_validate)
 
     def test_raises_validation_error_if_one_of_schema_value_is_not_allowed(self):
         """expected behavior: raises exc.ValidationEror in case the value does not match to "one_of" the values allowed by the schema."""
