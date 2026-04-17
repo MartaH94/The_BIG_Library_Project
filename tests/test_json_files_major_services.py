@@ -6,30 +6,8 @@ Test for the file json_files_major_services.py
 ________________________________________________________
 
 Test classes: 11
-Test cases total: 58
-current status: in progress
-
-
---- IMPORTANT TO DO ---
-
-TEST CASES TO REPAIR:
-- TestJsonFileServiceValidateAgainstSchema.test_returns_none_if_data_is_none_and_schema_allows_none
-
-
-TEST CASES TO IMPLEMENT in test class: TestJsonFileServiceValidateAgainstSchema:
-- test_raises_validation_error_if_schema_dict_missing_fields_key
-- test_returns_data_if_one_of_schema_value_is_allowed
-- test_raises_validation_error_if_one_of_schema_value_is_not_allowed
-- test_returns_data_if_tuple_schema_matches_any_option
-- test_raises_validation_error_if_tuple_schema_matches_no_option
-- test_raises_validation_error_if_schema_date_and_data_is_not_string
-- test_raises_validation_error_if_schema_date_and_format_is_invalid
-- test_returns_data_if_schema_date_and_format_is_valid
-- test_raises_validation_error_if_schema_datetime_and_data_is_not_string
-- test_raises_validation_error_if_schema_datetime_and_format_is_invalid
-- test_returns_data_if_schema_datetime_and_format_is_valid
-- test_raises_validation_error_if_schema_is_unsupported_string
-- test_raises_validation_error_if_schema_type_is_unsupported
+Test cases total: 59
+current status: Done
 
 """
 
@@ -338,10 +316,10 @@ class TestJsonFileServiceAppendDataToFile(unittest.TestCase):  # 4/4
 # -------------------------
 
 
-class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/20
+class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 21/21
     """Method under test: validate_against_schema
-    Number of TestCases: 20
-    Done TestCases: 6
+    Number of TestCases: 21
+    Done TestCases: 21
     """
 
     def setUp(self):
