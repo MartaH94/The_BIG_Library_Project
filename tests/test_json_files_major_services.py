@@ -658,11 +658,33 @@ class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/20
 
     def test_raises_validation_error_if_schema_is_unsupported_string(self):
         """expected behavior: Raises exc.ValidationError in case that defined schema is unsupported string other than "date" or "datetime"."""
-        pass
+        test_schema_with_unsupported_string = {
+            "fields": {"loan_date": "loan_date"},
+            "required": ["loan_date"],
+        }
+        data_to_validate = {"loan_date": "2026-04-17"}
+
+        with self.assertRaises(exc.ValidationError) as cm:
+            self.validation_service.validate_against_schema(
+                data_to_validate, test_schema_with_unsupported_string
+            )
+
+        self.assertIn("Unsupported string schema", str(cm.exception))
 
     def test_raises_validation_error_if_schema_type_is_unsupported(self):
         """expected behavior: Raises exc.ValidationError in case that defined schema is unsupported type other than dict, tuple, or string."""
-        pass
+        test_schema_with_unsupported_type = {
+            "fields": {"service": int},
+            "required": ["service"],
+        }
+        data_to_validate = {"service": "loan"}
+
+        with self.assertRaises(exc.ValidationError) as cm:
+            self.validation_service.validate_against_schema(
+                data_to_validate, test_schema_with_unsupported_type
+            )
+
+        self.assertIn("Wrong type of data", str(cm.exception))
 
 
 class TestJsonFileServiceValidateFileData(unittest.TestCase):
