@@ -558,15 +558,47 @@ class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/20
 
     def test_raises_validation_error_if_schema_date_and_data_is_not_string(self):
         """expected behavior: Raises exc.ValidationError in case the date data is not a string value."""
-        pass
+        test_schema_with_date = {
+            "fields": {"loan_date": str},
+            "required": ["loan_date"],
+        }
+        data_to_validate = {"loan_date": 20260417}
+
+        with self.assertRaises(exc.ValidationError) as cm:
+            self.validation_service.validate_against_schema(
+                data_to_validate, test_schema_with_date
+            )
+
+        self.assertIn("Wrong type of data", str(cm.exception))
 
     def test_raises_validation_error_if_schema_date_and_format_is_invalid(self):
         """expected behavior: Raises exc.ValidationError in case the date data does not follow the expected YYYY-MM-DD format."""
-        pass
+        test_schema_with_date = {
+            "fields": {"loan_date": "date"},
+            "required": ["loan_date"],
+        }
+        data_to_validate = {"loan_date": "2026/04/17"}
+
+        with self.assertRaises(exc.ValidationError) as cm:
+            self.validation_service.validate_against_schema(
+                data_to_validate, test_schema_with_date
+            )
+
+        self.assertIn("Invalid date format", str(cm.exception))
 
     def test_returns_data_if_schema_date_and_format_is_valid(self):
         """expected behavior: Returns the data in case the date data is a string value and follows the expected format."""
-        pass
+        test_schema_with_date = {
+            "fields": {"loan_date": "date"},
+            "required": ["loan_date"],
+        }
+        data_to_validate = {"loan_date": "2026-04-17"}
+
+        test_result = self.validation_service.validate_against_schema(
+            data_to_validate, test_schema_with_date
+        )
+
+        self.assertEqual(test_result, data_to_validate)
 
     # ---------------------------------------------------------------------------
     # String-based schema validation: "datetime"
