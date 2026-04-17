@@ -533,8 +533,22 @@ class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/20
         self.assertEqual(test_result, data_to_validate)
 
     def test_raises_validation_error_if_tuple_schema_matches_no_option(self):
-        """expected behavior: raises exc.ValidationEror in case the value does not match to any of the options defined in tuple schema."""
-        pass
+        """expected behavior: raises exc.ValidationEror in case the value does not match any of the schema options in a tuple."""
+        test_schema_with_tuple = {
+            "fields": {"service": (int, bool)},
+            "required": ["service"],
+        }
+        data_to_validate = {"service": "loan"}
+
+        with self.assertRaises(exc.ValidationError) as cm:
+            self.validation_service.validate_against_schema(
+                data_to_validate, test_schema_with_tuple
+            )
+
+        self.assertIn(
+            "Provided value does not match any of the options in the schema",
+            str(cm.exception),
+        )
 
     # ---------------------------------------------------------------------------
     # String-based schema validation: "date"
