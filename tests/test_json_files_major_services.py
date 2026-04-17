@@ -608,15 +608,47 @@ class TestJsonFileServiceValidateAgainstSchema(unittest.TestCase):  # 6/20
 
     def test_raises_validation_error_if_schema_datetime_and_data_is_not_string(self):
         """expected behavior: Raises exc.ValidationError in case the datetime data is not a string value."""
-        pass
+        test_schema_with_datetime = {
+            "fields": {"loging_date": str},
+            "required": ["loging_date"],
+        }
+        data_to_validate = {"loging_date": 20260417}
+
+        with self.assertRaises(exc.ValidationError) as cm:
+            self.validation_service.validate_against_schema(
+                data_to_validate, test_schema_with_datetime
+            )
+
+        self.assertIn("Wrong type of data", str(cm.exception))
 
     def test_raises_validation_error_if_schema_datetime_and_format_is_invalid(self):
-        """expected behavior: Raises exc.ValidationError in case the datetime data does not follow the expected ISO datetime format."""
-        pass
+        """expected behavior: Raises exc.ValidationError in case the datetime data does not follow the expected ISO datetime format. (YYYY-MM-DDTHH:MM:SS)"""
+        test_schema_with_datetime = {
+            "fields": {"loging_date": "datetime"},
+            "required": ["loging_date"],
+        }
+        data_to_validate = {"loging_date": "2026/04/17T12-16-00"}
+
+        with self.assertRaises(exc.ValidationError) as cm:
+            self.validation_service.validate_against_schema(
+                data_to_validate, test_schema_with_datetime
+            )
+
+        self.assertIn("Invalid datetime format", str(cm.exception))
 
     def test_returns_data_if_schema_datetime_and_format_is_valid(self):
         """expected behavior: Returns the data in case the datetime data is a string value and follows the expected ISO datetime format."""
-        pass
+        test_schema_with_datetime = {
+            "fields": {"loging_date": "datetime"},
+            "required": ["loging_date"],
+        }
+        data_to_validate = {"loging_date": "2026-04-17T12:16:00"}
+
+        test_result = self.validation_service.validate_against_schema(
+            data_to_validate, test_schema_with_datetime
+        )
+
+        self.assertEqual(test_result, data_to_validate)
 
     # ---------------------------------------------------------------------------
     # Unsupported schema definitions
