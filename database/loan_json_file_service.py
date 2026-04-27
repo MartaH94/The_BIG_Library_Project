@@ -13,10 +13,6 @@ loans, updating loan details, and deleting loan entries. All I/O operations and 
 validation are delegated to JsonFilesService, ensuring consistent data handling across
 the application.
 
-IMPORTANT:
-loan_schema (database_schemes.py) requires rebuilding to Json schema style to prepare required fields. Otherwise all fields must be filles during adding book data.
-Verify code of that services after that the changes are implemented.
-
 """
 
 import database.database_schemes as schema
@@ -81,39 +77,47 @@ class LoanJsonFileService:
             raise exc.DataTypeError(
                 "Loan data type is incorrect. Loan data must be a dictionary"
             )
-        loan_id = loan_data["loan_id"]
 
-        for loan in current_data:
-            if loan["loan_id"] == loan_id:
-                raise exc.LoanError(
-                    f"Loan with ID: {loan['loan_id']} exists in the database. ID number must be unique value."
-                )
-        validated_loan_data = self.json_service.validate_against_schema(
-            loan_data, schema.loan_schema
-        )
-
-        if not validated_loan_data:
+        try:
+            validated_loan_data = self.json_service.validate_against_schema(
+                loan_data, schema.loan_schema
+            )
+        except exc.ValidationError as e:
             raise exc.LoanValidationError(
-                "Validation failed. Loan data doesn't match database file schema."
+                f"Validation failed. Loan data doesn't match database file schema: {e}"
             )
 
-        current_data.append(loan_data)
+        if not isinstance(validated_loan_data, dict):
+            raise exc.LoanValidationError("Validated loan data is not a dictionary.")
+
+        loan_id = validated_loan_data["loan_id"]
+
+        for loan in current_data:
+            if loan.get("loan_id") == loan_id:
+                raise exc.LoanError(
+                    f"Loan with ID: {loan_id} exists in the database. ID number must be unique value."
+                )
+
+        current_data.append(validated_loan_data)
         self.json_service.write_json_data(current_data)
         return f"Added new loan to data base with ID: {loan_id}."
 
     def get_all_loans_list(self):
         """Retrieve all loan records from the database.
         Returns:
-            all_loans_list (list): List of all loan records.
+            all_loans (list): List of all loan records.
         """
-        all_loans_list = self.json_service.load_json_file()
+        current_data = self.json_service.load_json_file()
+        all_loans = []
 
-        if not isinstance(all_loans_list, list):
-            raise exc.DataTypeError(
-                "Loans database file structure is invalid. Expected type is list of dictionaries"
-            )
+        for loan in current_data:
+            if isinstance(loan, dict) and "loan_id" in loan:
+                all_loans.append(loan)
 
-        return all_loans_list
+        if not all_loans:
+            raise exc.LoanNotFoundError("No loan found in the database.")
+
+        return all_loans
 
     def update_loan_data(self, loan_id, field, new_value):
         """Update a specific field in a loan record.
@@ -147,9 +151,17 @@ class LoanJsonFileService:
                         f"The field '{field}' is missing in this loan record entry."
                     )
 
-            loan[field] = new_value
-            loan_id_found = True
-            break
+                loan[field] = new_value
+
+                try:
+                    self.json_service.validate_against_schema(loan, schema.loan_schema)
+                except exc.ValidationError as e:
+                    raise exc.LoanValidationError(
+                        f"Validation failed while updating loan data: {e}"
+                    )
+
+                loan_id_found = True
+                break
 
         if not loan_id_found:
             raise exc.LoanNotFoundError(
@@ -157,7 +169,7 @@ class LoanJsonFileService:
             )
 
         self.json_service.write_json_data(current_data)
-        return f"For loan with ID: {loan_id}, data updated successfully."
+        return f"New data value has been saved for loan with ID: {loan_id}"
 
     def delete_loan_data_from_file(self, loan_id):
         """Delete a loan record by its ID.
@@ -166,19 +178,23 @@ class LoanJsonFileService:
         Returns:
             str: Message with confirmation of success.
         """
+        current_data = self.json_service.load_json_file()
+        loan_deleted = False
 
         if loan_id is None:
             raise exc.ValidationError("Loan ID is missing or it's an empty value.")
 
-        if not isinstance(loan_id, int):
-            raise exc.DataTypeError("Loan ID must be an integer.")
-
-        current_data = self.json_service.load_json_file()
-
         for loan in current_data:
             if loan.get("loan_id") == loan_id:
                 current_data.remove(loan)
-                self.json_service.write_json_data(current_data)
-                return f"Loan record with ID {loan_id} has been deleted from database."
+                loan_deleted = True
+                break
 
-        raise exc.LoanNotFoundError(f"Loan with ID: {loan_id} not found in database.")
+        self.json_service.write_json_data(current_data)
+
+        if not loan_deleted:
+            raise exc.LoanNotFoundError(
+                f"Loan with ID: {loan_id} could not be removed from the database."
+            )
+
+        return f"Loan record with ID {loan_id} has been deleted from database."

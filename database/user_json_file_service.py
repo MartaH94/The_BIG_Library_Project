@@ -11,10 +11,6 @@ This module provides a thin service layer for managing user records stored in a 
 file. It offers simple helpers to load, add, query, update, and delete users while
 leveraging a lower-level JSON file service for I/O, validation, and persistence.
 
-IMPORTANT:
-user_schema (database_schemes.py) requires rebuilding to Json schema style to prepare required fields. Otherwise all fields must be filles during adding book data.
-Verify code of that services after that the changes are implemented.
-
 """
 
 import database.database_schemes as schema
@@ -55,7 +51,7 @@ class UsersJsonFileService:
             )
 
         for user in current_data:
-            if user["id"] == user_id:
+            if user["user_id"] == user_id:
                 user_data = user
                 user_found = True
                 break
@@ -84,26 +80,28 @@ class UsersJsonFileService:
                 "User data type is incorrect. User data must be a dict type."
             )
 
-        user_id = user_data["user_id"]
+        try:
+            validated_user_data = self.json_service.validate_against_schema(
+                user_data, schema.user_schema
+            )
+        except exc.ValidationError as e:
+            raise exc.UserValidationError(
+                f"Validation failed. User data doesn't match database file schema: {e}"
+            )
+
+        if not isinstance(validated_user_data, dict):
+            raise exc.UserValidationError("Validated user data is not a dictionary.")
+
+        user_id = validated_user_data["user_id"]
 
         for user in current_data:
-            if user["user_id"] == user_id:
+            if user.get("user_id") == user_id:
                 raise exc.UserError(
-                    f"User with ID: {user_id} already exists in the database. User ID must be unique value."
+                    f"User with ID: {user_id} exists in the database. User ID must be unique value."
                 )
-        validated_user_data = self.json_service.validate_against_schema(
-            user_data, schema.user_schema
-        )
 
-        if not validated_user_data:
-            raise exc.UserValidationError(
-                "Validation failed. User data doesn't match the schema."
-            )
-        else:
-            current_data.append(validated_user_data)
-
+        current_data.append(validated_user_data)
         self.json_service.write_json_data(current_data)
-
         return f"Added new user to database with ID: {user_id}."
 
     def get_all_users_list(self):
@@ -113,16 +111,13 @@ class UsersJsonFileService:
         """
         current_data = self.json_service.load_json_file()
         all_users = []
-        user_found = False
 
         for user in current_data:
-            if user["user_name"]:
+            if isinstance(user, dict) and "user_id" in user:
                 all_users.append(user)
-                user_found = True
-            else:
-                raise exc.UserNotFoundError("User not found in database.")
-            if not user_found:
-                raise exc.UserNotFoundError("User not found in database.")
+
+        if not all_users:
+            raise exc.UserNotFoundError("No user found in the database.")
 
         return all_users
 
@@ -136,7 +131,7 @@ class UsersJsonFileService:
             str: Message with confirmation of success.
         """
         current_data = self.json_service.load_json_file()
-        user_found = False
+        user_id_found = False
 
         if user_id is None:
             raise exc.ValidationError("User ID is missing or it's an empty value.")
@@ -157,16 +152,24 @@ class UsersJsonFileService:
                     )
 
             user[field] = new_value
-            user_found = True
+
+            try:
+                self.json_service.validate_against_schema(user, schema.user_schema)
+            except exc.ValidationError as e:
+                raise exc.UserValidationError(
+                    f"Validation failed while updating user data: {e}"
+                )
+
+            user_id_found = True
             break
 
-        if not user_found:
+        if not user_id_found:
             raise exc.UserNotFoundError(
                 f"User with ID: {user_id} not found in database."
             )
 
         self.json_service.write_json_data(current_data)
-        return f"For user with ID: {user_id}, data updated successfully."
+        return f"New data value has been saved for user with ID: {user_id}"
 
     def delete_user_by_id(self, user_id):
         """Delete a user record by its ID.
@@ -179,18 +182,18 @@ class UsersJsonFileService:
         user_deleted = False
 
         if user_id is None:
-            raise exc.ValidationError("User ID is missing ir it's an empty value.")
+            raise exc.ValidationError("User ID is missing or it's an empty value.")
 
         for user in current_data:
-            if user["id"] == user_id:
+            if user.get("user_id") == user_id:
                 current_data.remove(user)
                 user_deleted = True
                 break
 
         if not user_deleted:
-            raise exc.UserError(
-                f"User with ID: {user_id} not found in database and couldn't be removed from database."
+            raise exc.UserNotFoundError(
+                f"User with ID: {user_id} could not be removed from the database."
             )
 
         self.json_service.write_json_data(current_data)
-        return f"User with ID {user_id} deleted from database."
+        return f"User with ID {user_id} has been deleted from database."

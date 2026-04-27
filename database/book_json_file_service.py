@@ -12,10 +12,6 @@ It supports adding, retrieving, updating, and deleting book entries while relyin
 a lower-level JSON file service for schema validation, loading, and saving. It is used
 to maintain the library's book collection in a consistent and safe way
 
-IMPORTANT:
-book_schema (database_schemes.py) requires rebuilding to Json schema style to prepare required fields. Otherwise all fields must be filles during adding book data.
-Verify code of that services after that the changes are implemented.
-
 """
 
 import database.database_schemes as schema
@@ -87,21 +83,25 @@ class BookJsonFileService:
                 "Book data type is incorrect. Book data must be a dict type."
             )
 
-        book_id = book_data["book_id"]
+        try:
+            validated_book_data = self.json_service.validate_against_schema(
+                book_data, schema.book_schema
+            )
+        except exc.ValidationError as e:
+            raise exc.BookValidationError(
+                f"Validation failed. Book data doesn't match database file schema: {e}"
+            )
+
+        if not isinstance(validated_book_data, dict):
+            raise exc.BookValidationError("Validated book data is not a dictionary.")
+
+        book_id = validated_book_data["book_id"]
 
         for book in current_data:
-            if book["book_id"] == book_id:
+            if book.get("book_id") == book_id:
                 raise exc.BookError(
-                    f"Book with ID: {book['book_id']} exists in the database. ID number must be unique value."
+                    f"Book with ID: {book_id} exists in the database. Book ID number must be unique value."
                 )
-        validated_book_data = self.json_service.validate_against_schema(
-            book_data, schema.book_schema
-        )
-
-        if not validated_book_data:
-            raise exc.BookValidationError(
-                "Validation failed. Book data doesn't match database file schema."
-            )
 
         current_data.append(validated_book_data)
         self.json_service.write_json_data(current_data)
@@ -115,15 +115,12 @@ class BookJsonFileService:
 
         current_data = self.json_service.load_json_file()
         all_books = []
-        book_found = False
 
         for book in current_data:
-            if book["book_id"] in book:
+            if isinstance(book, dict) and "book_id" in book:
                 all_books.append(book)
-                book_found = True
-            else:
-                raise exc.BookNotFoundError("No book found in the database.")
-        if not book_found:
+
+        if not all_books:
             raise exc.BookNotFoundError("No book found in the database.")
 
         return all_books
@@ -162,6 +159,14 @@ class BookJsonFileService:
                     )
 
                 book[field] = new_value
+
+                try:
+                    self.json_service.validate_against_schema(book, schema.book_schema)
+                except exc.ValidationError as e:
+                    raise exc.BookValidationError(
+                        f"Validation failed while updating book data: {e}"
+                    )
+
                 book_id_found = True
                 break
 
@@ -188,15 +193,15 @@ class BookJsonFileService:
             raise exc.ValidationError("Book ID is missing or it's an empty value.")
 
         for book in current_data:
-            if book["book_id"] == book_id:
+            if book.get("book_id") == book_id:
                 current_data.remove(book)
                 book_deleted = True
                 break
 
         if not book_deleted:
-            raise exc.BookError(
+            raise exc.BookNotFoundError(
                 f"Book with ID: {book_id} could not be removed from the database."
             )
 
         self.json_service.write_json_data(current_data)
-        return f"Book with ID: {book_id} has been deleted from the library. "
+        return f"Book with ID: {book_id} has been deleted from the database."
