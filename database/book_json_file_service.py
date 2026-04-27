@@ -87,21 +87,25 @@ class BookJsonFileService:
                 "Book data type is incorrect. Book data must be a dict type."
             )
 
-        book_id = book_data["book_id"]
+        try:
+            validated_book_data = self.json_service.validate_against_schema(
+                book_data, schema.book_schema
+            )
+        except exc.ValidationError as e:
+            raise exc.BookValidationError(
+                f"Validation failed. Book data doesn't match database file schema: {e}"
+            )
+
+        if not isinstance(validated_book_data, dict):
+            raise exc.BookValidationError("Validated book data is not a dictionary.")
+
+        book_id = validated_book_data["book_id"]
 
         for book in current_data:
-            if book["book_id"] == book_id:
+            if book.get("book_id") == book_id:
                 raise exc.BookError(
-                    f"Book with ID: {book['book_id']} exists in the database. ID number must be unique value."
+                    f"Book with ID: {book_id} exists in the database. ID number must be unique value."
                 )
-        validated_book_data = self.json_service.validate_against_schema(
-            book_data, schema.book_schema
-        )
-
-        if not validated_book_data:
-            raise exc.BookValidationError(
-                "Validation failed. Book data doesn't match database file schema."
-            )
 
         current_data.append(validated_book_data)
         self.json_service.write_json_data(current_data)
