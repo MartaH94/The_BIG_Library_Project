@@ -81,23 +81,28 @@ class LoanJsonFileService:
             raise exc.DataTypeError(
                 "Loan data type is incorrect. Loan data must be a dictionary"
             )
-        loan_id = loan_data["loan_id"]
 
-        for loan in current_data:
-            if loan["loan_id"] == loan_id:
-                raise exc.LoanError(
-                    f"Loan with ID: {loan['loan_id']} exists in the database. ID number must be unique value."
-                )
-        validated_loan_data = self.json_service.validate_against_schema(
-            loan_data, schema.loan_schema
-        )
-
-        if not validated_loan_data:
+        try:
+            validated_loan_data = self.json_service.validate_against_schema(
+                loan_data, schema.loan_schema
+            )
+        except exc.ValidationError as e:
             raise exc.LoanValidationError(
-                "Validation failed. Loan data doesn't match database file schema."
+                f"Validation failed. Loan data doesn't match database file schema: {e}"
             )
 
-        current_data.append(loan_data)
+        if not isinstance(validated_loan_data, dict):
+            raise exc.LoanValidationError("Validated loan data is not a dictionary.")
+
+        loan_id = validated_loan_data["loan_id"]
+
+        for loan in current_data:
+            if loan.get("loan_id") == loan_id:
+                raise exc.LoanError(
+                    f"Loan with ID: {loan_id} exists in the database. ID number must be unique value."
+                )
+
+        current_data.append(validated_loan_data)
         self.json_service.write_json_data(current_data)
         return f"Added new loan to data base with ID: {loan_id}."
 
