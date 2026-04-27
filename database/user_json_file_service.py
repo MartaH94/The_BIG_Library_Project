@@ -84,26 +84,28 @@ class UsersJsonFileService:
                 "User data type is incorrect. User data must be a dict type."
             )
 
-        user_id = user_data["user_id"]
+        try:
+            validated_user_data = self.json_service.validate_against_schema(
+                user_data, schema.user_schema
+            )
+        except exc.ValidationError as e:
+            raise exc.UserValidationError(
+                f"Validation failed. User data doesn't match database file schema: {e}"
+            )
+
+        if not isinstance(validated_user_data, dict):
+            raise exc.UserValidationError("Validated user data is not a dictionary.")
+
+        user_id = validated_user_data["user_id"]
 
         for user in current_data:
-            if user["user_id"] == user_id:
+            if user.get("user_id") == user_id:
                 raise exc.UserError(
-                    f"User with ID: {user_id} already exists in the database. User ID must be unique value."
+                    f"User with ID: {user_id} exists in the database. User ID must be unique value."
                 )
-        validated_user_data = self.json_service.validate_against_schema(
-            user_data, schema.user_schema
-        )
 
-        if not validated_user_data:
-            raise exc.UserValidationError(
-                "Validation failed. User data doesn't match the schema."
-            )
-        else:
-            current_data.append(validated_user_data)
-
+        current_data.append(validated_user_data)
         self.json_service.write_json_data(current_data)
-
         return f"Added new user to database with ID: {user_id}."
 
     def get_all_users_list(self):
