@@ -170,7 +170,7 @@ class LoanJsonFileService:
             )
 
         self.json_service.write_json_data(current_data)
-        return f"For loan with ID: {loan_id}, data updated successfully."
+        return f"New data value has been saved for loan with ID: {loan_id}"
 
     def delete_loan_data_from_file(self, loan_id):
         """Delete a loan record by its ID.
@@ -179,19 +179,23 @@ class LoanJsonFileService:
         Returns:
             str: Message with confirmation of success.
         """
+        current_data = self.json_service.load_json_file()
+        loan_deleted = False
 
         if loan_id is None:
             raise exc.ValidationError("Loan ID is missing or it's an empty value.")
 
-        if not isinstance(loan_id, int):
-            raise exc.DataTypeError("Loan ID must be an integer.")
-
-        current_data = self.json_service.load_json_file()
-
         for loan in current_data:
             if loan.get("loan_id") == loan_id:
                 current_data.remove(loan)
-                self.json_service.write_json_data(current_data)
-                return f"Loan record with ID {loan_id} has been deleted from database."
+                loan_deleted = True
+                break
 
-        raise exc.LoanNotFoundError(f"Loan with ID: {loan_id} not found in database.")
+        self.json_service.write_json_data(current_data)
+
+        if not loan_deleted:
+            raise exc.LoanNotFoundError(
+                f"Loan with ID: {loan_id} could not be removed from the database."
+            )
+
+        return f"Loan record with ID {loan_id} has been deleted from database."
