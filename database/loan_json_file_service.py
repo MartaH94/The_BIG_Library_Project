@@ -13,10 +13,6 @@ loans, updating loan details, and deleting loan entries. All I/O operations and 
 validation are delegated to JsonFilesService, ensuring consistent data handling across
 the application.
 
-IMPORTANT:
-loan_schema (database_schemes.py) requires rebuilding to Json schema style to prepare required fields. Otherwise all fields must be filles during adding book data.
-Verify code of that services after that the changes are implemented.
-
 """
 
 import database.database_schemes as schema
