@@ -204,4 +204,4 @@ class BookJsonFileService:
             )
 
         self.json_service.write_json_data(current_data)
-        return f"Book with ID: {book_id} has been deleted from the library."
+        return f"Book with ID: {book_id} has been deleted from the database."
