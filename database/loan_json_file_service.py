@@ -152,9 +152,17 @@ class LoanJsonFileService:
                         f"The field '{field}' is missing in this loan record entry."
                     )
 
-            loan[field] = new_value
-            loan_id_found = True
-            break
+                loan[field] = new_value
+
+                try:
+                    self.json_service.validate_against_schema(loan, schema.loan_schema)
+                except exc.ValidationError as e:
+                    raise exc.LoanValidationError(
+                        f"Validation failed while updating loan data: {e}"
+                    )
+
+                loan_id_found = True
+                break
 
         if not loan_id_found:
             raise exc.LoanNotFoundError(
