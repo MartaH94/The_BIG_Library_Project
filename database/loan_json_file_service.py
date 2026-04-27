@@ -109,16 +109,19 @@ class LoanJsonFileService:
     def get_all_loans_list(self):
         """Retrieve all loan records from the database.
         Returns:
-            all_loans_list (list): List of all loan records.
+            all_loans (list): List of all loan records.
         """
-        all_loans_list = self.json_service.load_json_file()
+        current_data = self.json_service.load_json_file()
+        all_loans = []
 
-        if not isinstance(all_loans_list, list):
-            raise exc.DataTypeError(
-                "Loans database file structure is invalid. Expected type is list of dictionaries"
-            )
+        for loan in current_data:
+            if isinstance(loan, dict) and "loan_id" in loan:
+                all_loans.append(loan)
 
-        return all_loans_list
+        if not all_loans:
+            raise exc.LoanNotFoundError("No loan found in the database.")
+
+        return all_loans
 
     def update_loan_data(self, loan_id, field, new_value):
         """Update a specific field in a loan record.
