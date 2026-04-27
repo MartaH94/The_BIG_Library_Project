@@ -100,7 +100,7 @@ class BookJsonFileService:
         for book in current_data:
             if book.get("book_id") == book_id:
                 raise exc.BookError(
-                    f"Book with ID: {book_id} exists in the database. ID number must be unique value."
+                    f"Book with ID: {book_id} exists in the database. Book ID number must be unique value."
                 )
 
         current_data.append(validated_book_data)
