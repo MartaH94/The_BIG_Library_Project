@@ -115,16 +115,13 @@ class UsersJsonFileService:
         """
         current_data = self.json_service.load_json_file()
         all_users = []
-        user_found = False
 
         for user in current_data:
-            if user["user_name"]:
+            if isinstance(user, dict) and "user_id" in user:
                 all_users.append(user)
-                user_found = True
-            else:
-                raise exc.UserNotFoundError("User not found in database.")
-            if not user_found:
-                raise exc.UserNotFoundError("User not found in database.")
+
+        if not all_users:
+            raise exc.UserNotFoundError("No user found in the database.")
 
         return all_users
 
