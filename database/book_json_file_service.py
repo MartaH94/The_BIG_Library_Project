@@ -122,7 +122,7 @@ class BookJsonFileService:
         book_found = False
 
         for book in current_data:
-            if book["book_id"] in book:
+            if "book_id" in book:
                 all_books.append(book)
                 book_found = True
             else:
@@ -166,6 +166,14 @@ class BookJsonFileService:
                     )
 
                 book[field] = new_value
+
+                try:
+                    self.json_service.validate_against_schema(book, schema.book_schema)
+                except exc.ValidationError as e:
+                    raise exc.BookValidationError(
+                        f"Validation failed while updating book data: {e}"
+                    )
+
                 book_id_found = True
                 break
 
