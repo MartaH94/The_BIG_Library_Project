@@ -6,15 +6,10 @@ Test for the file book_json_file_service.py
 ________________________________________________________
 
 Test classes: 5
-Test cases total: 18
+Test cases total: 22
+Done test cases: 3
 
 current status: in progress
-Total number of done test cases: 3
-
-
-TO DO:
-Verify existing test cases
-Add new test cases if needed
 """
 
 import json
@@ -83,9 +78,9 @@ class TestBookJsonFileServiceGetBookData(unittest.TestCase):  # 3/3
         self.assertIn("not exists in database", str(cm.exception))
 
 
-class TestBookJsonFileServiceAddBookData(unittest.TestCase):  # 0/5
+class TestBookJsonFileServiceAddBookData(unittest.TestCase):  # 0/6
     """Method under test: add_book_data
-    Number of TestCases: 5
+    Number of TestCases: 6
     Done TestCases:
     """
 
@@ -126,6 +121,12 @@ class TestBookJsonFileServiceAddBookData(unittest.TestCase):  # 0/5
         """
         pass
 
+    def test_raises_book_validation_error_when_schema_validation_raises_validation_error(
+        self,
+    ):
+        """expected behavior: raises BookValidationError when book data doesn't match database file schema and schema validation raises ValidationError"""
+        pass
+
     def tets_raises_book_validation_error_when_schema_validation_fails(self):
         """expected behavior: raises BookValidationError when book data doesn't match database file schema"""
         invalid_book_data = {}
@@ -136,21 +137,37 @@ class TestBookJsonFileServiceAddBookData(unittest.TestCase):  # 0/5
         pass
 
 
-class TestBookJsonFileServiceGetAllBooksList(unittest.TestCase):  # 0/2
+class TestBookJsonFileServiceGetAllBooksList(unittest.TestCase):  # 0/3
+    """Method under test: get_all_books_list
+    Number of TestCases: 3
+    Done TestCases:
+    """
+
     def setUp(self):
         self.temporary_dir = tempfile.TemporaryDirectory()
 
     def tearDown(self):
         self.temporary_dir.cleanup()
 
-    def test_returns_all_books_when_database_is_not_empty(self):
+    def test_returns_all_books_valid_book_dicts_as_list(self):
+        """expected behavior: returns a list of all books in the database."""
         pass
 
     def test_raises_book_not_found_error_when_database_is_empty(self):
+        """expected behavior: raises BookNotFoundError when there are no books in the database."""
+        pass
+
+    def test_raises_book_not_found_error_when_no_valid_book_entries_exist(self):
+        """expected behavior: raises BookNotFoundError when there are no valid book entries in the database."""
         pass
 
 
-class TestBookJsonFileServiceUpdateBookData(unittest.TestCase):  # 0/6
+class TestBookJsonFileServiceUpdateBookData(unittest.TestCase):  # 0/7
+    """Method under test: update_book_data
+    Number of TestCases: 7
+    Done TestCases:
+    """
+
     def setUp(self):
         self.temporary_dir = tempfile.TemporaryDirectory()
 
@@ -158,25 +175,42 @@ class TestBookJsonFileServiceUpdateBookData(unittest.TestCase):  # 0/6
         self.temporary_dir.cleanup()
 
     def test_raises_validation_error_when_book_id_is_none(self):
+        """expected behavior: raises ValidationError when book_id is missing or it's an empty value."""
         pass
 
     def test_raises_validation_error_when_field_is_none(self):
+        """expected behavior: raises ValidationError when field name is missing or it's an empty value."""
         pass
 
     def test_raises_validation_error_when_new_value_is_none(self):
+        """expected behavior: raises ValidationError when new value to update book record is missing or it's an empty value."""
         pass
 
     def test_raises_validation_error_when_field_not_in_book(self):
+        """expected behavior: raises ValidationError when the field to update is not present in the book record."""
         pass
 
     def test_raises_book_not_found_error_when_book_id_not_found(self):
+        """expected behavior: raises BookNotFoundError when book_id is not found in the database."""
         pass
 
-    def test_updates_book_and_writes_json_when_data_is_valid(self):
+    def test_raises_book_validation_erroer_when_updated_book_data_fails_schema_validation(
+        self,
+    ):
+        """expected behavior: raises BookValidationError when updated book data doesn't match database file schema."""
+        pass
+
+    def test_updates_book_field_and_writes_json_when_data_is_valid(self):
+        """expected behavior: updates specified field of the book record with new value and writes updated data to json file when book_id exists and data is valid."""
         pass
 
 
 class TestBookJsonFileServiceDeleteBookById(unittest.TestCase):  # 0/3
+    """Method under test: delete_book_by_id
+    Number of TestCases:
+    Done TestCases:
+    """
+
     def setUp(self):
         self.temporary_dir = tempfile.TemporaryDirectory()
 
@@ -184,12 +218,15 @@ class TestBookJsonFileServiceDeleteBookById(unittest.TestCase):  # 0/3
         self.temporary_dir.cleanup()
 
     def test_raises_validation_error_when_book_id_is_none(self):
+        """expected behavior: raises ValidationError when book_id is missing or it's an empty value."""
         pass
 
-    def test_raises_book_error_when_book_id_not_found(self):
+    def test_raises_book_not_found_error_when_book_id_not_found(self):
+        """expected behavior: raises BookNotFoundError when book_id is not found in the database."""
         pass
 
     def test_removes_book_and_writes_json_when_book_id_exists(self):
+        """expected behavior: removes book record from the database and writes updated data to json file when book_id exists in the database."""
         pass
 
 
