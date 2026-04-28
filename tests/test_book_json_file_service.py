@@ -6,8 +6,8 @@ Test for the file book_json_file_service.py
 ________________________________________________________
 
 Test classes: 5
-Test cases total: 22
-Done test cases: 3
+Test cases total: 21
+Done test cases: 8
 
 current status: in progress
 """
@@ -19,6 +19,7 @@ from pathlib import Path
 
 import exceptions as exc
 from database.book_json_file_service import BookJsonFileService
+from database.database_schemes import book_schema
 from database.json_files_major_services import JsonFilesService
 
 
@@ -93,10 +94,10 @@ class TestBookJsonFileServiceGetBookData(unittest.TestCase):  # 3/3
         self.assertIn("not exists in database", str(cm.exception))
 
 
-class TestBookJsonFileServiceAddBookData(unittest.TestCase):  # 0/6
+class TestBookJsonFileServiceAddBookData(unittest.TestCase):  # 5/5
     """Method under test: add_book_data
-    Number of TestCases: 6
-    Done TestCases:
+    Number of TestCases: 5
+    Done TestCases: 5
     """
 
     def setUp(self):
@@ -134,7 +135,9 @@ class TestBookJsonFileServiceAddBookData(unittest.TestCase):  # 0/6
         with self.test_json_file_path.open("w", encoding="utf-8") as f:
             json.dump(self.valid_book_list, f)
 
-        self.major_json_service = JsonFilesService(file_path=self.test_json_file_path)
+        self.major_json_service = JsonFilesService(
+            file_path=self.test_json_file_path, schema=book_schema
+        )
 
         self.book_service = BookJsonFileService(
             self.major_json_service, file_path=self.test_json_file_path
@@ -188,14 +191,21 @@ class TestBookJsonFileServiceAddBookData(unittest.TestCase):  # 0/6
 
         self.assertIn("Book data doesn't match database file schema", str(cm.exception))
 
-    def tets_raises_book_validation_error_when_schema_validation_fails(self):
-        """expected behavior: raises BookValidationError when book data doesn't match database file schema"""
-        invalid_book_data = {}
-        pass
-
     def test_writes_json_and_returns_success_message_when_data_is_valid(self):
         """expected behavior: writes new book data to json file and returns success message when book data is valid"""
-        pass
+        data_to_append = {
+            "book_id": 1005,
+            "author": "William Shakespeare",
+            "title": "Macbeth",
+            "publication_year": 1606,
+        }
+
+        result = self.book_service.add_book_data(data_to_append)
+
+        self.assertIn("Added new book to data base", result)
+
+        with self.test_json_file_path.open() as f:
+            self.assertIn(data_to_append, json.load(f))
 
 
 class TestBookJsonFileServiceGetAllBooksList(unittest.TestCase):  # 0/3
