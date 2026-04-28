@@ -177,7 +177,16 @@ class TestBookJsonFileServiceAddBookData(unittest.TestCase):  # 0/6
         self,
     ):
         """expected behavior: raises BookValidationError when book data doesn't match database file schema and schema validation raises ValidationError"""
-        pass
+        data_to_append = {
+            "book_id": 1005,
+            "author": "William Shakespeare",
+            "title": "Macbeth",
+        }
+
+        with self.assertRaises(exc.BookValidationError) as cm:
+            self.book_service.add_book_data(data_to_append)
+
+        self.assertIn("Book data doesn't match database file schema", str(cm.exception))
 
     def tets_raises_book_validation_error_when_schema_validation_fails(self):
         """expected behavior: raises BookValidationError when book data doesn't match database file schema"""
