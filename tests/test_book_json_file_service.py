@@ -34,14 +34,29 @@ class TestBookJsonFileServiceGetBookData(unittest.TestCase):  # 3/3
         self.test_json_file_path = self.temporary_dir_path / "test_file.json"
 
         self.valid_book_list = [
-            {"book_id": 1001, "author": "Stephen King", "title": "It", "year": 1986},
-            {"book_id": 1002, "author": "Frank Herbert", "title": "Dune", "year": 1965},
-            {"book_id": 1003, "author": "Jane Austen", "title": "Emma", "year": 1815},
+            {
+                "book_id": 1001,
+                "author": "Stephen King",
+                "title": "It",
+                "publication_year": 1986,
+            },
+            {
+                "book_id": 1002,
+                "author": "Frank Herbert",
+                "title": "Dune",
+                "publication_year": 1965,
+            },
+            {
+                "book_id": 1003,
+                "author": "Jane Austen",
+                "title": "Emma",
+                "publication_year": 1815,
+            },
             {
                 "book_id": 1004,
                 "author": "Peter Benchley",
                 "title": "Jaws",
-                "year": 1974,
+                "publication_year": 1974,
             },
         ]
 
@@ -88,7 +103,36 @@ class TestBookJsonFileServiceAddBookData(unittest.TestCase):  # 0/6
         self.temporary_dir = tempfile.TemporaryDirectory()
         self.temporary_dir_path = Path(self.temporary_dir.name)
         self.test_json_file_path = self.temporary_dir_path / "test_file.json"
-        self.test_json_file_path.write_text("[]", encoding="utf-8")
+
+        self.valid_book_list = [
+            {
+                "book_id": 1001,
+                "author": "Stephen King",
+                "title": "It",
+                "publication_year": 1986,
+            },
+            {
+                "book_id": 1002,
+                "author": "Frank Herbert",
+                "title": "Dune",
+                "publication_year": 1965,
+            },
+            {
+                "book_id": 1003,
+                "author": "Jane Austen",
+                "title": "Emma",
+                "publication_year": 1815,
+            },
+            {
+                "book_id": 1004,
+                "author": "Peter Benchley",
+                "title": "Jaws",
+                "publication_year": 1974,
+            },
+        ]
+
+        with self.test_json_file_path.open("w", encoding="utf-8") as f:
+            json.dump(self.valid_book_list, f)
 
         self.major_json_service = JsonFilesService(file_path=self.test_json_file_path)
 
@@ -116,10 +160,18 @@ class TestBookJsonFileServiceAddBookData(unittest.TestCase):  # 0/6
         self.assertIn("Book data type is incorrect.", str(cm.exception))
 
     def test_raises_book_error_when_book_id_already_exists(self):
-        """expected behavior: raises BookError when book_id already exists in the database
-        book_schema (database_schemes.py) requires rebuilding to Json schema style to prepare required fields. Otherwise all fields must be filles during adding book data.
-        """
-        pass
+        """expected behavior: raises BookError when book_id already exists in the database"""
+        data_to_add = {
+            "book_id": 1001,
+            "author": "William Shakespeare",
+            "title": "Macbeth",
+            "publication_year": 1606,
+        }
+
+        with self.assertRaises(exc.BookError) as cm:
+            self.book_service.add_book_data(data_to_add)
+
+        self.assertIn("Book ID number must be unique value", str(cm.exception))
 
     def test_raises_book_validation_error_when_schema_validation_raises_validation_error(
         self,
