@@ -246,9 +246,6 @@ class TestBookJsonFileServiceGetAllBooksList(unittest.TestCase):  # 0/3
             },
         ]
 
-        with self.test_json_file_path.open("w", encoding="utf-8") as f:
-            json.dump(self.valid_book_list, f)
-
         self.major_json_service = JsonFilesService(file_path=self.test_json_file_path)
         self.book_service = BookJsonFileService(
             self.major_json_service, file_path=self.test_json_file_path
@@ -259,6 +256,9 @@ class TestBookJsonFileServiceGetAllBooksList(unittest.TestCase):  # 0/3
 
     def test_returns_all_books_valid_book_dicts_as_list(self):
         """expected behavior: returns a list of all books in the database."""
+        with self.test_json_file_path.open("w", encoding="utf-8") as f:
+            json.dump(self.valid_book_list, f)
+
         expected_result = self.valid_book_list
         test_result = self.book_service.get_all_books_list()
 
@@ -266,7 +266,13 @@ class TestBookJsonFileServiceGetAllBooksList(unittest.TestCase):  # 0/3
 
     def test_raises_book_not_found_error_when_database_is_empty(self):
         """expected behavior: raises BookNotFoundError when there are no books in the database."""
-        pass
+        with self.test_json_file_path.open("w", encoding="utf-8") as f:
+            json.dump([], f)
+
+        with self.assertRaises(exc.BookNotFoundError) as cm:
+            self.book_service.get_all_books_list()
+
+        self.assertIn("No book found in the database", str(cm.exception))
 
     def test_raises_book_not_found_error_when_no_valid_book_entries_exist(self):
         """expected behavior: raises BookNotFoundError when there are no valid book entries in the database."""
