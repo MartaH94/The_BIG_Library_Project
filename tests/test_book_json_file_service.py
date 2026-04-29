@@ -246,7 +246,7 @@ class TestBookJsonFileServiceGetAllBooksList(unittest.TestCase):  # 0/3
             },
         ]
 
-        with self.test_json_file_path.open("r", encoding="utf-8") as f:
+        with self.test_json_file_path.open("w", encoding="utf-8") as f:
             json.dump(self.valid_book_list, f)
 
         self.major_json_service = JsonFilesService(file_path=self.test_json_file_path)
@@ -259,7 +259,10 @@ class TestBookJsonFileServiceGetAllBooksList(unittest.TestCase):  # 0/3
 
     def test_returns_all_books_valid_book_dicts_as_list(self):
         """expected behavior: returns a list of all books in the database."""
-        pass  # I am here
+        expected_result = self.valid_book_list
+        test_result = self.book_service.get_all_books_list()
+
+        self.assertEqual(test_result, expected_result)
 
     def test_raises_book_not_found_error_when_database_is_empty(self):
         """expected behavior: raises BookNotFoundError when there are no books in the database."""
