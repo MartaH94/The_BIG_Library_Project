@@ -356,7 +356,14 @@ class TestBookJsonFileServiceUpdateBookData(unittest.TestCase):  # 0/7
 
     def test_raises_validation_error_when_field_is_none(self):
         """expected behavior: raises ValidationError when field name is missing or it's an empty value."""
-        pass
+        with self.assertRaises(exc.ValidationError) as cm:
+            self.book_service.update_book_data(
+                book_id=1001, field=None, new_value="The Hobbit"
+            )
+
+        self.assertIn(
+            "The field value is missing or it's an empty value", str(cm.exception)
+        )
 
     def test_raises_validation_error_when_new_value_is_none(self):
         """expected behavior: raises ValidationError when new value to update book record is missing or it's an empty value."""
