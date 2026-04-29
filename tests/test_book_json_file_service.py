@@ -379,17 +379,32 @@ class TestBookJsonFileServiceUpdateBookData(unittest.TestCase):  # 0/7
 
     def test_raises_validation_error_when_field_not_in_book(self):
         """expected behavior: raises ValidationError when the field to update is not present in the book record."""
-        pass
+        with self.assertRaises(exc.ValidationError) as cm:
+            self.book_service.update_book_data(
+                book_id=1001, field="status", new_value="reserved"
+            )
+
+        self.assertIn("missing in this book entry", str(cm.exception))
 
     def test_raises_book_not_found_error_when_book_id_not_found(self):
         """expected behavior: raises BookNotFoundError when book_id is not found in the database."""
-        pass
+        with self.assertRaises(exc.BookNotFoundError) as cm:
+            self.book_service.update_book_data(
+                book_id=1010, field="titile", new_value="The Hobbit"
+            )
 
-    def test_raises_book_validation_erroer_when_updated_book_data_fails_schema_validation(
+        self.assertIn("not found in database", str(cm.exception))
+
+    def test_raises_book_validation_error_when_updated_book_data_fails_schema_validation(
         self,
     ):
         """expected behavior: raises BookValidationError when updated book data doesn't match database file schema."""
-        pass
+        with self.assertRaises(exc.BookValidationError) as cm:
+            self.book_service.update_book_data(
+                book_id=1001, field="title", new_value=1234
+            )
+
+        self.assertIn("Validation failed", str(cm.exception))
 
     def test_updates_book_field_and_writes_json_when_data_is_valid(self):
         """expected behavior: updates specified field of the book record with new value and writes updated data to json file when book_id exists and data is valid."""
