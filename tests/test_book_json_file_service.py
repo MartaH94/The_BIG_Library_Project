@@ -216,13 +216,50 @@ class TestBookJsonFileServiceGetAllBooksList(unittest.TestCase):  # 0/3
 
     def setUp(self):
         self.temporary_dir = tempfile.TemporaryDirectory()
+        self.temporary_dir_path = Path(self.temporary_dir.name)
+        self.test_json_file_path = self.temporary_dir_path / "test_file.json"
+
+        self.valid_book_list = [
+            {
+                "book_id": 1001,
+                "author": "Stephen King",
+                "title": "It",
+                "publication_year": 1986,
+            },
+            {
+                "book_id": 1002,
+                "author": "Frank Herbert",
+                "title": "Dune",
+                "publication_year": 1965,
+            },
+            {
+                "book_id": 1003,
+                "author": "Jane Austen",
+                "title": "Emma",
+                "publication_year": 1815,
+            },
+            {
+                "book_id": 1004,
+                "author": "Peter Benchley",
+                "title": "Jaws",
+                "publication_year": 1974,
+            },
+        ]
+
+        with self.test_json_file_path.open("r", encoding="utf-8") as f:
+            json.dump(self.valid_book_list, f)
+
+        self.major_json_service = JsonFilesService(file_path=self.test_json_file_path)
+        self.book_service = BookJsonFileService(
+            self.major_json_service, file_path=self.test_json_file_path
+        )
 
     def tearDown(self):
         self.temporary_dir.cleanup()
 
     def test_returns_all_books_valid_book_dicts_as_list(self):
         """expected behavior: returns a list of all books in the database."""
-        pass
+        pass  # I am here
 
     def test_raises_book_not_found_error_when_database_is_empty(self):
         """expected behavior: raises BookNotFoundError when there are no books in the database."""
