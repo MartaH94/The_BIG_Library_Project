@@ -7,7 +7,7 @@ ________________________________________________________
 
 Test classes: 5
 Test cases total: 21
-Done test cases: 11
+Done test cases: 18
 
 current status: in progress
 """
@@ -289,10 +289,10 @@ class TestBookJsonFileServiceGetAllBooksList(unittest.TestCase):  # 3/3
         self.assertIn("No book found in the database", str(cm.exception))
 
 
-class TestBookJsonFileServiceUpdateBookData(unittest.TestCase):  # 0/7
+class TestBookJsonFileServiceUpdateBookData(unittest.TestCase):  # 7/7
     """Method under test: update_book_data
     Number of TestCases: 7
-    Done TestCases:
+    Done TestCases: 7
     """
 
     def setUp(self):
@@ -330,7 +330,9 @@ class TestBookJsonFileServiceUpdateBookData(unittest.TestCase):  # 0/7
         with self.test_json_file_path.open("w", encoding="utf-8") as f:
             json.dump(self.valid_book_list, f)
 
-        self.major_json_service = JsonFilesService(file_path=self.test_json_file_path)
+        self.major_json_service = JsonFilesService(
+            file_path=self.test_json_file_path, schema=book_schema
+        )
         self.book_service = BookJsonFileService(
             self.major_json_service, file_path=self.test_json_file_path
         )
@@ -340,12 +342,6 @@ class TestBookJsonFileServiceUpdateBookData(unittest.TestCase):  # 0/7
 
     def test_raises_validation_error_when_book_id_is_none(self):
         """expected behavior: raises ValidationError when book_id is missing or it's an empty value."""
-        # data_to_update = {
-        #     "book_id": 1006,
-        #     "author": "J.R.R. Tolkien",
-        #     "title": "The Hobbit",
-        #     "publication_year": 1937,
-        # }
 
         with self.assertRaises(exc.ValidationError) as cm:
             self.book_service.update_book_data(
@@ -408,7 +404,19 @@ class TestBookJsonFileServiceUpdateBookData(unittest.TestCase):  # 0/7
 
     def test_updates_book_field_and_writes_json_when_data_is_valid(self):
         """expected behavior: updates specified field of the book record with new value and writes updated data to json file when book_id exists and data is valid."""
-        pass
+        test_result = self.book_service.update_book_data(
+            book_id=1001, field="title", new_value="The Hobbit"
+        )
+
+        self.assertIn("New data value has been saved", str(test_result))
+
+        with self.test_json_file_path.open("r", encoding="utf-8") as f:
+            updated_book_data = json.load(f)
+
+        for book in updated_book_data:
+            if book.get("book_id") == 1001:
+                self.assertEqual(book.get("title"), "The Hobbit")
+                break
 
 
 class TestBookJsonFileServiceDeleteBookById(unittest.TestCase):  # 0/3
