@@ -7,7 +7,7 @@ ________________________________________________________
 
 Test classes: 5
 Test cases total: 21
-Done test cases: 8
+Done test cases: 11
 
 current status: in progress
 """
@@ -208,10 +208,10 @@ class TestBookJsonFileServiceAddBookData(unittest.TestCase):  # 5/5
             self.assertIn(data_to_append, json.load(f))
 
 
-class TestBookJsonFileServiceGetAllBooksList(unittest.TestCase):  # 0/3
+class TestBookJsonFileServiceGetAllBooksList(unittest.TestCase):  # 3/3
     """Method under test: get_all_books_list
     Number of TestCases: 3
-    Done TestCases:
+    Done TestCases: 3
     """
 
     def setUp(self):
@@ -297,6 +297,43 @@ class TestBookJsonFileServiceUpdateBookData(unittest.TestCase):  # 0/7
 
     def setUp(self):
         self.temporary_dir = tempfile.TemporaryDirectory()
+        self.temporary_dir_path = Path(self.temporary_dir.name)
+        self.test_json_file_path = self.temporary_dir_path / "test_file.json"
+
+        self.valid_book_list = [
+            {
+                "book_id": 1001,
+                "author": "Stephen King",
+                "title": "It",
+                "publication_year": 1986,
+            },
+            {
+                "book_id": 1002,
+                "author": "Frank Herbert",
+                "title": "Dune",
+                "publication_year": 1965,
+            },
+            {
+                "book_id": 1003,
+                "author": "Jane Austen",
+                "title": "Emma",
+                "publication_year": 1815,
+            },
+            {
+                "book_id": 1004,
+                "author": "Peter Benchley",
+                "title": "Jaws",
+                "publication_year": 1974,
+            },
+        ]
+
+        with self.test_json_file_path.open("w", encoding="utf-8") as f:
+            json.dump(self.valid_book_list, f)
+
+        self.major_json_service = JsonFilesService(file_path=self.test_json_file_path)
+        self.book_service = BookJsonFileService(
+            self.major_json_service, file_path=self.test_json_file_path
+        )
 
     def tearDown(self):
         self.temporary_dir.cleanup()
