@@ -340,7 +340,19 @@ class TestBookJsonFileServiceUpdateBookData(unittest.TestCase):  # 0/7
 
     def test_raises_validation_error_when_book_id_is_none(self):
         """expected behavior: raises ValidationError when book_id is missing or it's an empty value."""
-        pass
+        # data_to_update = {
+        #     "book_id": 1006,
+        #     "author": "J.R.R. Tolkien",
+        #     "title": "The Hobbit",
+        #     "publication_year": 1937,
+        # }
+
+        with self.assertRaises(exc.ValidationError) as cm:
+            self.book_service.update_book_data(
+                book_id=None, field="book_id", new_value=1006
+            )
+
+        self.assertIn("Book ID is missing or it's an empty value", str(cm.exception))
 
     def test_raises_validation_error_when_field_is_none(self):
         """expected behavior: raises ValidationError when field name is missing or it's an empty value."""
