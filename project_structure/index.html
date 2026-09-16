@@ -69,6 +69,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#project-structure" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -311,6 +316,26 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Structure
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -328,6 +353,36 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -404,6 +459,27 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -420,9 +496,225 @@
 
 
 
-  <h1>Project Structure</h1>
-
-
+<h1 id="project-structure">Project Structure</h1>
+<h2 id="overview">Overview</h2>
+<p>The BIG Library follows a modular project structure designed to improve readability, maintainability, and scalability.</p>
+<p>The project is organized into separate layers and components, each with clear responsibilities. This approach supports clean code practices, simplifies testing, and allows the application to grow without introducing unnecessary complexity.</p>
+<hr />
+<h1 id="repository-structure">Repository Structure</h1>
+<pre><code class="language-text">The_BIG_Library_Project/
+│
+├── docs/
+├── src/
+├── tests/
+├── README.md
+├── mkdocs.yml
+└── requirements.txt
+</code></pre>
+<hr />
+<h1 id="source-code-structure">Source Code Structure</h1>
+<p>The application source code is located in the <code>src</code> directory.</p>
+<pre><code class="language-text">src/
+│
+├── models/
+├── services/
+├── database/
+├── utils/
+└── main.py
+</code></pre>
+<p>Each module has a specific responsibility within the application architecture.</p>
+<hr />
+<h2 id="models">Models</h2>
+<pre><code class="language-text">src/models/
+</code></pre>
+<p>The models package contains classes representing the core business entities of the system.</p>
+<p>Examples:</p>
+<ul>
+<li>Book</li>
+<li>User</li>
+<li>Loan</li>
+</ul>
+<p>Responsibilities:</p>
+<ul>
+<li>Store business data</li>
+<li>Define entity attributes</li>
+<li>Represent domain objects</li>
+<li>Support business operations</li>
+</ul>
+<hr />
+<h2 id="services">Services</h2>
+<pre><code class="language-text">src/services/
+</code></pre>
+<p>The services package contains business logic.</p>
+<p>Examples:</p>
+<ul>
+<li>BookService</li>
+<li>UserService</li>
+<li>LoanService</li>
+</ul>
+<p>Responsibilities:</p>
+<ul>
+<li>Process application operations</li>
+<li>Validate business rules</li>
+<li>Coordinate interactions between components</li>
+<li>Execute business workflows</li>
+</ul>
+<p>The service layer acts as a bridge between user actions and data storage.</p>
+<hr />
+<h2 id="database">Database</h2>
+<pre><code class="language-text">src/database/
+</code></pre>
+<p>The database package is responsible for data persistence.</p>
+<p>Responsibilities:</p>
+<ul>
+<li>Save data</li>
+<li>Load data</li>
+<li>Manage storage operations</li>
+<li>Maintain data consistency</li>
+</ul>
+<p>Separating persistence logic from business logic simplifies future migration to other storage technologies.</p>
+<hr />
+<h2 id="utilities">Utilities</h2>
+<pre><code class="language-text">src/utils/
+</code></pre>
+<p>The utilities package contains shared helper functionality.</p>
+<p>Examples:</p>
+<ul>
+<li>Input validation</li>
+<li>Logging</li>
+<li>Data formatting</li>
+<li>Configuration management</li>
+</ul>
+<p>Utilities help avoid duplicated code and improve maintainability.</p>
+<hr />
+<h2 id="main-application-entry-point">Main Application Entry Point</h2>
+<pre><code class="language-text">src/main.py
+</code></pre>
+<p>Responsibilities:</p>
+<ul>
+<li>Start the application</li>
+<li>Initialize required components</li>
+<li>Coordinate application execution</li>
+</ul>
+<p>The main module serves as the entry point for the project.</p>
+<hr />
+<h1 id="testing-structure">Testing Structure</h1>
+<p>Automated tests are maintained separately from production code.</p>
+<pre><code class="language-text">tests/
+</code></pre>
+<p>Example structure:</p>
+<pre><code class="language-text">tests/
+│
+├── test_books.py
+├── test_users.py
+├── test_loans.py
+└── test_validation.py
+</code></pre>
+<p>Responsibilities:</p>
+<ul>
+<li>Verify business logic</li>
+<li>Validate requirements</li>
+<li>Test error handling</li>
+<li>Support regression testing</li>
+</ul>
+<p>This separation improves readability and supports quality-focused development.</p>
+<hr />
+<h1 id="documentation-structure">Documentation Structure</h1>
+<p>Project documentation is maintained using MkDocs.</p>
+<pre><code class="language-text">docs/
+│
+├── index.md
+├── requirements.md
+├── architecture.md
+├── data_model.md
+├── project_structure.md
+├── testing.md
+└── future.md
+</code></pre>
+<p>Responsibilities:</p>
+<ul>
+<li>Document requirements</li>
+<li>Describe architecture</li>
+<li>Explain data structures</li>
+<li>Record testing strategy</li>
+<li>Support project maintenance</li>
+</ul>
+<p>Documentation is treated as part of the development process and evolves together with the application.</p>
+<hr />
+<h1 id="configuration-files">Configuration Files</h1>
+<h2 id="mkdocs-configuration">MkDocs Configuration</h2>
+<pre><code class="language-text">mkdocs.yml
+</code></pre>
+<p>Responsibilities:</p>
+<ul>
+<li>Configure documentation navigation</li>
+<li>Define documentation settings</li>
+<li>Manage documentation presentation</li>
+</ul>
+<hr />
+<h2 id="dependency-management">Dependency Management</h2>
+<pre><code class="language-text">requirements.txt
+</code></pre>
+<p>Responsibilities:</p>
+<ul>
+<li>List project dependencies</li>
+<li>Simplify environment setup</li>
+<li>Support reproducible installations</li>
+</ul>
+<hr />
+<h1 id="development-workflow">Development Workflow</h1>
+<p>The project follows the following high-level workflow:</p>
+<pre><code class="language-text">Requirements
+       │
+       ▼
+Design
+       │
+       ▼
+Implementation
+       │
+       ▼
+Testing
+       │
+       ▼
+Documentation
+       │
+       ▼
+Continuous Improvement
+</code></pre>
+<p>This workflow ensures that new functionality is designed, implemented, validated, and documented consistently.</p>
+<hr />
+<h1 id="design-principles">Design Principles</h1>
+<p>The project structure is designed around several key principles:</p>
+<ul>
+<li>Separation of concerns</li>
+<li>Modularity</li>
+<li>Reusability</li>
+<li>Testability</li>
+<li>Maintainability</li>
+<li>Scalability</li>
+</ul>
+<p>Each project component has a clearly defined purpose and responsibility.</p>
+<hr />
+<h1 id="future-improvements">Future Improvements</h1>
+<p>The structure has been prepared to support future expansion.</p>
+<p>Potential additions include:</p>
+<pre><code class="language-text">src/
+├── api/
+├── authentication/
+├── recommendations/
+├── config/
+└── integrations/
+</code></pre>
+<p>These modules will support future features such as:</p>
+<ul>
+<li>REST APIs</li>
+<li>User authentication</li>
+<li>Recommendation engine</li>
+<li>External integrations</li>
+<li>Advanced configuration management</li>
+</ul>
+<p>The current structure provides a solid foundation for both learning and long-term project evolution.
+``</p>
 
 
 
