@@ -35,6 +35,17 @@ class Loan:
             "return_date": self.return_date,
         }
 
+    def __repr__(self):
+        """Return a string representation of the Loan object for debugging purposes."""
+
+        return (
+            f"Loan(loan_id={self.loan_id}, "
+            f"user_id={self.user_id}, "
+            f"book_id={self.book_id}, "
+            f"loan_date='{self.loan_date}', "
+            f"return_date='{self.return_date}')"
+        )
+
 
 class Reservation:
     def __init__(
@@ -52,8 +63,17 @@ class Reservation:
     def to_dict(self):
 
         return {
-            "resrvation_id": self.reservation_id,
+            "reservation_id": self.reservation_id,
             "user_id": self.user_id,
             "book_id": self.book_id,
             "reservation_date": self.reservation_date,
         }
+
+    def __repr__(self):
+        """Return a string representation of the Reservation object for debugging purposes."""
+        return (
+            f"Reservation(reservation_id={self.reservation_id}, "
+            f"user_id={self.user_id}, "
+            f"book_id={self.book_id}, "
+            f"reservation_date='{self.reservation_date}')"
+        )

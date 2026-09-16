@@ -16,7 +16,14 @@ valid_roles = ["reader", "admin", "librarian", "guest", "moderator"]
 
 
 class User:
-    def __init__(self, user_id, role, is_active, last_login, user_profile):
+    def __init__(
+        self,
+        user_id: int,
+        role: str,
+        is_active: bool,
+        last_login: str | None,
+        user_profile: dict,
+    ):
         self.user_id = user_id
         self.role = role
         self.is_active = is_active
@@ -45,4 +52,9 @@ class User:
     def __repr__(self):
         """Return a string representation of the User object for debugging purposes."""
 
-        return f"User(user_id={self.user_id}, role='{self.role}', is_active={self.is_active}, last_login='{self.last_login}'"
+        return (
+            f"User(user_id={self.user_id}, "
+            f"role='{self.role}', "
+            f"is_active={self.is_active}, "
+            f"last_login='{self.last_login}')"
+        )

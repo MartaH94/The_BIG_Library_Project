@@ -53,13 +53,30 @@ class Book:
             "last_loan_date": self.last_loan_date,
         }
 
+    def __repr__(self):
+        """Return a string representation of the Book object for debugging purposes."""
+
+        return (
+            f"Book(book_id={self.book_id}, "
+            f"author='{self.author}', "
+            f"title='{self.title}', "
+            f"publication_year={self.publication_year}, "
+            f"isbn='{self.isbn}', "
+            f"category={self.category}, "
+            f"language='{self.language}', "
+            f"book_status='{self.book_status}', "
+            f"borrower_id={self.borrower_id}, "
+            f"due_date='{self.due_date}', "
+            f"last_loan_date='{self.last_loan_date}')"
+        )
+
 
 class BookCategory:
-    def __init__(self, name):
+    def __init__(self, name: str):
         self.name = name
-        self.books = []
+        self.books: list[Book] = []
 
-    def add_book(self, book):
+    def add_book(self, book: Book):
         """This method adds a book to the category's list of books. It takes a Book object as an argument and appends it to the books list of the category."""
 
         self.books.append(book)
