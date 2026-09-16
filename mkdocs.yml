@@ -1,0 +1,15 @@
+site_name: The BIG Library
+site_description: Documentation for The BIG Library application
+site_author: Marta Haraj
+
+theme:
+  name: material
+
+nav:
+  - Overview: index.md
+  - Requirements: requirements.md
+  - Architecture: architecture.md
+  - Data Model: data_model.md
+  - Project Structure: project_structure.md
+  - Testing: testing.md
+  - Future Development: future.md
