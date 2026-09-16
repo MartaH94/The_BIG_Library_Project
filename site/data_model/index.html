@@ -69,6 +69,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#data-model" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -284,6 +289,26 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Model
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -301,6 +326,47 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-entities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Entities
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -404,6 +470,38 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-entities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Entities
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -420,9 +518,306 @@
 
 
 
-  <h1>Data Model</h1>
-
-
+<h1 id="data-model">Data Model</h1>
+<h2 id="overview">Overview</h2>
+<p>The data model defines the core entities used by The BIG Library and describes how they interact with each other.</p>
+<p>The model is designed to support library operations such as book management, user management, and loan processing while maintaining simplicity, readability, and scalability.</p>
+<hr />
+<h2 id="core-entities">Core Entities</h2>
+<p>The application is based on three primary entities:</p>
+<ul>
+<li>Book</li>
+<li>User</li>
+<li>Loan</li>
+</ul>
+<p>These entities represent the core business objects of the system.</p>
+<hr />
+<h1 id="book">Book</h1>
+<h2 id="description">Description</h2>
+<p>The Book entity represents a library item that can be searched, borrowed, and returned.</p>
+<hr />
+<h2 id="main-attributes">Main Attributes</h2>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>book_id</td>
+<td>Unique identifier</td>
+</tr>
+<tr>
+<td>title</td>
+<td>Book title</td>
+</tr>
+<tr>
+<td>author</td>
+<td>Book author</td>
+</tr>
+<tr>
+<td>category</td>
+<td>Book category</td>
+</tr>
+<tr>
+<td>publication_year</td>
+<td>Year of publication</td>
+</tr>
+<tr>
+<td>isbn</td>
+<td>International Standard Book Number</td>
+</tr>
+<tr>
+<td>availability_status</td>
+<td>Indicates whether the book is available</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="responsibilities">Responsibilities</h2>
+<p>The Book entity is responsible for:</p>
+<ul>
+<li>Storing book information</li>
+<li>Providing book metadata</li>
+<li>Supporting search operations</li>
+<li>Supporting borrowing workflows</li>
+</ul>
+<hr />
+<h1 id="user">User</h1>
+<h2 id="description_1">Description</h2>
+<p>The User entity represents a library member who can borrow books and manage borrowing activity.</p>
+<hr />
+<h2 id="main-attributes_1">Main Attributes</h2>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>user_id</td>
+<td>Unique identifier</td>
+</tr>
+<tr>
+<td>first_name</td>
+<td>User first name</td>
+</tr>
+<tr>
+<td>last_name</td>
+<td>User last name</td>
+</tr>
+<tr>
+<td>email</td>
+<td>Contact email</td>
+</tr>
+<tr>
+<td>registration_date</td>
+<td>Date of registration</td>
+</tr>
+<tr>
+<td>active_status</td>
+<td>User account status</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="responsibilities_1">Responsibilities</h2>
+<p>The User entity is responsible for:</p>
+<ul>
+<li>Storing member information</li>
+<li>Supporting loan operations</li>
+<li>Tracking borrowing activity</li>
+</ul>
+<hr />
+<h1 id="loan">Loan</h1>
+<h2 id="description_2">Description</h2>
+<p>The Loan entity represents the borrowing transaction between a user and a book.</p>
+<hr />
+<h2 id="main-attributes_2">Main Attributes</h2>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>loan_id</td>
+<td>Unique identifier</td>
+</tr>
+<tr>
+<td>book_id</td>
+<td>Borrowed book reference</td>
+</tr>
+<tr>
+<td>user_id</td>
+<td>Borrowing user reference</td>
+</tr>
+<tr>
+<td>borrow_date</td>
+<td>Date of borrowing</td>
+</tr>
+<tr>
+<td>due_date</td>
+<td>Expected return date</td>
+</tr>
+<tr>
+<td>return_date</td>
+<td>Actual return date</td>
+</tr>
+<tr>
+<td>status</td>
+<td>Active or completed</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="responsibilities_2">Responsibilities</h2>
+<p>The Loan entity is responsible for:</p>
+<ul>
+<li>Tracking active loans</li>
+<li>Tracking completed loans</li>
+<li>Supporting availability checks</li>
+<li>Maintaining borrowing history</li>
+</ul>
+<hr />
+<h1 id="entity-relationships">Entity Relationships</h1>
+<h2 id="conceptual-relationship-model">Conceptual Relationship Model</h2>
+<pre><code class="language-text">User
+ │
+ │ 1
+ │
+ ▼
+Loan
+ ▲
+ │
+ │ N
+ │
+Book
+</code></pre>
+<hr />
+<h2 id="relationship-description">Relationship Description</h2>
+<h3 id="user-loan">User → Loan</h3>
+<p>A user may have multiple loans during the lifetime of the account.</p>
+<p>Examples:</p>
+<ul>
+<li>One user can borrow multiple books.</li>
+<li>One user can have multiple historical loan records.</li>
+</ul>
+<hr />
+<h3 id="book-loan">Book → Loan</h3>
+<p>A book can appear in many loan records over time.</p>
+<p>Examples:</p>
+<ul>
+<li>A book may be borrowed by different users.</li>
+<li>Historical borrowing activity is maintained.</li>
+</ul>
+<hr />
+<h3 id="loan-user">Loan → User</h3>
+<p>Each loan belongs to exactly one user.</p>
+<hr />
+<h3 id="loan-book">Loan → Book</h3>
+<p>Each loan is associated with exactly one book.</p>
+<hr />
+<h1 id="business-rules">Business Rules</h1>
+<h2 id="book-availability">Book Availability</h2>
+<p>A book can only be borrowed when:</p>
+<pre><code class="language-text">availability_status = Available
+</code></pre>
+<p>If the book is already borrowed, the borrowing request must be rejected.</p>
+<hr />
+<h2 id="active-loan-constraint">Active Loan Constraint</h2>
+<p>A loan may only be active when:</p>
+<ul>
+<li>A valid user exists</li>
+<li>A valid book exists</li>
+<li>The book is available</li>
+</ul>
+<hr />
+<h2 id="return-processing">Return Processing</h2>
+<p>When a book is returned:</p>
+<ul>
+<li>Loan status changes to Completed</li>
+<li>Return date is recorded</li>
+<li>Book becomes available again</li>
+</ul>
+<hr />
+<h1 id="data-validation-rules">Data Validation Rules</h1>
+<h2 id="book-validation">Book Validation</h2>
+<p>The system validates:</p>
+<ul>
+<li>Required fields</li>
+<li>Valid publication year</li>
+<li>Duplicate records</li>
+<li>ISBN format</li>
+</ul>
+<hr />
+<h2 id="user-validation">User Validation</h2>
+<p>The system validates:</p>
+<ul>
+<li>Required fields</li>
+<li>Email format</li>
+<li>Duplicate accounts</li>
+</ul>
+<hr />
+<h2 id="loan-validation">Loan Validation</h2>
+<p>The system validates:</p>
+<ul>
+<li>Existing user reference</li>
+<li>Existing book reference</li>
+<li>Book availability</li>
+<li>Loan status consistency</li>
+</ul>
+<hr />
+<h1 id="future-data-model-enhancements">Future Data Model Enhancements</h1>
+<p>Additional entities planned for future releases include:</p>
+<h2 id="reservation">Reservation</h2>
+<p>Allows users to reserve unavailable books.</p>
+<p>Possible attributes:</p>
+<ul>
+<li>reservation_id</li>
+<li>user_id</li>
+<li>book_id</li>
+<li>reservation_date</li>
+<li>status</li>
+</ul>
+<hr />
+<h2 id="review">Review</h2>
+<p>Stores user feedback and ratings.</p>
+<p>Possible attributes:</p>
+<ul>
+<li>review_id</li>
+<li>user_id</li>
+<li>book_id</li>
+<li>rating</li>
+<li>comment</li>
+</ul>
+<hr />
+<h2 id="recommendation">Recommendation</h2>
+<p>Supports future recommendation features.</p>
+<p>Possible attributes:</p>
+<ul>
+<li>recommendation_id</li>
+<li>user_id</li>
+<li>book_id</li>
+<li>recommendation_score</li>
+</ul>
+<hr />
+<h1 id="design-principles">Design Principles</h1>
+<p>The data model follows several key principles:</p>
+<ul>
+<li>Simplicity</li>
+<li>Maintainability</li>
+<li>Scalability</li>
+<li>Data consistency</li>
+<li>Separation of concerns</li>
+</ul>
+<p>The structure is intentionally simple to support learning objectives while providing a solid foundation for future enhancements such as SQL databases, REST APIs, and advanced recommendation capabilities.</p>
 
 
 
