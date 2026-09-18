@@ -416,6 +416,8 @@ class LoanService:
             if reservation["book_id"] == book_id:
                 return True
 
+        return False
+
     def ensure_book_is_not_reserved(self, book_id):
         """Method that allows to ensure that book is not reserved by another user. It raises exception if book is already reserved by another user."""
 
