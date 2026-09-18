@@ -61,9 +61,10 @@ loan_schema = {
         "user_id": int,
         "book_id": int,
         "loan_date": "date",
+        "due_date": "date",
         "return_date": ("date", type(None)),
     },
-    "required": ["loan_id", "user_id", "book_id", "loan_date"],
+    "required": ["loan_id", "user_id", "book_id", "loan_date", "due_date"],
 }
 
 reservation_schema = {
