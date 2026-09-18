@@ -386,6 +386,18 @@ class LoanService:
             f"Reservation with ID: {reservation_id} not found in database."
         )
 
+    def reservation_exists_by_id(self, reservation_id):
+
+        try:
+            self.get_reservation_by_id(reservation_id)
+            return True
+        except exc.ReservationNotFoundError:
+            return False
+
+    def ensure_reservation_exists(self, reservation_id):
+
+        self.get_reservation_by_id(reservation_id)
+
     def ensure_user_has_permission_to_reserve(self):  # DONE
 
         self.user_authorisation_service.check_permission("books.reserve_book")
