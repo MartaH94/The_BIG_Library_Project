@@ -159,9 +159,9 @@ class LoanService:
         today = datetime.now().date()
 
         for loan in active_loans:
-            return_date_str = loan["return_date"]
-            return_date = datetime.strptime(return_date_str, "%Y-%m-%d").date()
-            if today > return_date:
+            due_date_str = loan["due_date"]
+            due_date = datetime.strptime(due_date_str, "%Y-%m-%d").date()
+            if today > due_date:
                 overdue_loans.append(loan)
 
         return overdue_loans
@@ -307,13 +307,14 @@ class LoanService:
         now = datetime.now()
 
         loan_date = now.strftime("%Y-%m-%d")
-        return_date = (now + timedelta(days=21)).strftime("%Y-%m-%d")
+
+        due_date = (now + timedelta(days=21)).strftime("%Y-%m-%d")
 
         new_loan = Loan(
             user_id=current_user.user_id,
             book_id=book_id,
             loan_date=loan_date,
-            return_date=return_date,
+            due_date=due_date,
         )
 
         try:
