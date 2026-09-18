@@ -14,7 +14,12 @@ This module contains the definition of the Loan class, which represents a loan o
 
 class Loan:
     def __init__(
-        self, user_id: int, book_id: int, loan_date: str, return_date: str | None = None
+        self,
+        user_id: int,
+        book_id: int,
+        loan_date: str,
+        due_date: str,
+        return_date: str | None = None,
     ):
 
         self.loan_id: int | None = None
@@ -22,6 +27,7 @@ class Loan:
         self.user_id = user_id
         self.book_id = book_id
         self.loan_date = loan_date
+        self.due_date = due_date
         self.return_date = return_date
 
     def to_dict(self):
@@ -32,6 +38,7 @@ class Loan:
             "user_id": self.user_id,
             "book_id": self.book_id,
             "loan_date": self.loan_date,
+            "due_date": self.due_date,
             "return_date": self.return_date,
         }
 
@@ -43,6 +50,7 @@ class Loan:
             f"user_id={self.user_id}, "
             f"book_id={self.book_id}, "
             f"loan_date='{self.loan_date}', "
+            f"due_date='{self.due_date}, "
             f"return_date='{self.return_date}')"
         )
 
