@@ -388,6 +388,7 @@ class LoanService:
         )
 
     def reservation_exists_by_id(self, reservation_id):
+        """Method that allows to check if reservation with given id exists in database. It returns True if reservation exists and False if not. This method is useful for fetching reservation details based on the reservation ID."""
 
         try:
             self.get_reservation_by_id(reservation_id)
@@ -396,10 +397,12 @@ class LoanService:
             return False
 
     def ensure_reservation_exists(self, reservation_id):
+        """Method that allows to ensure that reservation with given id exists in database. It raises exception if reservation is missing. This method is used before the operations that require the reservation to exist. It enforces correctness by raising an exception if the reservation is missing."""
 
         self.get_reservation_by_id(reservation_id)
 
     def ensure_user_has_permission_to_reserve(self):  # DONE
+        """Method that allows to ensure that user has permission to reserve the book. It raises exception if user does not have permission to reserve the book."""
 
         self.user_authorisation_service.check_permission("books.reserve_book")
 
