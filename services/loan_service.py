@@ -331,7 +331,7 @@ class LoanService:
         self.book_service.mark_book_as_borrowed(
             book_id=book_id,
             user_id=new_loan.user_id,
-            due_date=new_loan.return_date,
+            due_date=new_loan.due_date,
             loan_date=new_loan.loan_date,
         )
 
@@ -362,7 +362,7 @@ class LoanService:
     def get_all_reservations(self):  # DONE
         """Method that allows to retrieve a list with all reservations from database."""
 
-        return self.reservation_data_service.get_all_loans_list()
+        return self.reservation_data_service.get_all_reservation_list()
 
     def get_reservation_by_id(self, reservation_id):
         """Method that allows to retrieve data about particular reservation by reservation id"""
@@ -403,8 +403,10 @@ class LoanService:
 
         self.user_authorisation_service.check_permission("books.reserve_book")
 
-    def reserve_book(self, book_id):  # DONE
-        """Method that enables user to reserve a book."""
+    def reserve_book(self, book_id):  # NOT COMPLETE
+        """Method that enables user to reserve a book.
+        What to do: Add a validation. Book can be reserved by only one user and has only one reservation.
+        """
 
         if book_id is None:
             raise exc.BookValidationError(
@@ -482,19 +484,19 @@ class LoanService:
         if not isinstance(reservation_id, int):
             raise exc.DataTypeError("Please provide correct reservation ID type.")
 
-        book_reservation = self.get_reservation_by_id(reservation_id)
+        reservation = self.get_reservation_by_id(reservation_id)
 
         current_user = self.user_authorisation_service.get_current_user()
 
         if not current_user:
             raise exc.PermissionError("User must be logged in.")
 
-        if current_user.user_id != book_reservation.user_id:
+        if current_user.user_id != reservation.user_id:
             raise exc.PermissionError(
                 "User is not allowed to borrow this reserved book."
             )
 
-        new_loan = self.borrow_book(book_reservation.book_id)
+        new_loan = self.borrow_book(reservation.book_id)
 
         self.cancel_reservation(reservation_id)
 
