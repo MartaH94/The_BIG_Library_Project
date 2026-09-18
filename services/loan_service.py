@@ -361,7 +361,7 @@ class LoanService:
     def get_all_reservations(self):  # DONE
         """Method that allows to retrieve a list with all reservations from database."""
 
-        return self.loan_data_service.get_all_reservation_list()
+        return self.reservation_data_service.get_all_loans_list()
 
     def get_reservation_by_id(self, reservation_id):
         """Method that allows to retrieve data about particular reservation by reservation id"""
@@ -379,7 +379,7 @@ class LoanService:
         all_reservations = self.get_all_reservations()
 
         for reservation in all_reservations:
-            if reservation_id == reservation.get("reservaion_id"):
+            if reservation_id == reservation.get("reservation_id"):
                 return Reservation(**reservation)
 
         raise exc.ReservationNotFoundError(
@@ -388,7 +388,7 @@ class LoanService:
 
     def ensure_user_has_permission_to_reserve(self):  # DONE
 
-        self.user_authorisation_service.check_permission("books.reserve_books")
+        self.user_authorisation_service.check_permission("books.reserve_book")
 
     def reserve_book(self, book_id):  # DONE
         """Method that enables user to reserve a book."""
@@ -427,7 +427,7 @@ class LoanService:
 
         new_reservation.reservation_id = reservation_id
 
-        self.loan_data_service.add_reservation_data(new_reservation.to_dict())
+        self.reservation_data_service.add_reservation_data(new_reservation.to_dict())
 
         return new_reservation
 
