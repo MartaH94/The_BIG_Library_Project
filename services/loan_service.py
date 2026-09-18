@@ -405,6 +405,7 @@ class LoanService:
         self.user_authorisation_service.check_permission("books.reserve_book")
 
     def is_book_reserved(self, book_id):
+        """Method that allows to check if book is reserved by another user. It returns True if book is reserved and False if not. This method is useful for checking if a specific book is currently reserved by any user."""
 
         all_reservations = self.get_all_reservations()
 
@@ -416,14 +417,13 @@ class LoanService:
                 return True
 
     def ensure_book_is_not_reserved(self, book_id):
+        """Method that allows to ensure that book is not reserved by another user. It raises exception if book is already reserved by another user."""
 
         if self.is_book_reserved(book_id):
             raise exc.ReservationError("Book is already reserved by another user.")
 
-    def reserve_book(self, book_id):  # NOT COMPLETE
-        """Method that enables user to reserve a book.
-        What to do: Add a validation. Book can be reserved by only one user and has only one reservation.
-        """
+    def reserve_book(self, book_id):
+        """Method that allows user to reserve the book. It checks if the book is already reserved by another user and if the user has permission to reserve the book. It also checks if the user is logged in and if the book exists in database."""
 
         if book_id is None:
             raise exc.BookValidationError(
@@ -434,6 +434,8 @@ class LoanService:
             raise exc.BookValidationError("Book ID must be a number.")
 
         self.book_service.ensure_book_exists(book_id)
+
+        self.ensure_book_is_not_reserved(book_id)
 
         current_user = self.user_authorisation_service.get_current_user()
 
