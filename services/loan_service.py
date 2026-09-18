@@ -150,7 +150,7 @@ class LoanService:
         return active_loans
 
     def get_overdue_books(self):  # done
-        """This method retrieves all overdue loans from the database. Overdue loans are defined as active loans where the return date has passed the current date. The method fetches all active loans and checks their return dates against the current date. If a loan is found to be overdue, it is added to the list of overdue loans. The method returns a list of dictionaries representing the overdue loans. If no overdue loans are found, it returns an empty list."""
+        """This method retrieves all overdue loans from the database. Overdue loans are defined as active loans whose due date has passed. The method fetches all active loans and checks their return dates against the current date. If a loan is found to be overdue, it is added to the list of overdue loans. The method returns a list of dictionaries representing the overdue loans. If no overdue loans are found, it returns an empty list."""
 
         active_loans = self.get_active_loans()
 
@@ -272,11 +272,9 @@ class LoanService:
         return updated_loan_data
 
     def borrow_book(self, book_id):
-        """This method requires refactoring!
+        """This method allows a user to borrow a book by its ID. It checks for the book's availability, the user's permissions, and creates a new loan record if all conditions are met. It updates the book's status to indicate that it is currently borrowed and sets return date for the loan.
 
-        This method allows a user to borrow a book by its ID. It checks for the book's availability, the user's permissions, and creates a new loan record if all conditions are met. It updates the book's status to indicate that it is currently borrowed and sets return date for the loan.
-
-        Book can be borrowed only if it's status is 'available'. Books which are 'reserved' cannot be borrowed by user who is not the user who reserved the book.
+        Book can be borrowed only if it's status is 'available'.
 
         Book reserved by particular user can be borrowed by this user.
 
@@ -406,6 +404,22 @@ class LoanService:
 
         self.user_authorisation_service.check_permission("books.reserve_book")
 
+    def is_book_reserved(self, book_id):
+
+        all_reservations = self.get_all_reservations()
+
+        if not all_reservations:
+            return False
+
+        for reservation in all_reservations:
+            if reservation["book_id"] == book_id:
+                return True
+
+    def ensure_book_is_not_reserved(self, book_id):
+
+        if self.is_book_reserved(book_id):
+            raise exc.ReservationError("Book is already reserved by another user.")
+
     def reserve_book(self, book_id):  # NOT COMPLETE
         """Method that enables user to reserve a book.
         What to do: Add a validation. Book can be reserved by only one user and has only one reservation.
@@ -418,6 +432,8 @@ class LoanService:
 
         if not isinstance(book_id, int):
             raise exc.BookValidationError("Book ID must be a number.")
+
+        self.book_service.ensure_book_exists(book_id)
 
         current_user = self.user_authorisation_service.get_current_user()
 
